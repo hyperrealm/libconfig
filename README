@@ -1,0 +1,58 @@
+
+To produce a PDF manual, issue the command "make pdf" after running
+`./configure'.
+
+				 -*-
+
+If you do not wish to build the C++ components, use:
+
+./configure --disable-cxx
+
+				 -*-
+
+The `examples' subdirectory contains some examples of using libconfig
+from C and C++.
+
+				 -*-
+
+The config file syntax changed between versions 0.8 and 0.9. In order
+to implement all of the feature/enhancement requests in an elegant and
+self-consistent way, the configuration grammar had to be changed in a
+non-backward-compatible way. In particular, groups are now values, so
+the old syntax:
+
+group
+{
+  ...
+}
+
+must now be written as:
+
+group =
+{
+  ...
+};
+
+Note that the trailing semicolon, which was previously optional, is
+now required. Also note that a colon (':') can be used in place of the
+equals sign.
+
+				 -*-
+
+Flex and Bison are not required in order to build this
+package. However, if you modify the .l or .y files, you must have Flex
+(2.5.31 or better) and Bison (2.1 or better), respectively.
+
+				 -*-
+
+To successfully compile using MinGW (with gcc 4.4.0 or later), it may
+be necessary to modify the file "mingw32\4.4.0\libstdc++.la", changing line 11
+from:
+
+library_names='libstdc++.dll.a'
+
+to:
+
+library_names='libstdc++.a'
+
+(See http://trac.osgeo.org/geos/ticket/282 for more information).
