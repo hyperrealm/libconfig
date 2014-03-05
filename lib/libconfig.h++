@@ -51,6 +51,8 @@ namespace libconfig {
 class LIBCONFIGXX_API ConfigException : public std::exception { };
 
 class Setting; // fwd decl
+class SettingIterator;
+class SettingConstIterator;
 
 class LIBCONFIGXX_API SettingException : public ConfigException
 {
@@ -188,6 +190,9 @@ class LIBCONFIGXX_API Setting
     FormatDefault = 0,
     FormatHex = 1
   };
+
+  typedef SettingIterator iterator;
+  typedef SettingConstIterator const_iterator;
 
   private:
 
@@ -343,7 +348,112 @@ class LIBCONFIGXX_API Setting
 
   unsigned int getSourceLine() const throw();
   const char *getSourceFile() const throw();
+
+  iterator begin();
+  iterator end();
+
+  const_iterator begin() const;
+  const_iterator end() const;
 };
+
+
+class LIBCONFIGXX_API SettingIterator
+{
+  private:
+
+  Setting *_setting;
+
+  int _count;
+  int _idx;
+
+  public:
+
+  SettingIterator(Setting &setting, bool endIterator = false);
+  SettingIterator(const SettingIterator &rhs);
+  SettingIterator& operator=(const SettingIterator &rhs);
+
+  // Equality comparison.
+  inline bool operator ==(SettingIterator const& rhs) const
+  { return _idx == rhs._idx; }
+
+  inline bool operator !=(SettingIterator const& rhs) const
+  { return ! (*this == rhs); }
+
+  bool operator <(SettingIterator const& rhs) const;
+
+  // Dereference operators.
+  inline Setting & operator *()  { return (*_setting)[_idx]; }
+  inline Setting * operator ->() { return &(*_setting)[_idx]; }
+
+  inline const Setting & operator *()  const { return (*_setting)[_idx]; }
+  inline const Setting * operator ->() const { return &(*_setting)[_idx]; }
+
+  // Increment and decrement operators.
+  SettingIterator& operator ++();
+  SettingIterator  operator ++(int);
+
+  SettingIterator& operator --();
+  SettingIterator  operator --(int);
+
+  // Arithmetic operators.
+  SettingIterator operator +(int offset) const;
+  SettingIterator& operator +=(int offset);
+
+  SettingIterator operator -(int offset) const;
+  SettingIterator& operator -=(int offset);
+
+  int operator -(const SettingIterator &rhs) const;
+};
+
+SettingIterator operator +(int offset, const SettingIterator &si);
+
+class LIBCONFIGXX_API SettingConstIterator
+{
+  private:
+
+  const Setting *_setting;
+
+  int _count;
+  int _idx;
+
+  public:
+
+  SettingConstIterator(const Setting &setting, bool endIterator = false);
+  SettingConstIterator(const SettingConstIterator &rhs);
+  SettingConstIterator& operator=(const SettingConstIterator &rhs);
+
+  // Equality comparison.
+  bool operator ==(SettingConstIterator const& rhs) const
+  { return _idx == rhs._idx; }
+
+  inline bool operator !=(SettingConstIterator const& rhs) const
+  { return ! (*this == rhs); }
+
+  // Dereference operators.
+  inline Setting const& operator *()  { return (*_setting)[_idx]; }
+  inline Setting const* operator ->() { return &(*_setting)[_idx]; }
+
+  inline const Setting& operator *()  const { return (*_setting)[_idx]; }
+  inline const Setting* operator ->() const { return &(*_setting)[_idx]; }
+
+  // Increment and decrement operators.
+  SettingConstIterator& operator ++();
+  SettingConstIterator  operator ++(int);
+
+  SettingConstIterator& operator --();
+  SettingConstIterator  operator --(int);
+
+  // Arithmetic operators.
+  SettingConstIterator operator +(int offset) const;
+  SettingConstIterator& operator +=(int offset);
+
+  SettingConstIterator operator -(int offset) const;
+  SettingConstIterator& operator -=(int offset);
+
+  int operator -(const SettingConstIterator &rhs) const;
+};
+
+SettingConstIterator operator +(int offset, const SettingConstIterator &si);
 
 class LIBCONFIGXX_API Config
 {

@@ -1156,6 +1156,246 @@ Setting & Setting::wrapSetting(config_setting_t *s)
 
 // ---------------------------------------------------------------------------
 
+Setting::iterator Setting::begin()
+{ return iterator(*this); }
+
+// ---------------------------------------------------------------------------
+
+Setting::iterator Setting::end()
+{ return iterator(*this, true); }
+
+// ---------------------------------------------------------------------------
+
+Setting::const_iterator Setting::begin() const
+{ return const_iterator(*this); }
+
+// ---------------------------------------------------------------------------
+
+Setting::const_iterator Setting::end() const
+{ return const_iterator(*this, true); }
+
+// ---------------------------------------------------------------------------
+
+SettingIterator::SettingIterator(Setting& setting, bool endIterator)
+  : _setting(&setting), _count(setting.getLength())
+{
+  if (endIterator)
+    _idx = _count;
+  else
+    _idx = 0;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingIterator::SettingIterator(const SettingIterator &rhs)
+  : _setting(rhs._setting), _count(rhs._count), _idx(rhs._idx)
+{
+}
+
+// ---------------------------------------------------------------------------
+
+SettingIterator& SettingIterator::operator=(const SettingIterator &rhs)
+{
+  _setting = rhs._setting;
+  _count = rhs._count;
+  _idx = rhs._idx;
+  return *this;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingIterator& SettingIterator::operator ++()
+{
+  ++_idx;
+  return *this;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingIterator SettingIterator::operator ++(int)
+{
+  SettingIterator tmp(*this);
+  ++_idx;
+  return tmp;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingIterator& SettingIterator::operator --()
+{
+  --_idx;
+  return *this;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingIterator SettingIterator::operator --(int)
+{
+  SettingIterator tmp(*this);
+  --_idx;
+  return tmp;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingIterator SettingIterator::operator +(int offset) const
+{
+  SettingIterator cpy(*this);
+  cpy += offset;
+  return cpy;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingIterator& SettingIterator::operator +=(int offset)
+{
+  _idx += offset;
+  return *this;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingIterator operator +(int offset, SettingIterator& si)
+{
+  SettingIterator cpy(si);
+  cpy += offset;
+  return cpy;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingIterator SettingIterator::operator -(int offset) const
+{
+  SettingIterator cpy(*this);
+  cpy._idx -= offset;
+  return cpy;;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingIterator& SettingIterator::operator -=(int offset)
+{
+  _idx -= offset;
+  return *this;
+}
+
+// ---------------------------------------------------------------------------
+
+int SettingIterator::operator -(SettingIterator const& rhs) const
+{
+  return _idx - rhs._idx;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingConstIterator::SettingConstIterator(const Setting &setting, bool endIterator)
+  : _setting(&setting), _count(setting.getLength())
+{
+  if (endIterator)
+    _idx = _count;
+  else
+    _idx = 0;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingConstIterator::SettingConstIterator(const SettingConstIterator &rhs)
+  : _setting(rhs._setting), _count(rhs._count), _idx(rhs._idx)
+{
+}
+
+// ---------------------------------------------------------------------------
+
+SettingConstIterator& SettingConstIterator::operator=(const SettingConstIterator &rhs)
+{
+  _setting = rhs._setting;
+  _count = rhs._count;
+  _idx = rhs._idx;
+  return *this;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingConstIterator& SettingConstIterator::operator ++()
+{ ++_idx; return *this; }
+
+// ---------------------------------------------------------------------------
+
+SettingConstIterator SettingConstIterator::operator ++(int)
+{
+  SettingConstIterator tmp(*this);
+  ++_idx;
+  return tmp;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingConstIterator& SettingConstIterator::operator --()
+{
+  --_idx;
+  return *this;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingConstIterator SettingConstIterator::operator --(int)
+{
+  SettingConstIterator tmp(*this);
+  --_idx;
+  return tmp;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingConstIterator SettingConstIterator::operator +(int offset) const
+{
+  SettingConstIterator cpy(*this);
+  cpy += offset;
+  return cpy;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingConstIterator& SettingConstIterator::operator +=(int offset)
+{
+  _idx += offset;
+  return *this;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingConstIterator operator +(int offset, SettingConstIterator& si)
+{
+  SettingConstIterator cpy(si);
+  cpy += offset;
+  return cpy;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingConstIterator SettingConstIterator::operator -(int offset) const
+{
+  SettingConstIterator cpy(*this);
+  cpy -= offset;
+  return cpy;
+}
+
+// ---------------------------------------------------------------------------
+
+SettingConstIterator& SettingConstIterator::operator -=(int offset)
+{
+  _idx -= offset;
+  return *this;
+}
+
+// ---------------------------------------------------------------------------
+
+int SettingConstIterator::operator -(SettingConstIterator const& rhs) const
+{
+  return _idx - rhs._idx;
+}
+
+
 } // namespace libconfig
 
 // eof
