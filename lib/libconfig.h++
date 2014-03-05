@@ -234,15 +234,12 @@ class LIBCONFIGXX_API Setting
   Setting & operator=(const char *value) throw(SettingTypeException);
   Setting & operator=(const std::string &value) throw(SettingTypeException);
 
-  Setting & operator[](const char *key) const
-    throw(SettingTypeException, SettingNotFoundException);
+  Setting & lookup(const std::string &key) const;
 
-  inline Setting & operator[](const std::string &key) const
-    throw(SettingTypeException, SettingNotFoundException)
-  { return(operator[](key.c_str())); }
+  inline Setting & operator[](const char *key) const
+  { return(lookup(key)); }
 
-  Setting & operator[](int index) const
-    throw(SettingTypeException, SettingNotFoundException);
+  Setting & operator[](int index) const;
 
   bool lookupValue(const char *name, bool &value) const throw();
   bool lookupValue(const char *name, int &value) const throw();
@@ -388,11 +385,10 @@ class LIBCONFIGXX_API Config
   void readFile(const char *filename) throw(FileIOException, ParseException);
   void writeFile(const char *filename) throw(FileIOException);
 
-  inline Setting & lookup(const std::string &path) const
-    throw(SettingNotFoundException)
-  { return(lookup(path.c_str())); }
+  Setting & lookup(const std::string &path) const;
 
-  Setting & lookup(const char *path) const throw(SettingNotFoundException);
+  inline Setting & operator[](const char *path) const
+  { return(lookup(path)); }
 
   inline bool exists(const std::string & path) const throw()
   { return(exists(path.c_str())); }

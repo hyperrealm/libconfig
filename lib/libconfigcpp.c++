@@ -446,12 +446,11 @@ void Config::writeFile(const char *filename) throw(FileIOException)
 
 // ---------------------------------------------------------------------------
 
-Setting & Config::lookup(const char *path) const
-  throw(SettingNotFoundException)
+Setting & Config::lookup(const std::string &path) const
 {
-  config_setting_t *s = config_lookup(_config, path);
+  config_setting_t *s = config_lookup(_config, path.c_str());
   if(! s)
-    throw SettingNotFoundException(path);
+    throw SettingNotFoundException(path.c_str());
 
   return(Setting::wrapSetting(s));
 }
@@ -834,8 +833,21 @@ Setting & Setting::operator=(const std::string &value)
 
 // ---------------------------------------------------------------------------
 
+Setting & Setting::lookup(const std::string &key) const
+{
+  assertType(TypeGroup);
+
+  config_setting_t *setting = config_setting_get_member(_setting, key.c_str());
+
+  if(! setting)
+    throw SettingNotFoundException(*this, key.c_str());
+
+  return(wrapSetting(setting));
+}
+
+// ---------------------------------------------------------------------------
+
 Setting & Setting::operator[](int i) const
-  throw(SettingTypeException, SettingNotFoundException)
 {
   if((_type != TypeArray) && (_type != TypeGroup) && (_type != TypeList))
     throw SettingTypeException(*this, i);
@@ -844,21 +856,6 @@ Setting & Setting::operator[](int i) const
 
   if(! setting)
     throw SettingNotFoundException(*this, i);
-
-  return(wrapSetting(setting));
-}
-
-// ---------------------------------------------------------------------------
-
-Setting & Setting::operator[](const char *key) const
-  throw(SettingTypeException, SettingNotFoundException)
-{
-  assertType(TypeGroup);
-
-  config_setting_t *setting = config_setting_get_member(_setting, key);
-
-  if(! setting)
-    throw SettingNotFoundException(*this, key);
 
   return(wrapSetting(setting));
 }
