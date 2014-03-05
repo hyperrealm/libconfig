@@ -531,16 +531,9 @@ bool Config::lookupValue(const char *path, float &value) const throw()
 
 // ---------------------------------------------------------------------------
 
-bool Config::lookupValue(const char *path, const char *&value) const throw()
-{
-  CONFIG_LOOKUP_NO_EXCEPTIONS(path, const char *, value);
-}
-
-// ---------------------------------------------------------------------------
-
 bool Config::lookupValue(const char *path, std::string &value) const throw()
 {
-  CONFIG_LOOKUP_NO_EXCEPTIONS(path, const char *, value);
+  CONFIG_LOOKUP_NO_EXCEPTIONS(path, std::string, value);
 }
 
 // ---------------------------------------------------------------------------
@@ -728,26 +721,24 @@ Setting::operator float() const throw(SettingTypeException)
 
 // ---------------------------------------------------------------------------
 
-Setting::operator const char *() const throw(SettingTypeException)
-{
-  assertType(TypeString);
-
-  return(config_setting_get_string(_setting));
-}
-
-// ---------------------------------------------------------------------------
-
 Setting::operator std::string() const throw(SettingTypeException)
 {
-  assertType(TypeString);
-
-  const char *s = config_setting_get_string(_setting);
+  const char *s = c_str();
 
   std::string str;
   if(s)
     str = s;
 
   return(str);
+}
+
+// ---------------------------------------------------------------------------
+
+const char* Setting::c_str() const throw(SettingTypeException)
+{
+  assertType(TypeString);
+
+  return(config_setting_get_string(_setting));
 }
 
 // ---------------------------------------------------------------------------
@@ -939,16 +930,9 @@ bool Setting::lookupValue(const char *name, float &value) const throw()
 
 // ---------------------------------------------------------------------------
 
-bool Setting::lookupValue(const char *name, const char *&value) const throw()
-{
-  SETTING_LOOKUP_NO_EXCEPTIONS(name, const char *, value);
-}
-
-// ---------------------------------------------------------------------------
-
 bool Setting::lookupValue(const char *name, std::string &value) const throw()
 {
-  SETTING_LOOKUP_NO_EXCEPTIONS(name, const char *, value);
+  SETTING_LOOKUP_NO_EXCEPTIONS(name, std::string, value);
 }
 
 // ---------------------------------------------------------------------------

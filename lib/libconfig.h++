@@ -221,11 +221,9 @@ class LIBCONFIGXX_API Setting
   operator unsigned long long() const throw(SettingTypeException);
   operator double() const throw(SettingTypeException);
   operator float() const throw(SettingTypeException);
-  operator const char *() const throw(SettingTypeException);
   operator std::string() const throw(SettingTypeException);
 
-  inline const char *c_str() const throw(SettingTypeException)
-  { return operator const char*(); }
+  const char *c_str() const throw(SettingTypeException);
 
   Setting & operator=(bool value) throw(SettingTypeException);
   Setting & operator=(int value) throw(SettingTypeException);
