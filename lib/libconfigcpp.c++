@@ -312,6 +312,17 @@ Config::Config()
 
 // ---------------------------------------------------------------------------
 
+Config::Config(std::string const& cfgFile)
+  : _defaultFormat(Setting::FormatDefault)
+{
+  _config = new config_t;
+  config_init(_config);
+  config_set_destructor(_config, ConfigDestructor);
+  readFile(cfgFile.c_str());
+}
+
+// ---------------------------------------------------------------------------
+
 Config::~Config()
 {
   config_destroy(_config);
@@ -623,7 +634,7 @@ void Setting::setFormat(Format format) throw()
 
 // ---------------------------------------------------------------------------
 
-Setting::operator bool() const throw(SettingTypeException) 
+Setting::operator bool() const throw(SettingTypeException)
 {
   assertType(TypeBoolean);
 

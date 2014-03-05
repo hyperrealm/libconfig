@@ -363,6 +363,8 @@ class LIBCONFIGXX_API Config
   public:
 
   Config();
+  Config(std::string const& cfgFile);
+
   virtual ~Config();
 
   void setAutoConvert(bool flag);
