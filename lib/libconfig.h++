@@ -54,8 +54,6 @@ class Setting; // fwd decl
 
 class LIBCONFIGXX_API SettingException : public ConfigException
 {
-  friend class Config;
-
   public:
 
   SettingException(const SettingException &other);
@@ -66,8 +64,6 @@ class LIBCONFIGXX_API SettingException : public ConfigException
   const char *getPath() const;
 
   virtual const char *what() const throw();
-
-  protected:
 
   SettingException(const Setting &setting);
   SettingException(const Setting &setting, int idx);
@@ -81,14 +77,9 @@ class LIBCONFIGXX_API SettingException : public ConfigException
 
 class LIBCONFIGXX_API SettingTypeException : public SettingException
 {
-  friend class Config;
-  friend class Setting;
-
   public:
 
   virtual const char *what() const throw();
-
-  private:
 
   SettingTypeException(const Setting &setting);
   SettingTypeException(const Setting &setting, int idx);
@@ -97,14 +88,9 @@ class LIBCONFIGXX_API SettingTypeException : public SettingException
 
 class LIBCONFIGXX_API SettingNotFoundException : public SettingException
 {
-  friend class Config;
-  friend class Setting;
-
   public:
 
   virtual const char *what() const throw();
-
-  private:
 
   SettingNotFoundException(const Setting &setting, int idx);
   SettingNotFoundException(const Setting &setting, const char *name);
@@ -113,14 +99,9 @@ class LIBCONFIGXX_API SettingNotFoundException : public SettingException
 
 class LIBCONFIGXX_API SettingNameException : public SettingException
 {
-  friend class Config;
-  friend class Setting;
-
   public:
 
   virtual const char *what() const throw();
-
-  private:
 
   SettingNameException(const Setting &setting, const char *name);
 };
@@ -134,8 +115,6 @@ class LIBCONFIGXX_API FileIOException : public ConfigException
 
 class LIBCONFIGXX_API ParseException : public ConfigException
 {
-  friend class Config;
-
   public:
 
   ParseException(const ParseException &other);
@@ -153,9 +132,9 @@ class LIBCONFIGXX_API ParseException : public ConfigException
 
   virtual const char *what() const throw();
 
-  private:
-
   ParseException(const char *file, int line, const char *error);
+
+  private:
 
   const char *_file;
   int _line;
