@@ -1137,8 +1137,8 @@ short config_setting_get_format(const config_setting_t *setting)
 
 /* ------------------------------------------------------------------------- */
 
-config_setting_t *config_lookup_from(config_setting_t *setting,
-                                     const char *path)
+config_setting_t *config_setting_lookup(config_setting_t *setting,
+                                        const char *path)
 {
   const char *p = path;
   config_setting_t *found;
@@ -1172,7 +1172,7 @@ config_setting_t *config_lookup_from(config_setting_t *setting,
 
 config_setting_t *config_lookup(const config_t *config, const char *path)
 {
-  return(config_lookup_from(config->root, path));
+  return(config_setting_lookup(config->root, path));
 }
 
 /* ------------------------------------------------------------------------- */

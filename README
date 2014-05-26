@@ -15,30 +15,6 @@ from C and C++.
 
 				 -*-
 
-The config file syntax changed between versions 0.8 and 0.9. In order
-to implement all of the feature/enhancement requests in an elegant and
-self-consistent way, the configuration grammar had to be changed in a
-non-backward-compatible way. In particular, groups are now values, so
-the old syntax:
-
-group
-{
-  ...
-}
-
-must now be written as:
-
-group =
-{
-  ...
-};
-
-Note that the trailing semicolon, which was previously optional, is
-now required. Also note that a colon (':') can be used in place of the
-equals sign.
-
-				 -*-
-
 Flex and Bison are not required in order to build this
 package. However, if you modify the .l or .y files, you must have Flex
 (2.5.31 or better) and Bison (2.1 or better), respectively.
@@ -56,3 +32,29 @@ to:
 library_names='libstdc++.a'
 
 (See http://trac.osgeo.org/geos/ticket/282 for more information).
+
+				 -*-
+
+To cross-compile for Android:
+
+1) Create a standalone toolchain using the 'make-standalone-toolchain.sh'
+script included with the Android NDK. For example:
+
+$ /pkg/android-ndk-r9d/build/tools/make-standalone-toolchain.sh \
+  --platform=android-19 \
+  --install-dir=/pkg/android-toolchain-19 \
+  --system=linux-x86_64 \
+  --arch=arm
+
+2) Add the standalone toolchain's bin directory to the front of the path:
+
+$ export PATH=/pkg/android-toolchain-19/bin:$PATH
+
+3) Configure libconfig for cross-compilation:
+
+$ ./configure --host=arm-linux-androideabi \
+  --with-sysroot=/pkg/android-toolchain-19/sysroot
+
+4) Build libconfig
+
+make

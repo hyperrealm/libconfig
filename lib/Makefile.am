@@ -24,7 +24,7 @@ endif
 #
 # For more info see section 6.3 of the GNU Libtool Manual.
 
-VERINFO = -version-info 10:4:1
+VERINFO = -version-info 11:0:2
 
 PARSER_PREFIX = libconfig_yy
 
