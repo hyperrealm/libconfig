@@ -1,4 +1,19 @@
-	----- version 1.4.10 ------
+
+	----- version 1.5 ------
+
+2014-05-25  Mark Lindner  <markl@neuromancer>
+
+	* lib/libconfig.c++, lib/libconfig.h++ - added patches from Matt
+	  Renaud (added iterators, removed throws() specifications); added
+	  Setting.lookup(); code cleanup; added patch from Yuri Dyachenko
+	  (made exception constructors public)
+	* lib/libconfig.c, lib/libconfig.h - renamed
+	  config_setting_lookup_from() to config_setting_lookup() and
+	  documented it; patch from Alexander Klauer (floating point precision
+	  loss)
+	* doc/libconfig.texi - documented new APIs, bumped version
+	* lib/scanner.c, lib/scanner.h, lib/scanner.l, libconfig.c -
+	  scanner code cleanup; and regenerated with flex 2.5.39
 
 2014-01-21  Mark Lindner  <markl@neuromancer>
 

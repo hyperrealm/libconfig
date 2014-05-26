@@ -1187,12 +1187,12 @@ Setting::const_iterator Setting::end() const
 // ---------------------------------------------------------------------------
 
 SettingIterator::SettingIterator(Setting& setting, bool endIterator)
-  : _setting(&setting), _count(setting.getLength())
+  : _setting(&setting),
+    _count(setting.getLength()),
+    _idx(endIterator ? _count : 0)
 {
-  if (endIterator)
-    _idx = _count;
-  else
-    _idx = 0;
+  if(!setting.isAggregate())
+    throw SettingTypeException(setting);
 }
 
 // ---------------------------------------------------------------------------
@@ -1313,9 +1313,11 @@ int SettingIterator::operator-(SettingIterator const &other) const
 SettingConstIterator::SettingConstIterator(const Setting &setting,
                                            bool endIterator)
   : _setting(&setting),
-    _count(setting.getLength())
+    _count(setting.getLength()),
+    _idx(endIterator ? _count : 0)
 {
-  _idx = endIterator ? _count : 0;
+  if(!setting.isAggregate())
+    throw SettingTypeException(setting);
 }
 
 // ---------------------------------------------------------------------------
@@ -1426,7 +1428,7 @@ SettingConstIterator& SettingConstIterator::operator-=(int offset)
 
 // ---------------------------------------------------------------------------
 
-int SettingConstIterator::operator -(SettingConstIterator const &other) const
+int SettingConstIterator::operator-(SettingConstIterator const &other) const
 {
   return(_idx - other._idx);
 }

@@ -1791,6 +1791,17 @@ These methods test if the setting has a child setting with the given
 
 @end deftypemethod
 
+@deftypemethod Setting iterator begin ()
+@deftypemethodx Setting iterator end ()
+@deftypemethodx Setting const_iterator begin ()
+@deftypemethodx Setting const_iterator end ()
+
+These methods return STL-style iterators that can be used to enumerate
+the child settings of a given setting. If the setting is not an array, list,
+or group, they throw a @code{SettingTypeException}.
+
+@end deftypemethod
+
 @deftypemethod Setting int getLength ()
 
 This method returns the number of settings in a group, or the number of
