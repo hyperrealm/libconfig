@@ -1155,16 +1155,44 @@ common base exception @code{ConfigException}.
 A @code{SettingTypeException} is thrown when the type of a setting's
 value does not match the type requested.
 
+@deftypemethod SettingTypeException {} SettingTypeException (@w{const Setting &@var{setting}})
+@deftypemethodx SettingTypeException {} SettingTypeException (@w{const Setting &@var{setting}}, @w{int @var{index}})
+@deftypemethodx SettingTypeException {} SettingTypeException (@w{const Setting &@var{setting}}, @w{const char *@var{name}})
+
+These methods construct @code{SettingTypeException} objects for the given @var{setting} and/or member @var{index} or @var{name}.
+
+@end deftypemethod
+
 @tindex SettingNotFoundException
 A @code{SettingNotFoundException} is thrown when a setting is not found.
+
+@deftypemethod SettingNotFoundException {} SettingNotFoundException (@w{const Setting &@var{setting}}, @w{int @var{index}})
+@deftypemethodx SettingNotFoundException {} SettingNotFoundException (@w{const Setting &@var{setting}}, @w{const char *@var{name}})
+@deftypemethodx SettingNotFoundException {} SettingNotFoundException (@w{const char *@var{path}})
+
+These methods construct @code{SettingTypeException} objects for the given @var{setting} and member @var{index} or @var{name}, or path @var{path}.
+
+@end deftypemethod
 
 @tindex SettingNameException
 A @code{SettingNameException} is thrown when an attempt is made to add
 a new setting with a non-unique or invalid name.
 
+@deftypemethod SettingNameException {} SettingNameException (@w{const Setting &@var{setting}}, @w{const char *@var{name}})
+
+This method constructs a @code{SettingNameExcpetion} object for the given @var{setting} and member name @var{name}.
+
+@end deftypemethod
+
 @tindex ParseException
 A @code{ParseException} is thrown when a parse error occurs while
 reading a configuration from a stream.
+
+@deftypemethod ParseException {} ParseException (@w{const char *@var{file}}, @w{int @var{line}}, @w{const char *@var{error}})
+
+This method constructs a @code{ParseException} object with the given filename @var{file}, line number @var{line}, and error message @var{error}.
+
+@end deftypemethod
 
 @tindex FileIOException
 A @code{FileIOException} is thrown when an I/O error occurs while
