@@ -24,13 +24,6 @@
 #include "ac_config.h"
 #endif
 
-#include "libconfig.h"
-#include "grammar.h"
-#include "scanner.h"
-#include "scanctx.h"
-#include "parsectx.h"
-#include "wincompat.h"
-
 #include <locale.h>
 
 #ifdef HAVE_XLOCALE_H
@@ -40,6 +33,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+
+#include "libconfig.h"
+#include "grammar.h"
+#include "scanctx.h"
+#include "parsectx.h"
+#include "wincompat.h"
+#include "scanner.h"
+
 
 #define PATH_TOKENS ":./"
 #define CHUNK_SIZE 16
@@ -554,7 +555,6 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
   yyscan_t scanner;
   struct scan_context scan_ctx;
   struct parse_context parse_ctx;
-  YY_BUFFER_STATE buffer = NULL;
   int r;
 
   /* Reinitialize the config */
@@ -587,7 +587,7 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
   if(stream)
     libconfig_yyrestart(stream, scanner);
   else /* read from string */
-    buffer = libconfig_yy_scan_string(str, scanner);
+    (void)libconfig_yy_scan_string(str, scanner);
 
   libconfig_yyset_lineno(1, scanner);
   r = libconfig_yyparse(scanner, &parse_ctx, &scan_ctx);

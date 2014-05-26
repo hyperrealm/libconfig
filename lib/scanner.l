@@ -22,6 +22,7 @@
 */
 
 %option nounistd
+%option never-interactive
 %option reentrant
 %option noyywrap
 %option yylineno
