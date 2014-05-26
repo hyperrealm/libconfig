@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <float.h>
 
 #include "libconfig.h"
 #include "grammar.h"
@@ -44,7 +45,7 @@
 
 #define PATH_TOKENS ":./"
 #define CHUNK_SIZE 16
-#define FLOAT_PRECISION 10
+#define FLOAT_PRECISION DBL_DIG
 
 #define _new(T) (T *)calloc(sizeof(T), 1) /* zeroed */
 #define _delete(P) free((void *)(P))
