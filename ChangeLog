@@ -14,6 +14,9 @@
 	* doc/libconfig.texi - documented new APIs, bumped version
 	* lib/scanner.c, lib/scanner.h, lib/scanner.l, libconfig.c -
 	  scanner code cleanup; and regenerated with flex 2.5.39
+	* lib/grammar.c, lib/grammar.h, lib/grammar.y - parser code cleanup;
+	  and regenerated with bison 3.0.2
+	* README, ChangeLog - version updates
 
 2014-01-21  Mark Lindner  <markl@neuromancer>
 

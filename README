@@ -58,3 +58,13 @@ $ ./configure --host=arm-linux-androideabi \
 4) Build libconfig
 
 make
+
+				 -*-
+
+Build tools dependencies. (These are only required if you are a maintainer.)
+
+Autoconf 2.69
+Automake 1.14.1
+Bison 3.0.2
+Flex 2.5.39
+Libtool 2.4.2
