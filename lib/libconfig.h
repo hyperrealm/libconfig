@@ -40,8 +40,8 @@ extern "C" {
 #endif /* WIN32 */
 
 #define LIBCONFIG_VER_MAJOR    1
-#define LIBCONFIG_VER_MINOR    4
-#define LIBCONFIG_VER_REVISION 9
+#define LIBCONFIG_VER_MINOR    5
+#define LIBCONFIG_VER_REVISION 0
 
 #include <stdio.h>
 

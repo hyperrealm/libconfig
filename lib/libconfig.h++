@@ -40,8 +40,8 @@
 #endif /* WIN32 */
 
 #define LIBCONFIGXX_VER_MAJOR    1
-#define LIBCONFIGXX_VER_MINOR    4
-#define LIBCONFIGXX_VER_REVISION 9
+#define LIBCONFIGXX_VER_MINOR    5
+#define LIBCONFIGXX_VER_REVISION 0
 
 struct config_t; // fwd decl
 struct config_setting_t; // fwd decl
@@ -92,9 +92,9 @@ class LIBCONFIGXX_API SettingNotFoundException : public SettingException
 {
   public:
 
+  SettingNotFoundException(const char *path);
   SettingNotFoundException(const Setting &setting, int idx);
   SettingNotFoundException(const Setting &setting, const char *name);
-  SettingNotFoundException(const char *path);
 
   virtual const char *what() const throw();
 };
