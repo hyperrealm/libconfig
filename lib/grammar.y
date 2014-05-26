@@ -22,7 +22,7 @@
 */
 
 %defines
-%output="y.tab.c"
+%output "y.tab.c"
 %pure-parser
 %lex-param{void *scanner}
 %parse-param{void *scanner}

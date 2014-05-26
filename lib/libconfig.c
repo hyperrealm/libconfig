@@ -36,12 +36,11 @@
 #include <float.h>
 
 #include "libconfig.h"
-#include "grammar.h"
-#include "scanctx.h"
 #include "parsectx.h"
+#include "scanctx.h"
 #include "wincompat.h"
+#include "grammar.h"
 #include "scanner.h"
-
 
 #define PATH_TOKENS ":./"
 #define CHUNK_SIZE 16

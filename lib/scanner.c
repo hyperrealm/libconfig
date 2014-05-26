@@ -579,10 +579,10 @@ static yyconst flex_int32_t yy_rule_can_match_eol[43] =
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include "grammar.h"
-#include "wincompat.h"
 #include "parsectx.h"
 #include "scanctx.h"
+#include "grammar.h"
+#include "wincompat.h"
 
 #define YY_NO_INPUT // Suppress generation of useless input() function
 

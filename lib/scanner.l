@@ -41,10 +41,10 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include "grammar.h"
-#include "wincompat.h"
 #include "parsectx.h"
 #include "scanctx.h"
+#include "grammar.h"
+#include "wincompat.h"
 
 #define YY_NO_INPUT // Suppress generation of useless input() function
 
