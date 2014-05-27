@@ -335,10 +335,10 @@ class LIBCONFIGXX_API SettingIterator
 
   // Equality comparison.
   inline bool operator==(SettingIterator const &other) const
-  { return(_idx == other._idx); }
+  { return((_setting == other._setting) && (_idx == other._idx)); }
 
   inline bool operator!=(SettingIterator const &other) const
-  { return(*this != other); }
+  { return(!operator==(other)); }
 
   bool operator<(SettingIterator const &other) const;
 
@@ -390,10 +390,10 @@ class LIBCONFIGXX_API SettingConstIterator
 
   // Equality comparison.
   bool operator==(SettingConstIterator const &other) const
-  { return(_idx == other._idx); }
+  { return((_setting == other._setting) && (_idx == other._idx)); }
 
   inline bool operator!=(SettingConstIterator const &other) const
-  { return(*this != other); }
+  { return(!operator==(other)); }
 
   // Dereference operators.
   inline Setting const & operator*()
