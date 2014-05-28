@@ -168,4 +168,3 @@ const char *scanctx_current_filename(struct scan_context *ctx)
 }
 
 /* ------------------------------------------------------------------------- */
-/* eof */

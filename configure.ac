@@ -31,7 +31,7 @@ cat <<EOF
 *******************************************************************
 You do not seem to have flex. While flex is not required to build
 libconfig, you may need it to regenerate the lexer if you change
-the scanner.l file. Flex 2.5.33 or newer is recommended.
+the scanner.l file.
 *******************************************************************
 EOF
 fi

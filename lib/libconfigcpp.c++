@@ -1436,4 +1436,3 @@ int SettingConstIterator::operator-(SettingConstIterator const &other) const
 
 } // namespace libconfig
 
-// eof

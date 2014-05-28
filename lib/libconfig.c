@@ -52,14 +52,15 @@
 /* ------------------------------------------------------------------------- */
 
 #ifndef LIBCONFIG_STATIC
-#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
+#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)    \
+     || defined(WIN64) || defined(_WIN64))
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
   return(TRUE);
 }
 
-#endif /* WIN32 */
+#endif /* WIN32 || WIN64 */
 #endif /* LIBCONFIG_STATIC */
 
 /* ------------------------------------------------------------------------- */
@@ -70,11 +71,6 @@ static void __config_list_destroy(config_list_t *list);
 static void __config_write_setting(const config_setting_t *setting,
                                    FILE *stream, int depth,
                                    unsigned short tab_width);
-
-extern int libconfig_yyparse(void *scanner, struct parse_context *ctx,
-                             struct scan_context *scan_ctx);
-extern int libconfig_yylex_init_extra(struct scan_context *scan_ctx,
-                                      yyscan_t *scanner);
 
 /* ------------------------------------------------------------------------- */
 
@@ -1614,4 +1610,4 @@ int config_setting_index(const config_setting_t *setting)
 }
 
 /* ------------------------------------------------------------------------- */
-/* eof */
+

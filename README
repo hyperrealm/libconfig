@@ -16,8 +16,8 @@ from C and C++.
 				 -*-
 
 Flex and Bison are not required in order to build this
-package. However, if you modify the .l or .y files, you must have Flex
-(2.5.31 or better) and Bison (2.1 or better), respectively.
+package. However, you will need them if you modify the .l or .y files. See
+the list of required build tool versions below.
 
 				 -*-
 
@@ -57,7 +57,7 @@ $ ./configure --host=arm-linux-androideabi \
 
 4) Build libconfig
 
-make
+$ make
 
 				 -*-
 
@@ -68,3 +68,7 @@ Automake 1.14.1
 Bison 3.0.2
 Flex 2.5.39
 Libtool 2.4.2
+
+				 -*-
+
+Libconfig may be found on github at https://github.com/hyperrealm/libconfig
