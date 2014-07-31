@@ -58,6 +58,15 @@ extern "C" {
 #define CONFIG_FORMAT_DEFAULT  0
 #define CONFIG_FORMAT_HEX      1
 
+
+#define CONFIG_OUT_FORMAT_USE_ASSIGN        1
+#define CONFIG_OUT_FORMAT_USE_COLON         2
+#define CONFIG_OUT_FORMAT_APPEND_SEMICOLON  4
+#define CONFIG_OUT_FORMAT_APPEND_COMMA      8
+#define CONFIG_OUT_FORMAT_DEFAULT           (CONFIG_OUT_FORMAT_USE_ASSIGN | \
+					     CONFIG_OUT_FORMAT_USE_COLON | \
+					     CONFIG_OUT_FORMAT_APPEND_SEMICOLON)
+
 #define CONFIG_OPTION_AUTOCONVERT 0x01
 
 #define CONFIG_TRUE  (1)
@@ -105,6 +114,7 @@ typedef struct config_t
   unsigned short flags;
   unsigned short tab_width;
   short default_format;
+  short output_format;
   const char *include_dir;
   const char *error_text;
   const char *error_file;
@@ -276,6 +286,9 @@ extern LIBCONFIG_API int config_lookup_string(const config_t *config,
                                               const char *path,
                                               const char **value);
 
+extern LIBCONFIG_API int config_set_output_format(config_t *config,
+						  short output_format);
+
 #define /* config_setting_t * */ config_root_setting( \
   /* const config_t * */ C)                           \
   ((C)->root)
@@ -286,6 +299,9 @@ extern LIBCONFIG_API int config_lookup_string(const config_t *config,
 
 #define /* short */ config_get_default_format(/* config_t * */ C)       \
   ((C)->default_format)
+
+#define /* short */ config_get_output_format(/* config_t * */ C)       \
+  ((C)->output_format)
 
 #define /* void */ config_set_tab_width(/* config_t * */ C,     \
                                         /* unsigned short */ W) \
