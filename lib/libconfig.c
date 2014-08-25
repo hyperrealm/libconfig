@@ -48,6 +48,11 @@
 
 #define _new(T) (T *)calloc(sizeof(T), 1) /* zeroed */
 #define _delete(P) free((void *)(P))
+#define SHOULD_USE_ASSIGN( /* short */ F) (F & CONFIG_OUT_FORMAT_USE_ASSIGN)
+#define SHOULD_USE_COLON( /* short */ F) (F & CONFIG_OUT_FORMAT_USE_COLON)
+#define SHOULD_APPEND_SEMICOLON( /* short */ F) \
+  (F & CONFIG_OUT_FORMAT_APPEND_SEMICOLON)
+#define SHOULD_APPEND_COMMA( /* short */ F) (F & CONFIG_OUT_FORMAT_APPEND_COMMA)
 
 /* ------------------------------------------------------------------------- */
 
@@ -629,13 +634,21 @@ static void __config_write_setting(const config_setting_t *setting,
                                    FILE *stream, int depth,
                                    unsigned short tab_width)
 {
+  int output_format = setting->config->output_format;
+
   if(depth > 1)
     __config_indent(stream, depth, tab_width);
 
   if(setting->name)
   {
+    char separator;
     fputs(setting->name, stream);
-    fprintf(stream, " %c ", (setting->type == CONFIG_TYPE_GROUP ? ':' : '='));
+    if(SHOULD_USE_COLON(output_format) && SHOULD_USE_ASSIGN(output_format))
+      separator = (setting->type == CONFIG_TYPE_GROUP ? ':' : '=');
+    else
+      separator = SHOULD_USE_COLON(output_format) ? ':' : '=';
+
+    fprintf(stream, " %c ", separator);
   }
 
   __config_write_value(&(setting->value), setting->type,
@@ -644,7 +657,11 @@ static void __config_write_setting(const config_setting_t *setting,
 
   if(depth > 0)
   {
-    fputc(';', stream);
+    if (SHOULD_APPEND_SEMICOLON(output_format))
+      fputc(';', stream);
+    else if (SHOULD_APPEND_COMMA(output_format))
+      fputc(':', stream);
+
     fputc('\n', stream);
   }
 }
@@ -725,6 +742,7 @@ void config_init(config_t *config)
   config->root->type = CONFIG_TYPE_GROUP;
   config->root->config = config;
   config->tab_width = 2;
+  config->output_format = CONFIG_OUT_FORMAT_DEFAULT;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1611,3 +1629,19 @@ int config_setting_index(const config_setting_t *setting)
 
 /* ------------------------------------------------------------------------- */
 
+int config_set_output_format(config_t *config, short output_format)
+{
+  /* One of thos is mandatory */
+  if(!SHOULD_USE_COLON(output_format) && !SHOULD_USE_ASSIGN(output_format))
+    return(CONFIG_FALSE);
+
+  /* Both are optional but they exclude each other */
+  if(SHOULD_APPEND_COMMA(output_format) &&
+     SHOULD_APPEND_SEMICOLON(output_format))
+    return(CONFIG_FALSE);
+
+  config->output_format = output_format;
+  return(CONFIG_TRUE);
+}
+
+/* ------------------------------------------------------------------------- */
