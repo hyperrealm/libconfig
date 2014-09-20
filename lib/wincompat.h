@@ -32,6 +32,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#define fileno _fileno
+#define fstat _fstat
 #define snprintf  _snprintf
 
 #ifndef __MINGW32__

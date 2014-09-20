@@ -30,10 +30,13 @@
 #include <xlocale.h>
 #endif
 
-#include <stdlib.h>
-#include <string.h>
 #include <ctype.h>
 #include <float.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include "libconfig.h"
 #include "parsectx.h"
@@ -46,7 +49,7 @@
 #define CHUNK_SIZE 16
 #define FLOAT_PRECISION DBL_DIG
 
-#define _new(T) (T *)calloc(sizeof(T), 1) /* zeroed */
+#define _new(T) (T *)calloc(1, sizeof(T)) /* zeroed */
 #define _delete(P) free((void *)(P))
 
 /* ------------------------------------------------------------------------- */
@@ -664,10 +667,26 @@ void config_write(const config_t *config, FILE *stream)
 
 int config_read_file(config_t *config, const char *filename)
 {
-  int ret;
+  int ret, ok = 0;
+
   FILE *stream = fopen(filename, "rt");
-  if(! stream)
+  if(stream != NULL)
   {
+    // On some operating systems, fopen() succeeds on a directory.
+    int fd = fileno(stream);
+    struct stat statbuf;
+
+    if(fstat(fd, &statbuf) == 0)
+    {
+      // Only proceed if this is not a directory.
+      if(!S_ISDIR(statbuf.st_mode))
+        ok = 1;
+    }
+  }
+
+  if(!ok)
+  {
+    fclose(stream);
     config->error_text = __io_error;
     config->error_type = CONFIG_ERR_FILE_IO;
     return(CONFIG_FALSE);
