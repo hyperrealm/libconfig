@@ -71,9 +71,9 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 static const char *__io_error = "file I/O error";
 
 static void __config_list_destroy(config_list_t *list);
-static void __config_write_setting(const config_setting_t *setting,
-                                   FILE *stream, int depth,
-                                   unsigned short tab_width);
+static void __config_write_setting(const config_t *config,
+                                   const config_setting_t *setting,
+                                   FILE *stream, int depth);
 
 /* ------------------------------------------------------------------------- */
 
@@ -101,6 +101,11 @@ static void __config_locale_override(void)
 
 #endif
 }
+
+/* ------------------------------------------------------------------------- */
+
+#define __config_has_option(C, O)               \
+  (((C)->options & (O)) != 0)
 
 /* ------------------------------------------------------------------------- */
 
@@ -165,9 +170,9 @@ static void __config_indent(FILE *stream, int depth, unsigned short w)
 
 /* ------------------------------------------------------------------------- */
 
-static void __config_write_value(const config_value_t *value, int type,
-                                 int format, int depth,
-                                 unsigned short tab_width, FILE *stream)
+static void __config_write_value(const config_t *config,
+                                 const config_value_t *value, int type,
+                                 int format, int depth, FILE *stream)
 {
   char fbuf[64];
 
@@ -304,9 +309,9 @@ static void __config_write_value(const config_value_t *value, int type,
 
         for(s = list->elements; len--; s++)
         {
-          __config_write_value(&((*s)->value), (*s)->type,
-                               config_setting_get_format(*s),
-                               depth + 1, tab_width, stream);
+          __config_write_value(config, &((*s)->value), (*s)->type,
+                               config_setting_get_format(*s), depth + 1,
+                               stream);
 
           if(len)
             fputc(',', stream);
@@ -333,9 +338,9 @@ static void __config_write_value(const config_value_t *value, int type,
 
         for(s = list->elements; len--; s++)
         {
-          __config_write_value(&((*s)->value), (*s)->type,
-                               config_setting_get_format(*s),
-                               depth + 1, tab_width, stream);
+          __config_write_value(config, &((*s)->value), (*s)->type,
+                               config_setting_get_format(*s), depth + 1,
+                               stream);
 
           if(len)
             fputc(',', stream);
@@ -355,14 +360,14 @@ static void __config_write_value(const config_value_t *value, int type,
 
       if(depth > 0)
       {
-#ifdef K_AND_R_STYLE /* Horrendous, but many people like it. */
-        fputc(' ', stream);
-#else
-        fputc('\n', stream);
+        if((config->options & CONFIG_OPTION_OPEN_BRACE_ON_SEPARATE_LINE) != 0)
+        {
+          fputc('\n', stream);
 
-        if(depth > 1)
-          __config_indent(stream, depth, tab_width);
-#endif
+          if(depth > 1)
+            __config_indent(stream, depth, config->tab_width);
+        }
+
         fprintf(stream, "{\n");
       }
 
@@ -372,11 +377,11 @@ static void __config_write_value(const config_value_t *value, int type,
         config_setting_t **s;
 
         for(s = list->elements; len--; s++)
-          __config_write_setting(*s, stream, depth + 1, tab_width);
+          __config_write_setting(config, *s, stream, depth + 1);
       }
 
       if(depth > 1)
-        __config_indent(stream, depth, tab_width);
+        __config_indent(stream, depth, config->tab_width);
 
       if(depth > 0)
         fputc('}', stream);
@@ -560,7 +565,7 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
   void (*destructor)(void *) = config->destructor;
   const char *include_dir = config->include_dir;
   unsigned short tab_width = config->tab_width;
-  unsigned short flags = config->flags;
+  int options = config->options;
 
   config->include_dir = NULL;
   config_destroy(config);
@@ -569,7 +574,7 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
   config->destructor = destructor;
   config->include_dir = include_dir;
   config->tab_width = tab_width;
-  config->flags = flags;
+  config->options = options;
 
   parsectx_init(&parse_ctx);
   parse_ctx.config = config;
@@ -628,26 +633,38 @@ int config_read_string(config_t *config, const char *str)
 
 /* ------------------------------------------------------------------------- */
 
-static void __config_write_setting(const config_setting_t *setting,
-                                   FILE *stream, int depth,
-                                   unsigned short tab_width)
+static void __config_write_setting(const config_t *config,
+                                   const config_setting_t *setting,
+                                   FILE *stream, int depth)
 {
+  char group_assign_char = ((config->options
+                             & CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS) != 0)
+    ? ':' : '=';
+
+  char nongroup_assign_char
+    = ((config->options & CONFIG_OPTION_COLON_ASSIGNMENT_FOR_NON_GROUPS) != 0)
+    ? ':' : '=';
+
   if(depth > 1)
-    __config_indent(stream, depth, tab_width);
+    __config_indent(stream, depth, config->tab_width);
+
 
   if(setting->name)
   {
     fputs(setting->name, stream);
-    fprintf(stream, " %c ", (setting->type == CONFIG_TYPE_GROUP ? ':' : '='));
+    fprintf(stream, " %c ", ((setting->type == CONFIG_TYPE_GROUP)
+                             ? group_assign_char
+                             : nongroup_assign_char));
   }
 
-  __config_write_value(&(setting->value), setting->type,
-                       config_setting_get_format(setting),
-                       depth, tab_width, stream);
+  __config_write_value(config, &(setting->value), setting->type,
+                       config_setting_get_format(setting), depth, stream);
 
   if(depth > 0)
   {
-    fputc(';', stream);
+    if((config->options & CONFIG_OPTION_SEMICOLON_SEPARATORS) != 0)
+      fputc(';', stream);
+
     fputc('\n', stream);
   }
 }
@@ -658,7 +675,7 @@ void config_write(const config_t *config, FILE *stream)
 {
   __config_locale_override();
 
-  __config_write_setting(config->root, stream, 0, config->tab_width);
+  __config_write_setting(config, config->root, stream, 0);
 
   __config_locale_restore();
 }
@@ -743,6 +760,9 @@ void config_init(config_t *config)
   config->root = _new(config_setting_t);
   config->root->type = CONFIG_TYPE_GROUP;
   config->root->config = config;
+  config->options = (CONFIG_OPTION_SEMICOLON_SEPARATORS
+                     | CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS
+                     | CONFIG_OPTION_OPEN_BRACE_ON_SEPARATE_LINE);
   config->tab_width = 2;
 }
 
@@ -751,16 +771,30 @@ void config_init(config_t *config)
 void config_set_auto_convert(config_t *config, int flag)
 {
   if(flag)
-    config->flags |= CONFIG_OPTION_AUTOCONVERT;
+    config->options |= CONFIG_OPTION_AUTOCONVERT;
   else
-    config->flags &= ~CONFIG_OPTION_AUTOCONVERT;
+    config->options &= ~CONFIG_OPTION_AUTOCONVERT;
 }
 
 /* ------------------------------------------------------------------------- */
 
 int config_get_auto_convert(const config_t *config)
 {
-  return((config->flags & CONFIG_OPTION_AUTOCONVERT) != 0);
+  return((config->options & CONFIG_OPTION_AUTOCONVERT) != 0);
+}
+
+/* ------------------------------------------------------------------------- */
+
+void config_set_options(config_t *config, int options)
+{
+  config->options = options;
+}
+
+/* ------------------------------------------------------------------------- */
+
+int config_get_options(const config_t *config)
+{
+  return(config->options);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -814,7 +848,7 @@ static int __config_setting_get_int(const config_setting_t *setting,
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_FLOAT:
-      if((setting->config->flags & CONFIG_OPTION_AUTOCONVERT) != 0)
+      if((setting->config->options & CONFIG_OPTION_AUTOCONVERT) != 0)
       {
         *value = (int)(setting->value.fval);
         return(CONFIG_TRUE);
@@ -852,7 +886,7 @@ static int __config_setting_get_int64(const config_setting_t *setting,
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_FLOAT:
-      if((setting->config->flags & CONFIG_OPTION_AUTOCONVERT) != 0)
+      if((setting->config->options & CONFIG_OPTION_AUTOCONVERT) != 0)
       {
         *value = (long long)(setting->value.fval);
         return(CONFIG_TRUE);
@@ -1063,7 +1097,7 @@ int config_setting_set_float(config_setting_t *setting, double value)
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_INT:
-      if((setting->config->flags & CONFIG_OPTION_AUTOCONVERT) != 0)
+      if((setting->config->options & CONFIG_OPTION_AUTOCONVERT) != 0)
       {
         setting->value.ival = (int)value;
         return(CONFIG_TRUE);
@@ -1072,7 +1106,7 @@ int config_setting_set_float(config_setting_t *setting, double value)
         return(CONFIG_FALSE);
 
     case CONFIG_TYPE_INT64:
-      if((setting->config->flags & CONFIG_OPTION_AUTOCONVERT) != 0)
+      if((setting->config->options & CONFIG_OPTION_AUTOCONVERT) != 0)
       {
         setting->value.llval = (long long)value;
         return(CONFIG_TRUE);

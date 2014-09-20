@@ -1,5 +1,12 @@
-
 	----- version 1.5 ------
+
+2014-09-19  Mark Lindner  <markl@neuromancer>
+
+	* lib/libconfig.c, lib/wincompat.h - check if file being opened is a
+	  directory
+	* lib/libconfig.c, lib/libconfig.h, lib/libconfig.h++,
+	  doc/libconfig.texi - added config_set_options(),
+	  config_get_options(), setOptions(), getOptions().
 
 2014-05-25  Mark Lindner  <markl@neuromancer>
 

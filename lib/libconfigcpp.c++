@@ -327,6 +327,20 @@ void Config::setAutoConvert(bool flag)
 
 // ---------------------------------------------------------------------------
 
+void Config::setOptions(int options)
+{
+  config_set_options(_config, options);
+}
+
+// ---------------------------------------------------------------------------
+
+int Config::getOptions() const
+{
+  return(config_get_options(_config));
+}
+
+// ---------------------------------------------------------------------------
+
 bool Config::getAutoConvert() const
 {
   return(config_get_auto_convert(_config) != CONFIG_FALSE);

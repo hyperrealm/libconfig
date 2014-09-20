@@ -170,6 +170,16 @@ class LIBCONFIGXX_API Setting
     FormatHex = 1
   };
 
+  enum Option
+  {
+    OptionNone = 0,
+    OptionAutoConvert = 0x01,
+    OptionSemicolonSeparators = 0x02,
+    OptionColonAssignmentForGroups = 0x04,
+    OptionColonAssignmentForNonGroups = 0x08,
+    OptionOpenBraceOnSeparateLine = 0x10
+  };
+
   typedef SettingIterator iterator;
   typedef SettingConstIterator const_iterator;
 
@@ -438,6 +448,9 @@ class LIBCONFIGXX_API Config
 
   Config();
   virtual ~Config();
+
+  void setOptions(int options);
+  int getOptions() const;
 
   void setAutoConvert(bool flag);
   bool getAutoConvert() const;

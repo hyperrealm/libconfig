@@ -74,6 +74,8 @@ int main(int argc, char **argv)
   setting = config_setting_add(movie, "qty", CONFIG_TYPE_INT);
   config_setting_set_float(setting, 20);
 
+  config_set_options(&cfg, 0);
+
   /* Write out the updated configuration. */
   if(! config_write_file(&cfg, output_file))
   {
