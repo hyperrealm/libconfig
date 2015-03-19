@@ -209,12 +209,18 @@ TT_TEST(ParseInvalidStrings)
 
 int main(int argc, char **argv)
 {
+  int failures;
+
   TT_SUITE_START(LibConfigTests);
   TT_SUITE_TEST(LibConfigTests, ParsingAndFormatting);
   TT_SUITE_TEST(LibConfigTests, ParseInvalidFiles);
   TT_SUITE_TEST(LibConfigTests, ParseInvalidStrings);
   TT_SUITE_RUN(LibConfigTests);
+  failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);
 
-  return(0);
+  if (failures)
+    return EXIT_FAILURE;
+
+  return EXIT_SUCCESS;
 }
