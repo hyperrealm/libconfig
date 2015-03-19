@@ -41,6 +41,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <limits.h>
 #include "parsectx.h"
 #include "scanctx.h"
 #include "grammar.h"
@@ -164,7 +165,17 @@ include_open      ^[ \t]*@include[ \t]+\"
 {false}           { yylval->ival = 0; return(TOK_BOOLEAN); }
 {name}            { yylval->sval = yytext; return(TOK_NAME); }
 {float}           { yylval->fval = atof(yytext); return(TOK_FLOAT); }
-{integer}         { yylval->ival = atoi(yytext); return(TOK_INTEGER); }
+{integer}         {
+                    long long llval;
+                    llval = atoll(yytext);
+                    if (llval < INT_MIN || llval > INT_MAX) {
+	                  yylval->llval = llval;
+	                  return(TOK_INTEGER64);
+                    } else {
+	                  yylval->ival = llval;
+	                  return(TOK_INTEGER);
+                    }
+                  }
 {integer64}       { yylval->llval = atoll(yytext); return(TOK_INTEGER64); }
 {hex}             {
                     yylval->ival = strtoul(yytext, NULL, 16);

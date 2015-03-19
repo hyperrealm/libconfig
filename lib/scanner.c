@@ -9,7 +9,7 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
-#define YY_FLEX_SUBMINOR_VERSION 39
+#define YY_FLEX_SUBMINOR_VERSION 35
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
@@ -159,7 +159,15 @@ typedef void* yyscan_t;
 
 /* Size of default input buffer. */
 #ifndef YY_BUF_SIZE
+#ifdef __ia64__
+/* On IA-64, the buffer size is 16k, not 8k.
+ * Moreover, YY_BUF_SIZE is 2*YY_READ_BUF_SIZE in the general case.
+ * Ditto for the __ia64__ case accordingly.
+ */
+#define YY_BUF_SIZE 32768
+#else
 #define YY_BUF_SIZE 16384
+#endif /* __ia64__ */
 #endif
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
@@ -169,11 +177,6 @@ typedef void* yyscan_t;
 #ifndef YY_TYPEDEF_YY_BUFFER_STATE
 #define YY_TYPEDEF_YY_BUFFER_STATE
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
-#endif
-
-#ifndef YY_TYPEDEF_YY_SIZE_T
-#define YY_TYPEDEF_YY_SIZE_T
-typedef size_t yy_size_t;
 #endif
 
 #define EOB_ACT_CONTINUE_SCAN 0
@@ -194,13 +197,6 @@ typedef size_t yy_size_t;
                     if ( yytext[yyl] == '\n' )\
                         --yylineno;\
             }while(0)
-    #define YY_LINENO_REWIND_TO(dst) \
-            do {\
-                const char *p;\
-                for ( p = yy_cp-1; p >= (dst); --p)\
-                    if ( *p == '\n' )\
-                        --yylineno;\
-            }while(0)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -217,6 +213,11 @@ typedef size_t yy_size_t;
 	while ( 0 )
 
 #define unput(c) yyunput( c, yyg->yytext_ptr , yyscanner )
+
+#ifndef YY_TYPEDEF_YY_SIZE_T
+#define YY_TYPEDEF_YY_SIZE_T
+typedef size_t yy_size_t;
+#endif
 
 #ifndef YY_STRUCT_YY_BUFFER_STATE
 #define YY_STRUCT_YY_BUFFER_STATE
@@ -235,7 +236,7 @@ struct yy_buffer_state
 	/* Number of characters read into yy_ch_buf, not including EOB
 	 * characters.
 	 */
-	yy_size_t yy_n_chars;
+	int yy_n_chars;
 
 	/* Whether we "own" the buffer - i.e., we know we created it,
 	 * and can realloc() it to grow it, and should free() it to
@@ -314,7 +315,7 @@ static void libconfig_yy_init_buffer (YY_BUFFER_STATE b,FILE *file ,yyscan_t yys
 
 YY_BUFFER_STATE libconfig_yy_scan_buffer (char *base,yy_size_t size ,yyscan_t yyscanner );
 YY_BUFFER_STATE libconfig_yy_scan_string (yyconst char *yy_str ,yyscan_t yyscanner );
-YY_BUFFER_STATE libconfig_yy_scan_bytes (yyconst char *bytes,yy_size_t len ,yyscan_t yyscanner );
+YY_BUFFER_STATE libconfig_yy_scan_bytes (yyconst char *bytes,int len ,yyscan_t yyscanner );
 
 void *libconfig_yyalloc (yy_size_t ,yyscan_t yyscanner );
 void *libconfig_yyrealloc (void *,yy_size_t ,yyscan_t yyscanner );
@@ -344,7 +345,7 @@ void libconfig_yyfree (void * ,yyscan_t yyscanner );
 
 #define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 
-#define libconfig_yywrap(yyscanner) 1
+#define libconfig_yywrap(n) 1
 #define YY_SKIP_YYWRAP
 
 typedef unsigned char YY_CHAR;
@@ -579,6 +580,7 @@ static yyconst flex_int32_t yy_rule_can_match_eol[43] =
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <limits.h>
 #include "parsectx.h"
 #include "scanctx.h"
 #include "grammar.h"
@@ -621,7 +623,7 @@ static unsigned long long fromhex(const char *s)
 }
 
 
-#line 625 "scanner.c"
+#line 627 "scanner.c"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -651,8 +653,8 @@ struct yyguts_t
     size_t yy_buffer_stack_max; /**< capacity of stack. */
     YY_BUFFER_STATE * yy_buffer_stack; /**< Stack as an array. */
     char yy_hold_char;
-    yy_size_t yy_n_chars;
-    yy_size_t yyleng_r;
+    int yy_n_chars;
+    int yyleng_r;
     char *yy_c_buf_p;
     int yy_init;
     int yy_start;
@@ -705,17 +707,13 @@ FILE *libconfig_yyget_out (yyscan_t yyscanner );
 
 void libconfig_yyset_out  (FILE * out_str ,yyscan_t yyscanner );
 
-yy_size_t libconfig_yyget_leng (yyscan_t yyscanner );
+int libconfig_yyget_leng (yyscan_t yyscanner );
 
 char *libconfig_yyget_text (yyscan_t yyscanner );
 
 int libconfig_yyget_lineno (yyscan_t yyscanner );
 
 void libconfig_yyset_lineno (int line_number ,yyscan_t yyscanner );
-
-int libconfig_yyget_column  (yyscan_t yyscanner );
-
-void libconfig_yyset_column (int column_no ,yyscan_t yyscanner );
 
 YYSTYPE * libconfig_yyget_lval (yyscan_t yyscanner );
 
@@ -753,7 +751,12 @@ static int input (yyscan_t yyscanner );
 
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
+#ifdef __ia64__
+/* On IA-64, the buffer size is 16k, not 8k */
+#define YY_READ_BUF_SIZE 16384
+#else
 #define YY_READ_BUF_SIZE 8192
+#endif /* __ia64__ */
 #endif
 
 /* Copy whatever the last rule matched to the standard output. */
@@ -860,6 +863,11 @@ YY_DECL
 	register int yy_act;
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
+#line 102 "scanner.l"
+
+
+#line 870 "scanner.c"
+
     yylval = yylval_param;
 
 	if ( !yyg->yy_init )
@@ -888,12 +896,6 @@ YY_DECL
 		libconfig_yy_load_buffer_state(yyscanner );
 		}
 
-	{
-#line 101 "scanner.l"
-
-
-#line 896 "scanner.c"
-
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
 		yy_cp = yyg->yy_c_buf_p;
@@ -911,7 +913,7 @@ YY_DECL
 yy_match:
 		do
 			{
-			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)] ;
+			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
 			if ( yy_accept[yy_current_state] )
 				{
 				yyg->yy_last_accepting_state = yy_current_state;
@@ -937,7 +939,7 @@ yy_find_action:
 
 		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
 			{
-			yy_size_t yyl;
+			int yyl;
 			for ( yyl = 0; yyl < yyleng; ++yyl )
 				if ( yytext[yyl] == '\n' )
 					   
@@ -960,69 +962,69 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 103 "scanner.l"
+#line 104 "scanner.l"
 { BEGIN COMMENT; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 104 "scanner.l"
+#line 105 "scanner.l"
 { BEGIN INITIAL; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 105 "scanner.l"
+#line 106 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 106 "scanner.l"
+#line 107 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 108 "scanner.l"
+#line 109 "scanner.l"
 { BEGIN STRING; }
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 109 "scanner.l"
+#line 110 "scanner.l"
 { scanctx_append_string(yyextra, yytext); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 110 "scanner.l"
+#line 111 "scanner.l"
 { scanctx_append_string(yyextra, "\n"); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 111 "scanner.l"
+#line 112 "scanner.l"
 { scanctx_append_string(yyextra, "\r"); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 112 "scanner.l"
+#line 113 "scanner.l"
 { scanctx_append_string(yyextra, "\t"); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 113 "scanner.l"
+#line 114 "scanner.l"
 { scanctx_append_string(yyextra, "\f"); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 114 "scanner.l"
+#line 115 "scanner.l"
 { scanctx_append_string(yyextra, "\\"); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 115 "scanner.l"
+#line 116 "scanner.l"
 { scanctx_append_string(yyextra, "\""); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 116 "scanner.l"
+#line 117 "scanner.l"
 {
                     char c[2] = { (char)(strtol(yytext + 2, NULL, 16) & 0xFF),
                                   0 };
@@ -1031,12 +1033,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 121 "scanner.l"
+#line 122 "scanner.l"
 { scanctx_append_string(yyextra, "\\"); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 122 "scanner.l"
+#line 123 "scanner.l"
 {
                     yylval->sval = scanctx_take_string(yyextra);
                     BEGIN INITIAL;
@@ -1045,28 +1047,28 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 128 "scanner.l"
+#line 129 "scanner.l"
 { BEGIN INCLUDE; }
 	YY_BREAK
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-#line 129 "scanner.l"
+#line 130 "scanner.l"
 { scanctx_append_string(yyextra, yytext); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 130 "scanner.l"
+#line 131 "scanner.l"
 { scanctx_append_string(yyextra, "\\"); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 131 "scanner.l"
+#line 132 "scanner.l"
 { scanctx_append_string(yyextra, "\""); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 132 "scanner.l"
+#line 133 "scanner.l"
 {
                     const char *error;
                     FILE *fp = scanctx_push_include(yyextra,
@@ -1092,67 +1094,77 @@ YY_RULE_SETUP
 case 21:
 /* rule 21 can match eol */
 YY_RULE_SETUP
-#line 156 "scanner.l"
+#line 157 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 157 "scanner.l"
+#line 158 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 159 "scanner.l"
+#line 160 "scanner.l"
 { return(TOK_EQUALS); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 160 "scanner.l"
+#line 161 "scanner.l"
 { return(TOK_COMMA); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 161 "scanner.l"
+#line 162 "scanner.l"
 { return(TOK_GROUP_START); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 162 "scanner.l"
+#line 163 "scanner.l"
 { return(TOK_GROUP_END); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 163 "scanner.l"
+#line 164 "scanner.l"
 { yylval->ival = 1; return(TOK_BOOLEAN); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 164 "scanner.l"
+#line 165 "scanner.l"
 { yylval->ival = 0; return(TOK_BOOLEAN); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 165 "scanner.l"
+#line 166 "scanner.l"
 { yylval->sval = yytext; return(TOK_NAME); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 166 "scanner.l"
+#line 167 "scanner.l"
 { yylval->fval = atof(yytext); return(TOK_FLOAT); }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 167 "scanner.l"
-{ yylval->ival = atoi(yytext); return(TOK_INTEGER); }
+#line 168 "scanner.l"
+{
+                    long long llval;
+                    llval = atoll(yytext);
+                    if (llval < INT_MIN || llval > INT_MAX) {
+	                  yylval->llval = llval;
+	                  return(TOK_INTEGER64);
+                    } else {
+	                  yylval->ival = llval;
+	                  return(TOK_INTEGER);
+                    }
+                  }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 168 "scanner.l"
+#line 179 "scanner.l"
 { yylval->llval = atoll(yytext); return(TOK_INTEGER64); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 169 "scanner.l"
+#line 180 "scanner.l"
 {
                     yylval->ival = strtoul(yytext, NULL, 16);
                     return(TOK_HEX);
@@ -1160,32 +1172,32 @@ YY_RULE_SETUP
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 173 "scanner.l"
+#line 184 "scanner.l"
 { yylval->llval = fromhex(yytext); return(TOK_HEX64); }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 174 "scanner.l"
+#line 185 "scanner.l"
 { return(TOK_ARRAY_START); }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 175 "scanner.l"
+#line 186 "scanner.l"
 { return(TOK_ARRAY_END); }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 176 "scanner.l"
+#line 187 "scanner.l"
 { return(TOK_LIST_START); }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 177 "scanner.l"
+#line 188 "scanner.l"
 { return(TOK_LIST_END); }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 178 "scanner.l"
+#line 189 "scanner.l"
 { return(TOK_SEMICOLON); }
 	YY_BREAK
 case 40:
@@ -1193,19 +1205,19 @@ case 40:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 179 "scanner.l"
+#line 190 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 180 "scanner.l"
+#line 191 "scanner.l"
 { return(TOK_GARBAGE); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 case YY_STATE_EOF(STRING):
 case YY_STATE_EOF(INCLUDE):
-#line 182 "scanner.l"
+#line 193 "scanner.l"
 {
                     YY_BUFFER_STATE buf = (YY_BUFFER_STATE)scanctx_pop_include(
                       yyextra);
@@ -1220,10 +1232,10 @@ case YY_STATE_EOF(INCLUDE):
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 193 "scanner.l"
+#line 204 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1227 "scanner.c"
+#line 1239 "scanner.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1353,7 +1365,6 @@ ECHO;
 			"fatal flex scanner internal error--no action found" );
 	} /* end of action switch */
 		} /* end of scanning one token */
-	} /* end of user's declarations */
 } /* end of libconfig_yylex */
 
 /* yy_get_next_buffer - try to read in a new buffer
@@ -1410,21 +1421,21 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 
 	else
 		{
-			yy_size_t num_to_read =
+			int num_to_read =
 			YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
 
 		while ( num_to_read <= 0 )
 			{ /* Not enough room in the buffer - grow it. */
 
 			/* just a shorter name for the current buffer */
-			YY_BUFFER_STATE b = YY_CURRENT_BUFFER_LVALUE;
+			YY_BUFFER_STATE b = YY_CURRENT_BUFFER;
 
 			int yy_c_buf_p_offset =
 				(int) (yyg->yy_c_buf_p - b->yy_ch_buf);
 
 			if ( b->yy_is_our_buffer )
 				{
-				yy_size_t new_size = b->yy_buf_size * 2;
+				int new_size = b->yy_buf_size * 2;
 
 				if ( new_size <= 0 )
 					b->yy_buf_size += b->yy_buf_size / 8;
@@ -1455,7 +1466,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 
 		/* Read in more data. */
 		YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
-			yyg->yy_n_chars, num_to_read );
+			yyg->yy_n_chars, (size_t) num_to_read );
 
 		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = yyg->yy_n_chars;
 		}
@@ -1553,7 +1564,6 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 	yy_is_jam = (yy_current_state == 102);
 
-	(void)yyg;
 	return yy_is_jam ? 0 : yy_current_state;
 }
 
@@ -1582,7 +1592,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 
 		else
 			{ /* need more input */
-			yy_size_t offset = yyg->yy_c_buf_p - yyg->yytext_ptr;
+			int offset = yyg->yy_c_buf_p - yyg->yytext_ptr;
 			++yyg->yy_c_buf_p;
 
 			switch ( yy_get_next_buffer( yyscanner ) )
@@ -1870,7 +1880,7 @@ void libconfig_yypop_buffer_state (yyscan_t yyscanner)
  */
 static void libconfig_yyensure_buffer_stack (yyscan_t yyscanner)
 {
-	yy_size_t num_to_alloc;
+	int num_to_alloc;
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
 	if (!yyg->yy_buffer_stack) {
@@ -1968,12 +1978,12 @@ YY_BUFFER_STATE libconfig_yy_scan_string (yyconst char * yystr , yyscan_t yyscan
  * @param yyscanner The scanner object.
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE libconfig_yy_scan_bytes  (yyconst char * yybytes, yy_size_t  _yybytes_len , yyscan_t yyscanner)
+YY_BUFFER_STATE libconfig_yy_scan_bytes  (yyconst char * yybytes, int  _yybytes_len , yyscan_t yyscanner)
 {
 	YY_BUFFER_STATE b;
 	char *buf;
 	yy_size_t n;
-	yy_size_t i;
+	int i;
     
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = _yybytes_len + 2;
@@ -2083,7 +2093,7 @@ FILE *libconfig_yyget_out  (yyscan_t yyscanner)
 /** Get the length of the current token.
  * @param yyscanner The scanner object.
  */
-yy_size_t libconfig_yyget_leng  (yyscan_t yyscanner)
+int libconfig_yyget_leng  (yyscan_t yyscanner)
 {
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
     return yyleng;
@@ -2119,7 +2129,7 @@ void libconfig_yyset_lineno (int  line_number , yyscan_t yyscanner)
 
         /* lineno is only valid if an input buffer exists. */
         if (! YY_CURRENT_BUFFER )
-           YY_FATAL_ERROR( "libconfig_yyset_lineno called with no buffer" );
+           yy_fatal_error( "libconfig_yyset_lineno called with no buffer" , yyscanner); 
     
     yylineno = line_number;
 }
@@ -2134,7 +2144,7 @@ void libconfig_yyset_column (int  column_no , yyscan_t yyscanner)
 
         /* column is only valid if an input buffer exists. */
         if (! YY_CURRENT_BUFFER )
-           YY_FATAL_ERROR( "libconfig_yyset_column called with no buffer" );
+           yy_fatal_error( "libconfig_yyset_column called with no buffer" , yyscanner); 
     
     yycolumn = column_no;
 }
@@ -2358,4 +2368,4 @@ void libconfig_yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 193 "scanner.l"
+#line 204 "scanner.l"
