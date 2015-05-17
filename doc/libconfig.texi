@@ -7,7 +7,7 @@
 @settitle libconfig
 
 @set edition 1.5
-@set update-date 21 Sep 2014
+@set update-date 16 May 2015
 @set subtitle-text A Library For Processing Structured Configuration Files
 @set author-text Mark A.@: Lindner
 
@@ -512,8 +512,11 @@ more hexadecimal digits (@samp{0} - @samp{9}, @samp{A} - @samp{F},
 @section 64-bit Integer Values
 
 Long long (64-bit) integers are represented identically to integers,
-except that an 'L' character is appended to indicate a 64-bit
-value. For example, @samp{0L} indicates a 64-bit integer value 0.
+except that an `L' character is appended to indicate a 64-bit
+value. For example, @samp{0L} indicates a 64-bit integer value 0.  As
+of version 1.5 of the library, the trailing `L' is optional; if the
+integer value exceeds the range of a 32-bit integer, it will
+automatically be interpreted as a 64-bit integer.
 
 @node Floating Point Values, Boolean Values, 64-bit Integer Values, Configuration Files
 @comment  node-name,  next,  previous,  up
@@ -2013,7 +2016,7 @@ Terminals are defined below as regular expressions:
 @item @code{hex} @tab
 @code{0[Xx][0-9A-Fa-f]+}
 @item @code{hex64} @tab
-@code{0[Xx][0-9A-Fa-f]+L(L)?}
+@code{0[Xx][0-9A-Fa-f]+(L(L)?)?}
 @item @code{float} @tab
 @code{([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)}
 @end multitable

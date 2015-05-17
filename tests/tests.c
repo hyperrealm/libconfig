@@ -207,14 +207,231 @@ TT_TEST(ParseInvalidStrings)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(BigInt1)
+{
+  char *buf;
+  config_t cfg;
+  int rc;
+  int ival;
+  long long llval;
+
+  /* int = 5 */
+  buf = "someint=5;";
+
+  config_init(&cfg);
+  rc = config_read_string(&cfg, buf);
+  TT_ASSERT_TRUE(rc);
+
+  rc = config_lookup_int(&cfg, "someint", &ival);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT_EQ(ival, 5);
+
+  rc = config_lookup_int64(&cfg, "someint", &llval);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT_EQ(llval, 5);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
+TT_TEST(BigInt2)
+{
+  char *buf;
+  config_t cfg;
+  int rc;
+  int ival;
+  long long llval;
+
+  /* int = 2^33 */
+  buf = "someint=8589934592;";
+
+  config_init(&cfg);
+  rc = config_read_string(&cfg, buf);
+  TT_ASSERT_TRUE(rc);
+
+  rc = config_lookup_int(&cfg, "someint", &ival);
+  TT_ASSERT_TRUE(rc);
+  /* This looks very wrong. config_lookup_int should fail
+   * instead. */
+  TT_ASSERT_INT_EQ(ival, 0);
+
+  rc = config_lookup_int64(&cfg, "someint", &llval);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT64_EQ(llval, 8589934592);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
+TT_TEST(BigInt3)
+{
+  char *buf;
+  config_t cfg;
+  int rc;
+  int ival;
+  long long llval;
+
+  /* int = -2^33 */
+  buf = "someint=-8589934592;";
+
+  config_init(&cfg);
+  rc = config_read_string(&cfg, buf);
+  TT_ASSERT_TRUE(rc);
+
+  rc = config_lookup_int(&cfg, "someint", &ival);
+  TT_ASSERT_TRUE(rc);
+  /* This looks very wrong. config_lookup_int should fail
+   * instead. */
+  TT_ASSERT_INT_EQ(ival, 0);
+
+  rc = config_lookup_int64(&cfg, "someint", &llval);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT64_EQ(llval, -8589934592);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
+TT_TEST(BigInt4)
+{
+  char *buf;
+  config_t cfg;
+  int rc;
+  int ival;
+  long long llval;
+
+  /* int = 2^31-1 */
+  buf = "someint=2147483647;";
+
+  config_init(&cfg);
+  rc = config_read_string(&cfg, buf);
+  TT_ASSERT_TRUE(rc);
+
+  rc = config_lookup_int(&cfg, "someint", &ival);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT_EQ(ival, 2147483647);
+
+  rc = config_lookup_int64(&cfg, "someint", &llval);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT64_EQ(llval, 2147483647);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
+TT_TEST(BigInt5)
+{
+  char *buf;
+  config_t cfg;
+  int rc;
+  int ival;
+  long long llval;
+
+  /* int = 2^31 */
+  buf = "someint=2147483648;";
+
+  config_init(&cfg);
+  rc = config_read_string(&cfg, buf);
+  TT_ASSERT_TRUE(rc);
+
+  rc = config_lookup_int(&cfg, "someint", &ival);
+  TT_ASSERT_TRUE(rc);
+  /* This looks very wrong. config_lookup_int should fail
+   * instead. */
+  TT_ASSERT_INT_EQ(ival, 0);
+
+  rc = config_lookup_int64(&cfg, "someint", &llval);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT64_EQ(llval, 2147483648);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
+TT_TEST(BigInt6)
+{
+  char *buf;
+  config_t cfg;
+  int rc;
+  int ival;
+  long long llval;
+
+  /* int = -2^31 */
+  buf = "someint=-2147483648;";
+
+  config_init(&cfg);
+  rc = config_read_string(&cfg, buf);
+  TT_ASSERT_TRUE(rc);
+
+  rc = config_lookup_int(&cfg, "someint", &ival);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT_EQ(ival, -2147483648);
+
+  rc = config_lookup_int64(&cfg, "someint", &llval);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT64_EQ(llval, -2147483648);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
+TT_TEST(BigInt7)
+{
+  char *buf;
+  config_t cfg;
+  int rc;
+  int ival;
+  long long llval;
+
+  /* int = -2^31-1 */
+  buf = "someint=-2147483649;";
+
+  config_init(&cfg);
+  rc = config_read_string(&cfg, buf);
+  TT_ASSERT_TRUE(rc);
+
+  rc = config_lookup_int(&cfg, "someint", &ival);
+  TT_ASSERT_TRUE(rc);
+  /* This looks very wrong. config_lookup_int should fail
+   * instead. */
+  TT_ASSERT_INT_EQ(ival, 0);
+
+  rc = config_lookup_int64(&cfg, "someint", &llval);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT64_EQ(llval, -2147483649);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
+  int failures;
+
   TT_SUITE_START(LibConfigTests);
   TT_SUITE_TEST(LibConfigTests, ParsingAndFormatting);
   TT_SUITE_TEST(LibConfigTests, ParseInvalidFiles);
   TT_SUITE_TEST(LibConfigTests, ParseInvalidStrings);
+  TT_SUITE_TEST(LibConfigTests, BigInt1);
+  TT_SUITE_TEST(LibConfigTests, BigInt2);
+  TT_SUITE_TEST(LibConfigTests, BigInt3);
+  TT_SUITE_TEST(LibConfigTests, BigInt4);
+  TT_SUITE_TEST(LibConfigTests, BigInt5);
+  TT_SUITE_TEST(LibConfigTests, BigInt6);
+  TT_SUITE_TEST(LibConfigTests, BigInt7);
   TT_SUITE_RUN(LibConfigTests);
+  failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);
 
-  return(0);
+  if (failures)
+    return EXIT_FAILURE;
+
+  return EXIT_SUCCESS;
 }
