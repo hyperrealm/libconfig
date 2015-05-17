@@ -637,13 +637,11 @@ static void __config_write_setting(const config_t *config,
                                    const config_setting_t *setting,
                                    FILE *stream, int depth)
 {
-  char group_assign_char = ((config->options
-                             & CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS) != 0)
-    ? ':' : '=';
+  char group_assign_char = __config_has_option(
+    config, CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS) ? ':' : '=';
 
-  char nongroup_assign_char
-    = ((config->options & CONFIG_OPTION_COLON_ASSIGNMENT_FOR_NON_GROUPS) != 0)
-    ? ':' : '=';
+  char nongroup_assign_char = __config_has_option(
+    config, CONFIG_OPTION_COLON_ASSIGNMENT_FOR_NON_GROUPS) ? ':' : '=';
 
   if(depth > 1)
     __config_indent(stream, depth, config->tab_width);
@@ -662,7 +660,7 @@ static void __config_write_setting(const config_t *config,
 
   if(depth > 0)
   {
-    if((config->options & CONFIG_OPTION_SEMICOLON_SEPARATORS) != 0)
+    if(__config_has_option(config, CONFIG_OPTION_SEMICOLON_SEPARATORS))
       fputc(';', stream);
 
     fputc('\n', stream);
@@ -703,7 +701,9 @@ int config_read_file(config_t *config, const char *filename)
 
   if(!ok)
   {
-    fclose(stream);
+    if(stream != NULL)
+      fclose(stream);
+
     config->error_text = __io_error;
     config->error_type = CONFIG_ERR_FILE_IO;
     return(CONFIG_FALSE);
@@ -719,16 +719,16 @@ int config_read_file(config_t *config, const char *filename)
 
 int config_write_file(config_t *config, const char *filename)
 {
-  FILE *f = fopen(filename, "wt");
-  if(! f)
+  FILE *stream = fopen(filename, "wt");
+  if(stream == NULL)
   {
     config->error_text = __io_error;
     config->error_type = CONFIG_ERR_FILE_IO;
     return(CONFIG_FALSE);
   }
 
-  config_write(config, f);
-  fclose(f);
+  config_write(config, stream);
+  fclose(stream);
   config->error_type = CONFIG_ERR_NONE;
   return(CONFIG_TRUE);
 }
@@ -780,7 +780,7 @@ void config_set_auto_convert(config_t *config, int flag)
 
 int config_get_auto_convert(const config_t *config)
 {
-  return((config->options & CONFIG_OPTION_AUTOCONVERT) != 0);
+  return(__config_has_option(config, CONFIG_OPTION_AUTOCONVERT));
 }
 
 /* ------------------------------------------------------------------------- */
@@ -848,7 +848,7 @@ static int __config_setting_get_int(const config_setting_t *setting,
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_FLOAT:
-      if((setting->config->options & CONFIG_OPTION_AUTOCONVERT) != 0)
+      if(__config_has_option(setting->config, CONFIG_OPTION_AUTOCONVERT))
       {
         *value = (int)(setting->value.fval);
         return(CONFIG_TRUE);
@@ -886,7 +886,7 @@ static int __config_setting_get_int64(const config_setting_t *setting,
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_FLOAT:
-      if((setting->config->options & CONFIG_OPTION_AUTOCONVERT) != 0)
+      if(__config_has_option(setting->config, CONFIG_OPTION_AUTOCONVERT))
       {
         *value = (long long)(setting->value.fval);
         return(CONFIG_TRUE);
@@ -1097,7 +1097,7 @@ int config_setting_set_float(config_setting_t *setting, double value)
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_INT:
-      if((setting->config->options & CONFIG_OPTION_AUTOCONVERT) != 0)
+      if(__config_has_option(setting->config, CONFIG_OPTION_AUTOCONVERT))
       {
         setting->value.ival = (int)value;
         return(CONFIG_TRUE);
@@ -1106,7 +1106,7 @@ int config_setting_set_float(config_setting_t *setting, double value)
         return(CONFIG_FALSE);
 
     case CONFIG_TYPE_INT64:
-      if((setting->config->options & CONFIG_OPTION_AUTOCONVERT) != 0)
+      if(__config_has_option(setting->config, CONFIG_OPTION_AUTOCONVERT))
       {
         setting->value.llval = (long long)value;
         return(CONFIG_TRUE);
