@@ -1,4 +1,9 @@
+
 	----- version 1.5 ------
+
+2015-05-16  Mark Lindner  <markl@neuromancer>
+
+	* lib/libconfig.c - Don't fclose() a null pointer.
 
 2014-09-19  Mark Lindner  <markl@neuromancer>
 

@@ -72,3 +72,7 @@ Libtool 2.4.2
 				 -*-
 
 Libconfig may be found on github at https://github.com/hyperrealm/libconfig
+
+
+
+For some reason, we need to symlink /pkg/android-toolchain-19/sysroot/pkg -> /pkg
