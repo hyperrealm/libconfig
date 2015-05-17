@@ -1,5 +1,7 @@
 
-noinst_PROGRAMS = libconfig_tests
+check_PROGRAMS = libconfig_tests
+noinst_PROGRAMS=$(check_PROGRAMS)
+TESTS = $(check_PROGRAMS)
 
 libconfig_tests_SOURCES = tests.c
 
