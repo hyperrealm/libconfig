@@ -52,6 +52,10 @@
 #define _new(T) (T *)calloc(1, sizeof(T)) /* zeroed */
 #define _delete(P) free((void *)(P))
 
+#ifndef S_ISDIR
+#define S_ISDIR(mode)  (((mode) & S_IFMT) == S_IFDIR)
+#endif
+
 /* ------------------------------------------------------------------------- */
 
 #ifndef LIBCONFIG_STATIC
