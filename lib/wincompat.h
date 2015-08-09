@@ -34,12 +34,17 @@
 
 #define fileno _fileno
 #define fstat _fstat
+#define stat _stat // struct stat for fstat()
 #define snprintf  _snprintf
 
-#ifndef __MINGW32__
+#if !defined(__MINGW32__) && _MSC_VER < 1800
 #define atoll     _atoi64
 #define strtoull  _strtoui64
-#endif /* __MINGW32__ */
+#endif
+
+#if !defined(S_ISDIR) && defined(S_IFMT) && defined(S_IFDIR)
+#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+#endif
 
 #endif
 
