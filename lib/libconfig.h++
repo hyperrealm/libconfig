@@ -221,6 +221,10 @@ class LIBCONFIGXX_API Setting
   { return(lookup(path.c_str())); }
 
   Setting & operator[](const char *name) const;
+
+  inline Setting & operator[](const std::string &name) const
+  { return(operator[](name.c_str())); }
+
   Setting & operator[](int index) const;
 
   bool lookupValue(const char *name, bool &value) const;
