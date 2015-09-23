@@ -1,3 +1,7 @@
+2015-08-14  Mark Lindner  <markl@neuromancer>
+
+	* lib/wincompat.h - Fixed Windows portability issue
+	* lib/libconfig.h++ - added missing operator[](std::string&).
 
 	----- version 1.5 ------
 

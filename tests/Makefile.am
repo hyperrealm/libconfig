@@ -5,7 +5,7 @@ TESTS = $(check_PROGRAMS)
 
 libconfig_tests_SOURCES = tests.c
 
-libconfig_tests_CPPFLAGS = -I$(top_srcdir)/tinytest -I../lib
+libconfig_tests_CPPFLAGS = -I$(top_srcdir)/tinytest -I$(top_builddir)/lib
 
 libconfig_tests_LDADD = -L$(top_builddir)/tinytest -ltinytest \
 	-L$(top_builddir)/lib/.libs -lconfig
