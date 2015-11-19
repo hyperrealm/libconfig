@@ -74,6 +74,7 @@ static void __config_list_destroy(config_list_t *list);
 static void __config_write_setting(const config_t *config,
                                    const config_setting_t *setting,
                                    FILE *stream, int depth);
+static void  config_setting_get_printf_format(const config_setting_t *setting,char *fmt);
 
 /* ------------------------------------------------------------------------- */
 
@@ -172,10 +173,10 @@ static void __config_indent(FILE *stream, int depth, unsigned short w)
 
 static void __config_write_value(const config_t *config,
                                  const config_value_t *value, int type,
-                                 int format, int depth, FILE *stream)
+                                 const char* format, int depth, FILE *stream)
 {
-  char fbuf[64];
-
+  char fbuf[64],printfmt[CONFIG_FORMAT_PRINT_LEN];
+	
   switch(type)
   {
     /* boolean */
@@ -185,66 +186,18 @@ static void __config_write_value(const config_t *config,
 
     /* int */
     case CONFIG_TYPE_INT:
-      switch(format)
-      {
-        case CONFIG_FORMAT_HEX:
-          fprintf(stream, "0x%X", value->ival);
-          break;
-
-        case CONFIG_FORMAT_DEFAULT:
-        default:
-          fprintf(stream, "%d", value->ival);
-          break;
-      }
-      break;
-
+          fprintf(stream, format, value->ival);
+      	  break;
     /* 64-bit int */
     case CONFIG_TYPE_INT64:
-      switch(format)
-      {
-        case CONFIG_FORMAT_HEX:
-          fprintf(stream, "0x" INT64_HEX_FMT "L", value->llval);
-          break;
-
-        case CONFIG_FORMAT_DEFAULT:
-        default:
-          fprintf(stream, INT64_FMT "L", value->llval);
-          break;
-      }
-      break;
-
+          fprintf(stream, format, value->llval);
+      	  break;
     /* float */
     case CONFIG_TYPE_FLOAT:
     {
-      char *q;
-
-      snprintf(fbuf, sizeof(fbuf) - 3, "%.*g", FLOAT_PRECISION, value->fval);
-
-      /* check for exponent */
-      q = strchr(fbuf, 'e');
-      if(! q)
-      {
-        /* no exponent */
-        if(! strchr(fbuf, '.')) /* no decimal point */
-          strcat(fbuf, ".0");
-        else
-        {
-          /* has decimal point */
-          char *p;
-
-          for(p = fbuf + strlen(fbuf) - 1; p > fbuf; --p)
-          {
-            if(*p != '0')
-            {
-              *(++p) = '\0';
-              break;
-            }
-          }
-        }
-      }
-
-      fputs(fbuf, stream);
-      break;
+      	  snprintf(fbuf, sizeof(fbuf) - 1, format,  value->fval);
+      	  fputs(fbuf, stream);
+      	break;
     }
 
     /* string */
@@ -309,8 +262,9 @@ static void __config_write_value(const config_t *config,
 
         for(s = list->elements; len--; s++)
         {
+	  config_setting_get_printf_format(*s,printfmt);
           __config_write_value(config, &((*s)->value), (*s)->type,
-                               config_setting_get_format(*s), depth + 1,
+                               printfmt, depth + 1,
                                stream);
 
           if(len)
@@ -338,8 +292,9 @@ static void __config_write_value(const config_t *config,
 
         for(s = list->elements; len--; s++)
         {
+	  config_setting_get_printf_format(*s,printfmt);
           __config_write_value(config, &((*s)->value), (*s)->type,
-                               config_setting_get_format(*s), depth + 1,
+                               printfmt, depth + 1,
                                stream);
 
           if(len)
@@ -637,6 +592,7 @@ static void __config_write_setting(const config_t *config,
                                    const config_setting_t *setting,
                                    FILE *stream, int depth)
 {
+  char printfmt[CONFIG_FORMAT_PRINT_LEN];
   char group_assign_char = __config_has_option(
     config, CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS) ? ':' : '=';
 
@@ -654,9 +610,11 @@ static void __config_write_setting(const config_t *config,
                              ? group_assign_char
                              : nongroup_assign_char));
   }
-
+ 
+ 
+   config_setting_get_printf_format(setting,printfmt);
   __config_write_value(config, &(setting->value), setting->type,
-                       config_setting_get_format(setting), depth, stream);
+                       printfmt, depth, stream);
 
   if(depth > 0)
   {
@@ -817,6 +775,8 @@ static config_setting_t *config_setting_create(config_setting_t *parent,
   setting->config = parent->config;
   setting->hook = NULL;
   setting->line = 0;
+  config_setting_set_format(setting,setting->format);
+  
 
   list = parent->value.list;
 
@@ -1163,16 +1123,63 @@ int config_setting_set_string(config_setting_t *setting, const char *value)
 }
 
 /* ------------------------------------------------------------------------- */
+static void  config_setting_get_printf_format(const config_setting_t *setting,char *fmt)
+{
+  int format=setting->format;
+   memset(fmt,0,CONFIG_FORMAT_PRINT_LEN);
+ if(format==CONFIG_FORMAT_PRINTF)
+ {
+	strcpy(fmt,setting->printf_format);
+	return;
+
+ }
+  if(setting->type == CONFIG_TYPE_INT)
+  {
+	if(format==CONFIG_FORMAT_DEFAULT)
+	{
+		strcpy(fmt,"%d");
+	}
+	else if(format==CONFIG_FORMAT_HEX)
+	{
+		strcpy(fmt,"0x%X");
+ 	}
+  }
+  else if(setting->type == CONFIG_TYPE_INT64)
+  {
+	if(format==CONFIG_FORMAT_DEFAULT)
+	{
+		sprintf(fmt,"%sL",INT64_FMT);
+	}
+	else if(format==CONFIG_FORMAT_HEX)
+	{
+		sprintf(fmt,"0x%sL",INT64_HEX_FMT);
+ 	}
+  }
+  else if(setting->type == CONFIG_TYPE_FLOAT)
+  {
+	if(format==CONFIG_FORMAT_DEFAULT)
+	{
+		strcpy(fmt,"%.2g");
+	}
+  }
+}
+/* ------------------------------------------------------------------------- */
 
 int config_setting_set_format(config_setting_t *setting, short format)
 {
   if(((setting->type != CONFIG_TYPE_INT)
       && (setting->type != CONFIG_TYPE_INT64))
      || ((format != CONFIG_FORMAT_DEFAULT) && (format != CONFIG_FORMAT_HEX)))
-    return(CONFIG_FALSE);
+   return(CONFIG_FALSE);
 
   setting->format = format;
 
+  return(CONFIG_TRUE);
+}
+int config_setting_set_printf_format(config_setting_t *setting,const char* format)
+{
+  strncpy(setting->printf_format,format,sizeof(setting->printf_format)-1);
+  setting->format=CONFIG_FORMAT_PRINTF;
   return(CONFIG_TRUE);
 }
 

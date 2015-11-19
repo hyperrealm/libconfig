@@ -57,6 +57,7 @@ extern "C" {
 
 #define CONFIG_FORMAT_DEFAULT  0
 #define CONFIG_FORMAT_HEX      1
+#define CONFIG_FORMAT_PRINTF   2
 
 #define CONFIG_OPTION_AUTOCONVERT                     0x01
 #define CONFIG_OPTION_SEMICOLON_SEPARATORS            0x02
@@ -67,6 +68,7 @@ extern "C" {
 #define CONFIG_TRUE  (1)
 #define CONFIG_FALSE (0)
 
+#define CONFIG_FORMAT_PRINT_LEN 32
 typedef union config_value_t
 {
   int ival;
@@ -81,6 +83,7 @@ typedef struct config_setting_t
   char *name;
   short type;
   short format;
+  char printf_format[CONFIG_FORMAT_PRINT_LEN];
   config_value_t value;
   struct config_setting_t *parent;
   struct config_t *config;
@@ -180,6 +183,8 @@ extern LIBCONFIG_API int config_setting_set_string(config_setting_t *setting,
 
 extern LIBCONFIG_API int config_setting_set_format(config_setting_t *setting,
                                                    short format);
+extern LIBCONFIG_API int config_setting_set_printf_format(config_setting_t *setting,
+                                                   const  char *format);
 extern LIBCONFIG_API short config_setting_get_format(
   const config_setting_t *setting);
 
