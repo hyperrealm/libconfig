@@ -87,6 +87,14 @@ static unsigned long long fromhex(const char *s)
 static int filter_dotfiles(const struct dirent *de)
 {
   const char *fname = de->d_name;
+
+#ifdef _DIRENT_HAVE_D_TYPE
+  /* filter out non-files and non-symlinks */
+  if( DT_REG!=de->d_type && DT_LNK!=de->d_type
+    && DT_UNKNOWN!=de->d_type )
+            return 0;
+#endif
+
   return ( NULL != fname 
     && '\0' != fname[0] /* can't really happen */
     && '.' != fname[0] ) ? 1 : 0 ;

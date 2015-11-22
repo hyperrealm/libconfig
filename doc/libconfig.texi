@@ -36,7 +36,7 @@
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2005-2014  Mark A Lindner
+Copyright @copyright{} 2005-2015  Mark A Lindner
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -639,6 +639,48 @@ info: @{
 @};
 @end smallexample
 @end cartouche
+
+The resulting configuration will be equivalent to one in which the
+contents of the ``quote.cfg`` file appeared at the point where the
+@@include directive is placed.
+
+@cindex include_dir directive
+Additionally, a directory containing configuration snippets can be 
+processed using an @i{include_dir directive}. This directive has the 
+effect of inlining the contents of the files contained in the named
+directory at the point of inclusion.
+The files are ordered lexicographically and ``hidden`` files (those
+having a name beginning with a dot) are excluded.
+
+An include_dir directive must appear on its own line in the input:
+
+@b{@@include_dir "}@i{dirname}@b{"}
+
+The same quoting rules as for @i{@@include} apply.
+
+
+@cartouche
+@smallexample
+# directory: myapp/conf.d
+00prolog.cfg
+01header.cfg
+02body.cfg
+03footer.cfg
+99epilog.cfg
+@end smallexample
+@end cartouche   
+
+@cartouche
+@smallexample
+# file: test.cfg
+docinfo: @{
+  name = "Some complex config";
+  @@include_dir "myapp/conf.d"
+@};
+@end smallexample
+@end cartouche   
+
+Please keep in mind that the files will be included in lexicographical order.
 
 Include files may be nested to a maximum of 10 levels; exceeding this
 limit results in a parse error.
