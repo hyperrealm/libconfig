@@ -38,18 +38,33 @@ struct scan_context
   const char *files[MAX_INCLUDE_DEPTH];
   void *buffers[MAX_INCLUDE_DEPTH];
   FILE *streams[MAX_INCLUDE_DEPTH];
-  int depth;
   strbuf_t string;
   const char **filenames;
   unsigned int num_filenames;
+  int depth;
+  void** dentries;		/* dirent** */
+  const char* basedir;	/* basedir for @include_dir */
+  unsigned de_max, de_cur;	/* counters into dirent* array */
 };
+
+struct dirent;	/* forward decl */
 
 extern void scanctx_init(struct scan_context *ctx, const char *top_filename);
 extern const char **scanctx_cleanup(struct scan_context *ctx,
                                     unsigned int *num_filenames);
 
+extern const char *scanctx_getpath(struct scan_context *ctx);
+extern const char *scanctx_filename(struct scan_context *ctx, const char *dirname, const char *filename);
+
+extern const char* scanctx_dirnext(struct scan_context* ctx);
+extern int   scanctx_dirscan(struct scan_context* ctx, const char* dirname,
+				int (*filter)(const struct dirent *),
+				int (*compar)(const struct dirent **, const struct dirent **));
+extern int   scanctx_dirend(struct scan_context* ctx);
+extern int   scanctx_inloop(const struct scan_context* ctx);
+
 extern FILE *scanctx_push_include(struct scan_context *ctx, void *prev_buffer,
-                                  const char **error);
+                                  const char *file, const char **error);
 extern void *scanctx_pop_include(struct scan_context *ctx);
 
 #define scanctx_append_string(C, S)             \

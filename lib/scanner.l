@@ -42,6 +42,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <limits.h>
+#include <dirent.h>
 #include "parsectx.h"
 #include "scanctx.h"
 #include "grammar.h"
@@ -83,6 +84,14 @@ static unsigned long long fromhex(const char *s)
 #endif /* __MINGW32__ */
 }
 
+static int filter_dotfiles(const struct dirent *de)
+{
+  const char *fname = de->d_name;
+  return ( NULL != fname 
+    && '\0' != fname[0] /* can't really happen */
+    && '.' != fname[0] ) ? 1 : 0 ;
+}
+
 %}
 
 true              [Tt][Rr][Uu][Ee]
@@ -95,9 +104,10 @@ hex64             0[Xx][0-9A-Fa-f]+L(L)?
 hexchar           \\[Xx][0-9A-Fa-f]{2}
 float             ([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]?([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)
 comment           (#|\/\/).*$
-include_open      ^[ \t]*@include[ \t]+\"
+include_file_open ^[ \t]*@include[ \t]+\"
+include_dir_open  ^[ \t]*@include_dir[ \t]+\"
 
-%x COMMENT STRING INCLUDE
+%x COMMENT STRING INCLUDE_F INCLUDE_D
 
 %%
 
@@ -126,33 +136,83 @@ include_open      ^[ \t]*@include[ \t]+\"
                     return(TOK_STRING);
                   }
 
-{include_open}    { BEGIN INCLUDE; }
-<INCLUDE>[^\"\\]+ { scanctx_append_string(yyextra, yytext); }
-<INCLUDE>\\\\     { scanctx_append_string(yyextra, "\\"); }
-<INCLUDE>\\\"     { scanctx_append_string(yyextra, "\""); }
-<INCLUDE>\"       {
-                    const char *error;
-                    FILE *fp = scanctx_push_include(yyextra,
-                                                    (void *)YY_CURRENT_BUFFER,
-                                                    &error);
-                    if(fp)
-                    {
-                      yyin = fp;
-                      yy_switch_to_buffer(
-                        yy_create_buffer(yyin, YY_BUF_SIZE, yyscanner),
-                        yyscanner);
-                    }
-                    else
-                    {
-                      yyextra->config->error_text = error;
-                      yyextra->config->error_file = scanctx_current_filename(
-                        yyextra);
-                      yyextra->config->error_line = libconfig_yyget_lineno(
-                        yyscanner);
-                      return TOK_ERROR;
-                    }
-                    BEGIN INITIAL;
-                  }
+{include_file_open}	{ BEGIN INCLUDE_F; }
+<INCLUDE_F>[^\"\\]+	{ scanctx_append_string(yyextra, yytext); }
+<INCLUDE_F>\\\\		{ scanctx_append_string(yyextra, "\\"); }
+<INCLUDE_F>\\\"		{ scanctx_append_string(yyextra, "\""); }
+<INCLUDE_F>\"		{
+        const char *error;
+        FILE *fp = scanctx_push_include(yyextra,
+			(void *)YY_CURRENT_BUFFER,
+			scanctx_getpath(yyextra),
+			&error);
+		if(fp)
+		{
+			yyin = fp;
+			yy_switch_to_buffer(
+				yy_create_buffer(yyin, YY_BUF_SIZE, yyscanner), 
+				yyscanner
+			);
+		}
+		else
+		{
+			yyextra->config->error_text = error;
+			yyextra->config->error_file = scanctx_current_filename(
+				yyextra);
+			yyextra->config->error_line = libconfig_yyget_lineno(
+				yyscanner);
+			return TOK_ERROR;
+		}
+		BEGIN INITIAL;
+	}
+
+{include_dir_open}	{ BEGIN INCLUDE_D; }
+<INCLUDE_D>[^\"\\]+	{ scanctx_append_string(yyextra, yytext); }
+<INCLUDE_D>\\\\		{ scanctx_append_string(yyextra, "\\"); }
+<INCLUDE_D>\\\"		{ scanctx_append_string(yyextra, "\""); }
+<INCLUDE_D>\"		{
+		const char *error;
+		const char* basedir;
+		FILE *fp = NULL;
+
+		basedir = scanctx_getpath(yyextra);
+		if( scanctx_dirscan(yyextra, basedir, filter_dotfiles, alphasort) < 0 )
+		{
+			if(basedir)
+				free((void*)basedir);
+			return TOK_ERROR;
+		}
+
+		if( scanctx_inloop(yyextra) )
+		{
+			fp = scanctx_push_include(yyextra,
+				(void *)YY_CURRENT_BUFFER,
+				scanctx_filename(yyextra, NULL, scanctx_dirnext(yyextra)),
+				&error);
+
+			if(fp)
+			{
+				yyin = fp;
+				yy_switch_to_buffer(
+					yy_create_buffer(yyin, YY_BUF_SIZE, yyscanner), 
+					yyscanner
+				);
+			}
+			else
+			{
+				yyextra->config->error_text = error;
+				yyextra->config->error_file = scanctx_current_filename(
+					yyextra);
+				yyextra->config->error_line = libconfig_yyget_lineno(
+					yyscanner);
+			}
+		}
+		else
+			scanctx_dirend(yyextra);	/* avoid leaks */
+
+		BEGIN INITIAL;
+	}
+
 
 \n|\r|\f          { /* ignore */ }
 [ \t]+            { /* ignore */ }
@@ -194,13 +254,39 @@ include_open      ^[ \t]*@include[ \t]+\"
 .                 { return(TOK_GARBAGE); }
 
 <<EOF>>           {
-                    YY_BUFFER_STATE buf = (YY_BUFFER_STATE)scanctx_pop_include(
-                      yyextra);
-                    if(buf)
-                    {
-                      yy_delete_buffer(YY_CURRENT_BUFFER, yyscanner);
-                      yy_switch_to_buffer(buf, yyscanner);
-                    }
-                    else
-                      yyterminate();
-                  }
+        const char* error;
+	FILE* fp;
+		YY_BUFFER_STATE buf = (YY_BUFFER_STATE)scanctx_pop_include(yyextra);
+		if(buf)
+		{
+			yy_delete_buffer(YY_CURRENT_BUFFER, yyscanner);
+			yy_switch_to_buffer(buf, yyscanner);
+		}
+		else	/* if no more buffers, we are done */
+			yyterminate();
+
+		if( scanctx_inloop(yyextra) )
+		{
+			/* gotta keep looping.... */
+			fp = scanctx_push_include(yyextra,
+					(void *)YY_CURRENT_BUFFER,
+					scanctx_filename(yyextra, NULL, scanctx_dirnext(yyextra)),
+					&error);
+			if(fp)
+			{
+				yyin = fp;
+				yy_switch_to_buffer(
+					yy_create_buffer(yyin, YY_BUF_SIZE, yyscanner), 
+					yyscanner
+				);
+			}
+			else
+			{
+				yyextra->config->error_text = error;
+				yyextra->config->error_file = scanctx_current_filename(yyextra);
+				yyextra->config->error_line = libconfig_yyget_lineno(yyscanner);
+			}
+		}
+		else	/* not on loop, or just finished */
+			scanctx_dirend(yyextra);
+	}
