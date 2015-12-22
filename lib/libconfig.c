@@ -1598,6 +1598,8 @@ int config_setting_remove(config_setting_t *parent, const char *name)
 {
   unsigned int idx;
   config_setting_t *setting;
+  const char *settingName;
+  const char *lastFound;
 
   if(! parent)
     return(CONFIG_FALSE);
@@ -1605,10 +1607,29 @@ int config_setting_remove(config_setting_t *parent, const char *name)
   if(parent->type != CONFIG_TYPE_GROUP)
     return(CONFIG_FALSE);
 
-  if(! (setting = __config_list_search(parent->value.list, name, &idx)))
+  setting = config_setting_lookup(parent, name);
+  if(!setting)
     return(CONFIG_FALSE);
 
-  __config_list_remove(parent->value.list, idx);
+  settingName = name;
+  do
+  {
+    lastFound = settingName;
+    while(settingName && !strchr(PATH_TOKENS, *settingName))
+      ++settingName;
+
+    if(*settingName == '\0')
+    {
+      settingName = lastFound;
+      break;
+    }
+
+  }while(*++settingName);
+
+  if(!(setting = __config_list_search(setting->parent->value.list, settingName, &idx)))
+    return(CONFIG_FALSE);
+
+  __config_list_remove(setting->parent->value.list, idx);
   __config_setting_destroy(setting);
 
   return(CONFIG_TRUE);
