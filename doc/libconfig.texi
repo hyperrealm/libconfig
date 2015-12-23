@@ -1057,8 +1057,7 @@ not a group, list, or array, or if @var{index} is out of range, it returns
 
 @deftypefun {config_setting_t *} config_root_setting (@w{const config_t * @var{config}})
 
-This function returns the root setting for the configuration
-@var{config}. The root setting is a group.
+This function, which is implemented as a macro, returns the root setting for the configuration @var{config}. The root setting is a group.
 
 @end deftypefun
 
