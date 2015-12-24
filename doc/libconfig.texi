@@ -599,6 +599,7 @@ not treated as part of the configuration. Therefore if the
 configuration is written back out to a stream, any comments that were
 present in the original configuration will be lost.
 
+
 @node Include Directives, , Comments, Configuration Files
 @comment  node-name,  next,  previous,  up
 @section Include Directives
@@ -645,19 +646,19 @@ contents of the ``quote.cfg`` file appeared at the point where the
 @@include directive is placed.
 
 @cindex include_dir directive
-Additionally, a directory containing configuration snippets can be 
-processed using an @i{include_dir directive}. This directive has the 
+Additionally, a directory containing configuration snippets can be
+processed using an @b{include_dir} directive. This directive has the
 effect of inlining the contents of the files contained in the named
 directory at the point of inclusion.
-The files are ordered lexicographically and ``hidden`` files (those
-having a name beginning with a dot) are excluded.
+The configuration files are ordered lexicographically before processing
+and ``hidden`` files (those having a name beginning with a dot) are
+skipped.
 
 An include_dir directive must appear on its own line in the input:
 
 @b{@@include_dir "}@i{dirname}@b{"}
 
 The same quoting rules as for @i{@@include} apply.
-
 
 @cartouche
 @smallexample
@@ -668,7 +669,7 @@ The same quoting rules as for @i{@@include} apply.
 03footer.cfg
 99epilog.cfg
 @end smallexample
-@end cartouche   
+@end cartouche
 
 @cartouche
 @smallexample
@@ -678,12 +679,22 @@ docinfo: @{
   @@include_dir "myapp/conf.d"
 @};
 @end smallexample
-@end cartouche   
+@end cartouche
 
-Please keep in mind that the files will be included in lexicographical order.
+Please keep in mind that the included files will be read and processed in
+lexicographical order, as it has become customary.
 
 Include files may be nested to a maximum of 10 levels; exceeding this
 limit results in a parse error.
+
+When the path argument to an @b{@@include} or @b{@@include_dir} directive
+begins with a PATH_SEPARATOR ('/' or '\'), it is considered to be absolute.
+Alternatively, when an @i{include_basedir} has been set by means of a
+@b{config_set_include_dir} call, the directory and/or filename will be
+taken as relative to the specified include_basedir.
+Otherwise, the name is interpreted as relative to the program's CWD
+(current working directory).
+
 
 Like comments, include directives are not part of the configuration
 file syntax. They are processed before the configuration itself is

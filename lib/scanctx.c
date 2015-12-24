@@ -127,7 +127,7 @@ const char *scanctx_getpath(struct scan_context *ctx)
   const char *full_path = NULL;
 
 	name = scanctx_take_string(ctx);
-	if(ctx->config->include_dir)
+	if(FILE_SEPARATOR[0]!=name[0] && ctx->config->include_dir)
 		full_path = scanctx_filename(ctx, ctx->config->include_dir, name);
 	else
 		full_path = strdup(name);
