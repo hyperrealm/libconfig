@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2014  Mark A Lindner
+   Copyright (C) 2005-2015  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -93,7 +93,7 @@ const char **scanctx_cleanup(struct scan_context *ctx,
 /* ------------------------------------------------------------------------- */
 
 FILE *scanctx_push_include(struct scan_context *ctx, void *buffer,
-				const char *file, const char **error)
+                            const char *file, const char **error)
 {
   FILE *fp = NULL;
 
@@ -109,7 +109,7 @@ FILE *scanctx_push_include(struct scan_context *ctx, void *buffer,
     ctx->files[ctx->depth] = __scanctx_add_filename(ctx, file);
     ctx->buffers[ctx->depth] = buffer;
     ++(ctx->depth);
-	*error = NULL;
+      *error = NULL;
   }
   else
   {
@@ -126,13 +126,16 @@ const char *scanctx_getpath(struct scan_context *ctx)
   const char *name;
   const char *full_path = NULL;
 
-	name = scanctx_take_string(ctx);
-	if(FILE_SEPARATOR[0]!=name[0] && ctx->config->include_dir)
-		full_path = scanctx_filename(ctx, ctx->config->include_dir, name);
-	else
-		full_path = strdup(name);
-	free((void*)name);
-	return full_path;
+  name = scanctx_take_string(ctx);
+  if((name[0] != FILE_SEPARATOR[0]) && ctx->config->include_dir)
+  {
+    full_path = scanctx_filename(ctx, ctx->config->include_dir, name);
+    free((void*)name);
+  }
+  else
+    full_path = name;
+
+  return full_path;
 }
 
 
@@ -140,14 +143,14 @@ const char *scanctx_getpath(struct scan_context *ctx)
 
 const char *scanctx_filename(struct scan_context *ctx,const char* dirname, const char* filename)
 {
-  const char* basedir = (NULL!=dirname)? dirname : ctx->basedir;
+  const char *basedir = dirname ? dirname : ctx->basedir;
   char *full_file = (char *)malloc(strlen(basedir) + strlen(filename) + 2);
 
-	strcpy(full_file, basedir);
-	strcat(full_file, FILE_SEPARATOR);
-	strcat(full_file, filename);
+  strcpy(full_file, basedir);
+  strcat(full_file, FILE_SEPARATOR);
+  strcat(full_file, filename);
 
-	return full_file;
+  return full_file;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -161,65 +164,65 @@ void *scanctx_pop_include(struct scan_context *ctx)
 
   --(ctx->depth);
   buffer = ctx->buffers[ctx->depth];
-  if(NULL!=ctx->streams[ctx->depth])
-	  fclose(ctx->streams[ctx->depth]);
+  if(ctx->streams[ctx->depth])
+    fclose(ctx->streams[ctx->depth]);
 
   return(buffer);
 }
 
 /* ------------------------------------------------------------------------- */
 
-extern const char* scanctx_dirnext(struct scan_context* ctx)
+extern const char *scanctx_dirnext(struct scan_context* ctx)
 {
-	struct dirent** dentries= (struct dirent**)ctx->dentries;
-	if( NULL == ctx->dentries || ctx->de_cur==ctx->de_max )	/* shouldn't happen.... */
-		return NULL;
+  struct dirent** dentries = (struct dirent**)ctx->dentries;
+  if(!ctx->dentries || (ctx->de_cur == ctx->de_max))	/* shouldn't happen.... */
+    return NULL;
 
-	return dentries[ ctx->de_cur++ ]->d_name;
+  return dentries[ctx->de_cur++]->d_name;
 }
 
 int scanctx_dirscan(struct scan_context* ctx, const char* dirname,
-				int (*filter)(const struct dirent *),
-				int (*compar)(const struct dirent **, const struct dirent **))
+                    int (*filter)(const struct dirent *),
+                    int (*compar)(const struct dirent **, const struct dirent **))
 {
-	int n;
+  int n;
 
-	if( NULL == dirname )
-		return -1;
+  if(!dirname)
+    return -1;
 
-	ctx->dentries=NULL;
-	if( (n=scandir(dirname,(struct dirent***)&ctx->dentries,filter,compar)) < 0)
-		return n;
+  ctx->dentries = NULL;
+  if((n = scandir(dirname, (struct dirent***)&ctx->dentries, filter, compar)) < 0)
+    return n;
 
-	ctx->basedir=dirname;
-	ctx->de_max=n;
-	ctx->de_cur=0;
+  ctx->basedir = dirname;
+  ctx->de_max = n;
+  ctx->de_cur = 0;
 
-	return n;
+  return n;
 }
 
-int scanctx_dirend(struct scan_context* ctx)
+void scanctx_dirend(struct scan_context* ctx)
 {
- struct dirent** dentries= (struct dirent**)ctx->dentries;
- unsigned i;
+  struct dirent **dentries = (struct dirent**)ctx->dentries;
+  unsigned i;
 
-	for(i=0; i<ctx->de_max; i++)
-		free(dentries[i]);
-	free(ctx->dentries);
-	ctx->dentries=NULL;
+  for(i = 0; i < ctx->de_max; i++)
+    free(dentries[i]);
+  free(ctx->dentries);
+  ctx->dentries = NULL;
 
-	if(ctx->basedir)
-		free((void*)ctx->basedir);
-	ctx->de_cur=ctx->de_max=0;
+  if(ctx->basedir)
+    free((void*)ctx->basedir);
 
-	return 0;
+  ctx->de_cur = ctx->de_max = 0;
 }
+
 int scanctx_inloop(const struct scan_context* ctx)
 {
-	if( NULL == ctx->dentries )
-		return 0;
+  if(!ctx->dentries)
+    return 0;
 
-	return (ctx->de_cur < ctx->de_max)? 1 : 0;
+  return (ctx->de_cur < ctx->de_max) ? 1 : 0;
 }
 
 /* ------------------------------------------------------------------------- */
