@@ -244,7 +244,7 @@ include_dir_open  ^[ \t]*@include_dir[ \t]+\"
                     }
                     errno = errsave;
                     if( '0'==*yytext && '\0'!=*(yytext+1) )
-                    {	// it's octal... so INT we go
+                    {	/* it's octal... so INT we go */
                       yylval->ival=(int)(llval);
                       return(TOK_INTEGER);
                     }

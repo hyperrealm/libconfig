@@ -399,7 +399,8 @@ application:
     pi = 3.141592654;
     bigint = 9223372036854775807L;
     columns = [ "Last Name", "First Name", "MI" ];
-    bitmask = 0x1FC3;
+    bitmask = 0x1FC3;	// hex
+    umask = 0027;	// octal. Range limited to that of "int"
   @};
 @};
 @end smallexample
@@ -505,7 +506,8 @@ more decimal digits (@samp{0} - @samp{9}), with an optional leading
 sign character (@samp{+} or @samp{-}); or as a hexadecimal value
 consisting of the characters @samp{0x} followed by a series of one or
 more hexadecimal digits (@samp{0} - @samp{9}, @samp{A} - @samp{F},
-@samp{a} - @samp{f}).
+@samp{a} - @samp{f}). Additionally, octal notation integers (that is,
+those having a leading zero with non-zero value) are also allowed.
 
 @node 64-bit Integer Values, Floating Point Values, Integer Values, Configuration Files
 @comment  node-name,  next,  previous,  up
