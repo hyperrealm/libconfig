@@ -39,6 +39,7 @@
 #endif
 
 #include <stdlib.h>
+#include <errno.h>
 #include <ctype.h>
 #include <string.h>
 #include <limits.h>
@@ -232,7 +233,22 @@ include_dir_open  ^[ \t]*@include_dir[ \t]+\"
 {float}           { yylval->fval = atof(yytext); return(TOK_FLOAT); }
 {integer}         {
                     long long llval;
-                    llval = atoll(yytext);
+                    char *endptr;
+                    int errsave = errno;
+                    errno = 0;
+                    llval = strtoll(yytext, &endptr, 0);	/* base 10 or base 8 */
+                    if( '\0'!=*endptr || 0!=errno )
+                    {
+                      errno = 0;
+                      return(TOK_ERROR);	/* some error occured ... */
+                    }
+                    errno = errsave;
+                    if( '0'==*yytext && '\0'!=*(yytext+1) )
+                    {	// it's octal... so INT we go
+                      yylval->ival=(int)(llval);
+                      return(TOK_INTEGER);
+                    }
+
                     if((llval < INT_MIN) || (llval > INT_MAX))
                     {
                       yylval->llval = llval;

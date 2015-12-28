@@ -40,6 +40,7 @@
 #if !defined(__MINGW32__) && _MSC_VER < 1800
 #define atoll     _atoi64
 #define strtoull  _strtoui64
+#define strtoll   _strtoi64
 #endif
 
 #if !defined(S_ISDIR) && defined(S_IFMT) && defined(S_IFDIR)
