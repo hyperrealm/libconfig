@@ -237,15 +237,15 @@ include_dir_open  ^[ \t]*@include_dir[ \t]+\"
                     int errsave = errno;
                     errno = 0;
                     llval = strtoll(yytext, &endptr, 0);	/* base 10 or base 8 */
-                    if( '\0'!=*endptr || 0!=errno )
+                    if(*endptr || errno)
                     {
                       errno = 0;
                       return(TOK_ERROR);	/* some error occured ... */
                     }
                     errno = errsave;
-                    if( '0'==*yytext && '\0'!=*(yytext+1) )
-                    {	/* it's octal... so INT we go */
-                      yylval->ival=(int)(llval);
+                    if((*yytext == '0') && (*(yytext+1) != '\0'))
+                    {   /* it's octal... so INT we go */
+                      yylval->ival = (int)(llval);
                       return(TOK_INTEGER);
                     }
 
