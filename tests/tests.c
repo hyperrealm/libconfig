@@ -411,6 +411,36 @@ TT_TEST(BigInt7)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(RemoveSetting)
+{
+  char *buf;
+  config_t cfg;
+  int rc;
+  config_setting_t* rootSetting;
+
+  buf = "a:{b:3;c:4;}";
+
+  config_init(&cfg);
+  rc = config_read_string(&cfg, buf);
+  TT_ASSERT_TRUE(rc);
+
+  rootSetting = config_root_setting(&cfg);
+  rc = config_setting_remove(rootSetting, "a.c");
+  TT_ASSERT_TRUE(rc);
+
+  // a and a.b are found
+  rootSetting = config_lookup(&cfg, "a");
+  TT_EXPECT_PTR_NOTNULL(rootSetting);
+  rootSetting = config_lookup(&cfg, "a.b");
+  TT_EXPECT_PTR_NOTNULL(rootSetting);
+  rootSetting = config_lookup(&cfg, "a.c");
+  TT_EXPECT_PTR_NULL(rootSetting);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
   int failures;
@@ -426,6 +456,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, BigInt5);
   TT_SUITE_TEST(LibConfigTests, BigInt6);
   TT_SUITE_TEST(LibConfigTests, BigInt7);
+  TT_SUITE_TEST(LibConfigTests, RemoveSetting);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);
