@@ -1091,6 +1091,10 @@ This function removes and destroys the setting named @var{name} from
 the parent setting @var{parent}, which must be a group. Any child
 settings of the setting are recursively destroyed as well.
 
+The @var{name} parameter can also specify a setting @i{path} relative to 
+the provided @var{parent}.
+(In that case, the setting will be looked up and removed.)
+
 The function returns @code{CONFIG_TRUE} on success. If @var{parent} is
 not a group, or if it has no setting with the given name, it returns
 @code{CONFIG_FALSE}.
