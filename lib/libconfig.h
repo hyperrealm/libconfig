@@ -142,6 +142,10 @@ extern LIBCONFIG_API void config_set_destructor(config_t *config,
 extern LIBCONFIG_API void config_set_include_dir(config_t *config,
                                                  const char *include_dir);
 
+extern LIBCONFIG_API void config_set_float_precision(config_t *config,
+                                                          unsigned short digits);
+extern LIBCONFIG_API unsigned short config_get_float_precision(config_t *config);
+
 extern LIBCONFIG_API void config_init(config_t *config);
 extern LIBCONFIG_API void config_destroy(config_t *config);
 
@@ -299,7 +303,7 @@ extern LIBCONFIG_API int config_lookup_string(const config_t *config,
   (C)->tab_width = ((W) & 0x0F)
 
 #define /* unsigned char */ config_get_tab_width(/* const config_t * */ C) \
-  ((C)->tab_width)
+  ((C)->tab_width & 0x0F)
 
 #define /* unsigned short */ config_setting_source_line(   \
   /* const config_setting_t * */ S)                        \

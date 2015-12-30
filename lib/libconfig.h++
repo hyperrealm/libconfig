@@ -466,6 +466,9 @@ class LIBCONFIGXX_API Config
   void setTabWidth(unsigned short width);
   unsigned short getTabWidth() const;
 
+  void setFloatPrecision(unsigned short digits);
+  unsigned short getFloatPrecision() const;
+
   void setIncludeDir(const char *includeDir);
   const char *getIncludeDir() const;
 

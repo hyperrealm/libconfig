@@ -824,6 +824,22 @@ configuration @var{config}, or @code{NULL} if none is set.
 
 @end deftypefun
 
+@deftypefun void config_set_float_precision(@w{config_t *@var{config}}, @w{unsigned short @var{digits}})
+@deftypefunx {unsigned short} config_get_float_precision(@w{config_t *@var{config}})
+
+@b{Since @i{v1.6}}
+
+These functions set and get the number of decimal digits to output when writing
+the configuration to a file or stream.
+
+@code{config_set_float_precision(config,digits)} specifies "the number of
+digits to appear after the radix character". Please refer to printf(3) for details.
+
+Valid float precision range from 0 (no decimals) to about 15 (implementation defined).
+This parameter has no effect on parsing.
+
+@end deftypefun
+
 @deftypefun void config_set_options (@w{config_t *@var{config}}, @w{int @var{options}})
 @deftypefunx int config_get_options (@w{config_t *@var{config}})
 
@@ -1462,6 +1478,19 @@ spaces, or by a single tab character if @var{width} is 0. The tab
 width has no effect on parsing.
 
 Valid tab widths range from 0 to 15. The default tab width is 2.
+
+@end deftypemethod
+
+@deftypemethod Config void setFloatPrecision (@w{unsigned short @var{width}})
+@deftypemethodx Config {unsigned short} getFloatPrecision ()
+
+These methods set and get the float precision for the configuration. 
+This parameter influences the formatting of floating point settings in
+the configuration when it is written to a file or stream.
+Float precision has no effect on parsing.
+
+Valid precisions range from 0 to about 15 (implementation dependent),
+though the library will accept and store values up to 255.
 
 @end deftypemethod
 

@@ -49,6 +49,9 @@
 #define CHUNK_SIZE 16
 #define FLOAT_PRECISION DBL_DIG
 
+#define TAB2DIGITS(x)  (((x) & 0xFF00) >> 8)
+#define DIGITS2TAB(x)  (((x) & 0xFF) << 8)
+
 #define _new(T) (T *)calloc(1, sizeof(T)) /* zeroed */
 #define _delete(P) free((void *)(P))
 
@@ -218,7 +221,10 @@ static void __config_write_value(const config_t *config,
     {
       char *q;
 
-      snprintf(fbuf, sizeof(fbuf) - 3, "%.*g", FLOAT_PRECISION, value->fval);
+      snprintf(fbuf, sizeof(fbuf) - 3, "%.*f",
+               TAB2DIGITS(config->tab_width),   /* XXX: hack; See config_set_float_precision */
+               value->fval
+      );
 
       /* check for exponent */
       q = strchr(fbuf, 'e');
@@ -752,6 +758,18 @@ void config_destroy(config_t *config)
 }
 
 /* ------------------------------------------------------------------------- */
+void config_set_float_precision(config_t *config,
+                                          unsigned short digits)
+{
+  config->tab_width |= DIGITS2TAB(digits);
+}
+
+unsigned short config_get_float_precision(config_t *config)
+{
+  return TAB2DIGITS(config->tab_width);
+}
+
+/* ------------------------------------------------------------------------- */
 
 void config_init(config_t *config)
 {
@@ -763,7 +781,13 @@ void config_init(config_t *config)
   config->options = (CONFIG_OPTION_SEMICOLON_SEPARATORS
                      | CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS
                      | CONFIG_OPTION_OPEN_BRACE_ON_SEPARATE_LINE);
+
+  /* @version 1.6: piggyback float_digits on top of tab_width
+   * (ab)using the existing macros' 0x0F mask in order to preserve
+   * API & ABI compatibility ; changes are fully backwards compatible
+   */
   config->tab_width = 2;
+  config->tab_width |= DIGITS2TAB(FLOAT_PRECISION);    /* float_digits */
 }
 
 /* ------------------------------------------------------------------------- */
