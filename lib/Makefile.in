@@ -90,7 +90,9 @@ subdir = lib
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/aux-build/mkinstalldirs \
 	$(srcdir)/libconfig.pc.in $(srcdir)/libconfig++.pc.in \
-	scanner.c grammar.h grammar.c $(top_srcdir)/aux-build/depcomp \
+	$(srcdir)/libconfigConfig.cmake.in \
+	$(srcdir)/libconfig++Config.cmake.in scanner.c grammar.h \
+	grammar.c $(top_srcdir)/aux-build/depcomp \
 	$(top_srcdir)/aux-build/ylwrap $(am__include_HEADERS_DIST)
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -101,7 +103,8 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/aux-build/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/ac_config.h
-CONFIG_CLEAN_FILES = libconfig.pc libconfig++.pc
+CONFIG_CLEAN_FILES = libconfig.pc libconfig++.pc libconfigConfig.cmake \
+	libconfig++Config.cmake
 CONFIG_CLEAN_VPATH_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -130,7 +133,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgconfigdir)" \
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(cmakedir)" \
+	"$(DESTDIR)$(cmakeppdir)" "$(DESTDIR)$(pkgconfigdir)" \
 	"$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libconfig___la_LIBADD =
@@ -234,7 +238,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-DATA = $(pkgconfig_DATA)
+DATA = $(cmake_DATA) $(cmakepp_DATA) $(pkgconfig_DATA)
 am__include_HEADERS_DIST = libconfig.h libconfig.h++
 HEADERS = $(include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
@@ -433,6 +437,10 @@ EXTRA_DIST = \
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libconfig.pc $(am__append_5)
+cmakedir = $(libdir)/cmake/libconfig
+cmake_DATA = libconfigConfig.cmake
+@BUILDCXX_TRUE@cmakeppdir = $(libdir)/cmake/libconfig++
+@BUILDCXX_TRUE@cmakepp_DATA = libconfig++Config.cmake
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -471,6 +479,10 @@ $(am__aclocal_m4_deps):
 libconfig.pc: $(top_builddir)/config.status $(srcdir)/libconfig.pc.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 libconfig++.pc: $(top_builddir)/config.status $(srcdir)/libconfig++.pc.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+libconfigConfig.cmake: $(top_builddir)/config.status $(srcdir)/libconfigConfig.cmake.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+libconfig++Config.cmake: $(top_builddir)/config.status $(srcdir)/libconfig++Config.cmake.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 install-libLTLIBRARIES: $(lib_LTLIBRARIES)
@@ -665,6 +677,48 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
+install-cmakeDATA: $(cmake_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(cmake_DATA)'; test -n "$(cmakedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(cmakedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(cmakedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(cmakedir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(cmakedir)" || exit $$?; \
+	done
+
+uninstall-cmakeDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(cmake_DATA)'; test -n "$(cmakedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(cmakedir)'; $(am__uninstall_files_from_dir)
+install-cmakeppDATA: $(cmakepp_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(cmakepp_DATA)'; test -n "$(cmakeppdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(cmakeppdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(cmakeppdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(cmakeppdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(cmakeppdir)" || exit $$?; \
+	done
+
+uninstall-cmakeppDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(cmakepp_DATA)'; test -n "$(cmakeppdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(cmakeppdir)'; $(am__uninstall_files_from_dir)
 install-pkgconfigDATA: $(pkgconfig_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(pkgconfig_DATA)'; test -n "$(pkgconfigdir)" || list=; \
@@ -795,7 +849,7 @@ check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LTLIBRARIES) $(DATA) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(includedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(cmakedir)" "$(DESTDIR)$(cmakeppdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -856,7 +910,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-includeHEADERS install-pkgconfigDATA
+install-data-am: install-cmakeDATA install-cmakeppDATA \
+	install-includeHEADERS install-pkgconfigDATA
 
 install-dvi: install-dvi-am
 
@@ -902,7 +957,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-includeHEADERS uninstall-libLTLIBRARIES \
+uninstall-am: uninstall-cmakeDATA uninstall-cmakeppDATA \
+	uninstall-includeHEADERS uninstall-libLTLIBRARIES \
 	uninstall-pkgconfigDATA
 
 .MAKE: all check install install-am install-strip
@@ -911,17 +967,19 @@ uninstall-am: uninstall-includeHEADERS uninstall-libLTLIBRARIES \
 	clean-libLTLIBRARIES clean-libtool cscopelist-am ctags \
 	ctags-am distclean distclean-compile distclean-generic \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am \
-	install-includeHEADERS install-info install-info-am \
-	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
-	install-pkgconfigDATA install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-includeHEADERS \
-	uninstall-libLTLIBRARIES uninstall-pkgconfigDATA
+	html-am info info-am install install-am install-cmakeDATA \
+	install-cmakeppDATA install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-includeHEADERS install-info \
+	install-info-am install-libLTLIBRARIES install-man install-pdf \
+	install-pdf-am install-pkgconfigDATA install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags tags-am uninstall uninstall-am \
+	uninstall-cmakeDATA uninstall-cmakeppDATA \
+	uninstall-includeHEADERS uninstall-libLTLIBRARIES \
+	uninstall-pkgconfigDATA
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
