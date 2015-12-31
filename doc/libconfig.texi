@@ -6,8 +6,8 @@
 @setfilename libconfig.info
 @settitle libconfig
 
-@set edition 1.5
-@set update-date 16 May 2015
+@set edition 1.6
+@set update-date 31 Dec 2015
 @set subtitle-text A Library For Processing Structured Configuration Files
 @set author-text Mark A.@: Lindner
 
@@ -468,9 +468,9 @@ The value may be a scalar value, an array, a group, or a list.
 
 A group has the form:
 
-@b{@{}
+@b{lbracechar}
    @i{settings ...}
-@b{@}}
+@b{rbracechar}
 
 Groups can contain any number of settings, but each setting must have
 a unique name within the group.

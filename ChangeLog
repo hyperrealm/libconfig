@@ -1,3 +1,29 @@
+2015-12-31  Jose Luis Tallon <jltallon@adv-solutions.net>
+
+        * Added include_dir feature (support for Debian-style conf.d/
+          includes) (pull request #36)
+
+        * Added octal_ints feature (support for integer expressed in octal,
+          useful for permissions and masks in UNIX-like systems (pull req #42)
+
+	* Fixed "Removing a setting removes all siblings" (issue #41)
+	  Props random85
+
+	* Allow specifying the number of decimals wanted when outputting
+	  Based upon a suggestion by zhaopingsun (issue #31)
+
+	* Make libconfig usable from CMake (pull request/issue #28)
+	  Props thfi
+
+        * Documentation fixes
+	  - Copyright and examples
+	  - Included TeX patch from Debian (fixes FTBS with TeXlive)
+
+        * Resync Debian packaging
+	  includes updated packages for GCC5 transition
+
+        ----- version 1.6 ------
+
 2015-10-14  Thomas Fischer <fischer@unix-ag.uni-kl.de>
 
 	* configure, configure.ac, debian/libconfig++9-dev.install,
