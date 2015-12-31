@@ -78,3 +78,11 @@ pkgconfig_DATA = libconfig.pc
 if BUILDCXX
 pkgconfig_DATA += libconfig++.pc
 endif
+
+cmakedir = $(libdir)/cmake/libconfig
+cmake_DATA = libconfigConfig.cmake
+
+if BUILDCXX
+cmakeppdir = $(libdir)/cmake/libconfig++
+cmakepp_DATA = libconfig++Config.cmake
+endif

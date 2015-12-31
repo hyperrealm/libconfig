@@ -127,6 +127,8 @@ AC_OUTPUT(
 	lib/Makefile
 	lib/libconfig.pc
 	lib/libconfig++.pc
+	lib/libconfigConfig.cmake
+	lib/libconfig++Config.cmake
 	doc/Makefile
 	examples/Makefile
 	examples/c/Makefile

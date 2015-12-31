@@ -16896,7 +16896,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile lib/Makefile lib/libconfig.pc lib/libconfig++.pc doc/Makefile examples/Makefile examples/c/Makefile examples/c++/Makefile tinytest/Makefile tests/Makefile libconfig.spec"
+ac_config_files="$ac_config_files Makefile lib/Makefile lib/libconfig.pc lib/libconfig++.pc lib/libconfigConfig.cmake lib/libconfig++Config.cmake doc/Makefile examples/Makefile examples/c/Makefile examples/c++/Makefile tinytest/Makefile tests/Makefile libconfig.spec"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -18027,6 +18027,8 @@ do
     "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
     "lib/libconfig.pc") CONFIG_FILES="$CONFIG_FILES lib/libconfig.pc" ;;
     "lib/libconfig++.pc") CONFIG_FILES="$CONFIG_FILES lib/libconfig++.pc" ;;
+    "lib/libconfigConfig.cmake") CONFIG_FILES="$CONFIG_FILES lib/libconfigConfig.cmake" ;;
+    "lib/libconfig++Config.cmake") CONFIG_FILES="$CONFIG_FILES lib/libconfig++Config.cmake" ;;
     "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
     "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
     "examples/c/Makefile") CONFIG_FILES="$CONFIG_FILES examples/c/Makefile" ;;

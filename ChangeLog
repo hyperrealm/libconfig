@@ -1,3 +1,10 @@
+2015-10-14  Thomas Fischer <fischer@unix-ag.uni-kl.de>
+
+	* configure, configure.ac, debian/libconfig++9-dev.install,
+	  debian/libconfig9-dev.install, lib/Makefile.am, lib/Makefile.in,
+	  lib/libconfig++Config.cmake.in, lib/libconfigConfig.cmake.in,
+	  libconfig.spec.in - locating libconfig in CMake-based projects
+
 2015-08-14  Mark Lindner  <markl@neuromancer>
 
 	* lib/wincompat.h - Fixed Windows portability issue
