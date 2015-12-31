@@ -29,7 +29,7 @@ AM_YFLAGS = -d -p $(PARSER_PREFIX)
 
 
 libsrc = libconfig.c scanner.l grammar.y parsectx.h wincompat.h \
-	scanctx.c scanctx.h strbuf.c strbuf.h
+	scanctx.c scanctx.h strbuf.c strbuf.h dir.c dir.h
 libinc = libconfig.h
 
 libsrc_cpp =  $(libsrc) libconfigcpp.c++
