@@ -26,6 +26,9 @@
     <ClCompile Include="strbuf.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="win32\scandir.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ac_config.h">
@@ -53,6 +56,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="wincompat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="win32\dirent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
