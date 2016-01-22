@@ -1,10 +1,8 @@
 
 #include <libconfig.h++>
 
-
 namespace libconfig 
 {
-
 	struct Variant
 	{
 
@@ -88,7 +86,8 @@ namespace libconfig
 	public:
 
 		ChainedSetting(Setting& setting, std::ostream& err = std::cerr, ChainedSetting* parent = NULL)
-			: name(setting.getName() ? setting.getName() : "<root>")
+			: name(setting.isRoot() ? "<root>" : (setting.getName() ? setting.getName() : ""))
+			, index(setting.getIndex())
 			, parent(parent)
 			, setting(&setting)
 			, err(err)
@@ -121,12 +120,18 @@ namespace libconfig
 			isSettingMandatory = true;
 			if (parent) parent->isMandatory();
 			return *this;
-		}		
+		}
+
+		ChainedSetting& comment(std::string comment)
+		{
+			this->helpComment = comment;
+			return *this;
+		}
 
 		template<typename T>
 		operator T()
 		{
-			// TODO: test if any variant values missmatch with requested type
+			// TODO: test if any variant values mismatch with requested type
 			if (!setting)
 			{
 				if (isSettingMandatory)
@@ -175,11 +180,11 @@ namespace libconfig
 				return ChainedSetting(name, err, this);
 			}
 
-			try
+			if(setting->exists(name))
 			{
 				return ChainedSetting((*setting)[name], err, this);
 			}
-			catch (const SettingNotFoundException&)
+			else
 			{
 				return ChainedSetting(name, err, this);
 			}
@@ -190,6 +195,33 @@ namespace libconfig
 			return(operator[](name.c_str()));
 		}
 
+		ChainedSetting operator[](int index)
+		{
+			if (!setting)
+			{
+				return ChainedSetting(index, err, this);
+			}
+
+			if (index >= 0 && index < setting->getLength())
+			{
+				return ChainedSetting(setting[index], err, this);
+			}
+			else
+			{
+				return ChainedSetting(index, err, this);
+			}
+		}
+
+		int getLength() const
+		{
+			return setting ? setting->getLength() : 0;
+		}
+
+		bool exists() const
+		{
+			return setting != NULL;
+		}
+
 		bool isAnyMandatorySettingMissing() const
 		{
 			return anyMandatorySettingIsMissing;
@@ -197,8 +229,20 @@ namespace libconfig
 
 	private: 
 		
-		ChainedSetting(std::string name, std::ostream& err, ChainedSetting* parent)
+		ChainedSetting(const std::string& name, std::ostream& err, ChainedSetting* parent)
 			: name(name)
+			, index(-1)
+			, parent(parent)
+			, setting(NULL)
+			, err(err)
+			, isSettingMandatory(false)
+			, anyMandatorySettingIsMissing(true)
+		{
+		}
+
+		ChainedSetting(int index, std::ostream& err, ChainedSetting* parent)
+			: name("")
+			, index(index)
 			, parent(parent)
 			, setting(NULL)
 			, err(err)
@@ -213,12 +257,14 @@ namespace libconfig
 			{
 				return setting->getPath();
 			}
+
+			std::string path = (name.length() > 0) ? name : "[" + std::to_string(index) + "]";
 			if (parent)
 			{
 				auto parentPath = parent->GetPath();
-				return (parentPath.length() > 0) ? (parentPath + "." + name) : name;
+				return (parentPath.length() > 0) ? (parentPath + ((name.length() == 0) ? "" : ".") + path) : path;
 			}
-			return name;
+			return path;
 		}
 
 		void PropagateAnyMandatorySettingIsMissing()
@@ -235,8 +281,9 @@ namespace libconfig
 		{
 			PropagateAnyMandatorySettingIsMissing();
 
-			err << "Missing '" << GetPath() << "' setting in configuration file." << std::endl;
-			// TODO: print out usage???
+			err << "Missing '" << GetPath() << "' setting in configuration file.";
+			if (helpComment.length() > 0) err << " ("<< helpComment << ")";
+			err << std::endl;
 		}
 
 		template<typename T>
@@ -245,6 +292,7 @@ namespace libconfig
 			return (T)0;
 		}
 
+		template<>
 		std::string GetUnsetDefaultValue() const
 		{
 			return "";
@@ -262,12 +310,14 @@ namespace libconfig
 		}
 
 		std::string name;
+		int index;
 		ChainedSetting* parent;
 		Setting* setting;
 		std::ostream& err;
 		Variant defaultVal;
 		Variant minVal;
 		Variant maxVal;
+		std::string helpComment;
 		bool isSettingMandatory;
 		bool anyMandatorySettingIsMissing;
 	};

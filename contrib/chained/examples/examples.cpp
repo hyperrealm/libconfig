@@ -45,19 +45,21 @@ int main(int argc, char **argv)
   {
     cfg.readFile("../example.cfg");
   }
-  catch(const FileIOException &fioex)
+  catch(const FileIOException&)
   {
-    std::cerr << "I/O error while reading file." << std::endl;
+    std::cerr << "I/O error while reading file. " << std::endl;
     return(EXIT_FAILURE);
   }
-  catch(const ParseException &pex)
+  catch(const ParseException& pex)
   {
     std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
               << " - " << pex.getError() << std::endl;
     return(EXIT_FAILURE);
   }
 
+  cout << endl << "<<< Example 1 >>>" << endl;
   example1(cfg);
+  cout << endl << "<<< Example 2 >>>" << endl;
   example2(cfg);
 
   return(EXIT_SUCCESS);

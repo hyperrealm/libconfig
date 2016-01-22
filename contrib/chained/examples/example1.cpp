@@ -47,4 +47,6 @@ void example1(Config& cfg)
 		cerr << "Cannot proceed until all mandatory settings are set." << endl;
 		return;
 	}
+
+	// from here on all read config values are valid
 }

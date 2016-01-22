@@ -30,89 +30,42 @@
 using namespace std;
 using namespace libconfig;
 
-// This example expects values from configuration file which are missing
+// This example reads complex types from config file using method chains
 
 void example2(Config& cfg)
 {
-  const Setting& root = cfg.getRoot();
+	ChainedSetting cs(cfg.getRoot());
 
-  // Output a list of all books in the inventory.
-  try
-  {
-    const Setting &books = root["inventory"]["books"];
-    int count = books.getLength();
+	auto books = cs["inventory"]["books"];
+	if (!books.exists())
+	{
+		cerr << "No book section available." << endl;
+		return;
+	}
 
-    cout << setw(30) << left << "TITLE" << "  "
-         << setw(30) << left << "AUTHOR" << "   "
-         << setw(6) << left << "PRICE" << "  "
-         << "QTY"
-         << endl;
+	cout << setw(30) << left << "TITLE" << "  "
+			<< setw(30) << left << "AUTHOR" << "   "
+			<< setw(6) << left << "PRICE" << "  "
+			<< "QTY"
+			<< endl;
 
-    for(int i = 0; i < count; ++i)
-    {
-      const Setting &book = books[i];
+	const int count = books.getLength();
+	for(int i = 0; i < count; ++i)
+	{
+		auto book = books[i];
 
-      // Only output the record if all of the expected fields are present.
-      string title, author;
-      double price;
-      int qty;
+		// Only output the record if all of the expected fields are present.		
+		string title = book["title"];
+		string author = book["author"];
+		double price = book["price"];
+		int qty = book["qty"];
 
-      if(!(book.lookupValue("title", title)
-           && book.lookupValue("author", author)
-           && book.lookupValue("price", price)
-           && book.lookupValue("qty", qty)))
-        continue;
+		if(book.isAnyMandatorySettingMissing()) continue;
 
-      cout << setw(30) << left << title << "  "
-           << setw(30) << left << author << "  "
-           << '$' << setw(6) << right << price << "  "
-           << qty
-           << endl;
-    }
-    cout << endl;
-  }
-  catch(const SettingNotFoundException &nfex)
-  {
-    // Ignore.
-  }
-
-  // Output a list of all books in the inventory.
-  try
-  {
-    const Setting &movies = root["inventory"]["movies"];
-    int count = movies.getLength();
-
-    cout << setw(30) << left << "TITLE" << "  "
-         << setw(10) << left << "MEDIA" << "   "
-         << setw(6) << left << "PRICE" << "  "
-         << "QTY"
-         << endl;
-
-    for(int i = 0; i < count; ++i)
-    {
-      const Setting &movie = movies[i];
-
-      // Only output the record if all of the expected fields are present.
-      string title, media;
-      double price;
-      int qty;
-
-      if(!(movie.lookupValue("title", title)
-           && movie.lookupValue("media", media)
-           && movie.lookupValue("price", price)
-           && movie.lookupValue("qty", qty)))
-        continue;
-
-      cout << setw(30) << left << title << "  "
-           << setw(10) << left << media << "  "
-           << '$' << setw(6) << right << price << "  "
-           << qty
-           << endl;
-    }
-    cout << endl;
-  }
-  catch(const SettingNotFoundException &nfex)
-  {
-    // Ignore.
-  }
+		cout << setw(30) << left << title << "  "
+			<< setw(30) << left << author << "  "
+			<< '$' << setw(6) << right << price << "  "
+			<< qty
+			<< endl;
+	}
 }

@@ -28,7 +28,8 @@ int main(int argc, char **argv)
 }
 ```
 
-```tty
+Console Output:
+```sh
 'longitude' setting is out of valid bounds (max: 180). Value was: 1200.35
 Missing 'latitude' setting in configuration file.
 cannot proceed until all mandatory settings are set.
