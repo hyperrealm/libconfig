@@ -30,19 +30,21 @@
 using namespace std;
 using namespace libconfig;
 
-// This example reads the configuration file 'example.cfg' and displays
-// some of its contents.
+// This example reads basic information from config file 
+// and reacts on missing mandatory values
 
 void example1(Config& cfg)
 {
 	ChainedSetting cs(cfg.getRoot());
 
-	string name = cs["name"].defaultValue("title");
-	double longitude = cs["longitude"].defaultValue(13.41);
-	double latitude = cs["latitude"].defaultValue(52.52);
+	string name = cs["name"].defaultValue("<name>").isMandatory();
+	string abstract = cs["abstract"].defaultValue("<unknown>");
+	double longitude = cs["longitude"].min(-180.0).max(180.0).isMandatory();
+	double latitude = cs["latitude"].min(-90.0).max(90.0).isMandatory();
 
-	if (longitude > 0.0)
+	if (cs.isAnyMandatorySettingMissing())
 	{
-
+		cerr << "Cannot proceed until all mandatory settings are set." << endl;
+		return;
 	}
 }

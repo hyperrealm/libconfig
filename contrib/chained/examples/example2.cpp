@@ -30,26 +30,10 @@
 using namespace std;
 using namespace libconfig;
 
-// This example reads the configuration file 'example.cfg' and displays
-// some of its contents.
+// This example expects values from configuration file which are missing
 
 void example2(Config& cfg)
 {
-  // Get the store name.
-  try
-  {
-    string name = cfg.lookup("name");
-    cout << "Store name: " << name << endl << endl;
-  }
-  catch(const SettingNotFoundException &nfex)
-  {
-    cerr << "No 'name' setting in configuration file." << endl;
-  }
-  catch (const SettingTypeException& tex)
-  {
-	  cerr << "'" << tex.getPath() << "' setting is of wrong type" << endl;
-  }
-
   const Setting& root = cfg.getRoot();
 
   // Output a list of all books in the inventory.
