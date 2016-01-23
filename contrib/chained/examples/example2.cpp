@@ -54,12 +54,12 @@ void example2(Config& cfg)
 	{
 		auto book = books[i];
 
-		// Only output the record if all of the expected fields are present.		
 		string title = book["title"];
 		string author = book["author"];
 		double price = book["price"];
 		int qty = book["qty"];
 
+		// Only output the record if all of the expected fields are present.
 		if(book.isAnyMandatorySettingMissing()) continue;
 
 		cout << setw(30) << left << title << "  "

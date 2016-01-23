@@ -204,7 +204,7 @@ namespace libconfig
 
 			if (index >= 0 && index < setting->getLength())
 			{
-				return ChainedSetting(setting[index], err, this);
+				return ChainedSetting((*setting)[index], err, this);
 			}
 			else
 			{
