@@ -1,88 +1,88 @@
 
 #include <libconfig.h++>
+#include <cassert>
 
 namespace libconfig 
 {
-	struct Variant
-	{
-
-	private:
-		bool			isSet;
-		Setting::Type	type;
-
-		bool			value_bool;
-		int64_t			value_int;
-		double			value_float;
-		std::string		value_string;
-
-	public:
-
-		Variant()
-			: isSet(false)
-			, type(Setting::TypeNone)
-		{
-		}
-		Variant(bool value)
-		{
-			value_bool = value;
-			isSet = true;
-			type = Setting::TypeBoolean;
-		}
-		Variant(int32_t value)
-		{
-			value_int = value;
-			isSet = true;
-			type = Setting::TypeInt;
-		}
-		Variant(int64_t value)
-		{
-			value_int = value;
-			isSet = true;
-			type = Setting::TypeInt64;
-		}
-		Variant(double value)
-		{
-			value_float = value;
-			isSet = true;
-			type = Setting::TypeFloat;
-		}
-		Variant(std::string& value)
-		{
-			value_string = value;
-			isSet = true;
-			type = Setting::TypeString;
-		}
-		Variant(const char* value)
-		{
-			value_string = value;
-			isSet = true;
-			type = Setting::TypeString;
-		}
-
-		operator bool() const { return value_bool; }
-		operator int() const { return (int)value_int; }
-		operator unsigned int() const { return (unsigned int)value_int; }
-		operator long() const { return (long)value_int; }
-		operator unsigned long() const { return (unsigned long)value_int; }
-		operator long long() const { return (long long)value_int; }
-		operator unsigned long long() const { return (unsigned long long)value_int; }
-		operator double() const { return value_float; }
-		operator float() const { return (float)value_float; }
-		operator std::string() const { return value_string; }
-
-		const bool IsSet() const
-		{
-			return isSet;
-		}
-
-		const Setting::Type GetType() const
-		{
-			return type;
-		}
-	};
-
 	class ChainedSetting
 	{
+		struct Variant
+		{
+		private:
+			bool			isSet;
+			Setting::Type	type;
+
+			bool			value_bool;
+			int64_t			value_int;
+			double			value_float;
+			std::string		value_string;
+
+		public:
+
+			Variant()
+				: isSet(false)
+				, type(Setting::TypeNone)
+			{
+			}
+			Variant(bool value)
+			{
+				value_bool = value;
+				isSet = true;
+				type = Setting::TypeBoolean;
+			}
+			Variant(int32_t value)
+			{
+				value_int = value;
+				isSet = true;
+				type = Setting::TypeInt;
+			}
+			Variant(int64_t value)
+			{
+				value_int = value;
+				isSet = true;
+				type = Setting::TypeInt64;
+			}
+			Variant(double value)
+			{
+				value_float = value;
+				isSet = true;
+				type = Setting::TypeFloat;
+			}
+			Variant(std::string& value)
+			{
+				value_string = value;
+				isSet = true;
+				type = Setting::TypeString;
+			}
+			Variant(const char* value)
+			{
+				value_string = value;
+				isSet = true;
+				type = Setting::TypeString;
+			}
+
+			operator bool() const { return value_bool; }
+			operator int() const { return (int)value_int; }
+			operator unsigned int() const { return (unsigned int)value_int; }
+			operator long() const { return (long)value_int; }
+			operator unsigned long() const { return (unsigned long)value_int; }
+			operator long long() const { return (long long)value_int; }
+			operator unsigned long long() const { return (unsigned long long)value_int; }
+			operator double() const { return value_float; }
+			operator float() const { return (float)value_float; }
+			operator std::string() const { return value_string; }
+
+			const bool IsSet() const
+			{
+				return isSet;
+			}
+
+			const Setting::Type GetType() const
+			{
+				return type;
+			}
+		};
+
 	public:
 
 		ChainedSetting(Setting& setting, std::ostream& err = std::cerr, ChainedSetting* parent = NULL)
@@ -132,7 +132,11 @@ namespace libconfig
 		template<typename T>
 		operator T()
 		{
-			// TODO: test if any variant values mismatch with requested type
+			auto requestedType = GetRequestedType<T>();
+			CheckType(defaultVal, requestedType);
+			CheckType(minVal, requestedType);
+			CheckType(maxVal, requestedType);
+
 			if (!setting)
 			{
 				if (isSettingMandatory)
@@ -217,6 +221,11 @@ namespace libconfig
 		int getLength() const
 		{
 			return setting ? setting->getLength() : 0;
+		}
+
+		Setting::Type getType() const
+		{
+			return setting ? setting->getType() : Setting::TypeNone;
 		}
 
 		bool exists() const
@@ -330,6 +339,35 @@ namespace libconfig
 			}
 
 			return GetUnsetDefaultValue<T>();
+		}
+
+		template<typename T>
+		Setting::Type GetRequestedType() const
+		{
+			static_assert(false, "should never happen, unless you requested an unsupported type");
+			return Setting::TypeNone;
+		}
+		template<> Setting::Type GetRequestedType<int8_t>() const { return Setting::TypeInt; }
+		template<> Setting::Type GetRequestedType<uint8_t>() const { return Setting::TypeInt; }
+		template<> Setting::Type GetRequestedType<int16_t>() const { return Setting::TypeInt; }
+		template<> Setting::Type GetRequestedType<uint16_t>() const { return Setting::TypeInt; }
+		template<> Setting::Type GetRequestedType<int32_t>() const { return Setting::TypeInt; }
+		template<> Setting::Type GetRequestedType<uint32_t>() const { return Setting::TypeInt; }
+		template<> Setting::Type GetRequestedType<int64_t>() const { return Setting::TypeInt64; }
+		template<> Setting::Type GetRequestedType<uint64_t>() const { return Setting::TypeInt64; }
+		template<> Setting::Type GetRequestedType<float>() const { return Setting::TypeFloat; }
+		template<> Setting::Type GetRequestedType<double>() const { return Setting::TypeFloat; }
+		template<> Setting::Type GetRequestedType<std::string>() const { return Setting::TypeString; }
+		template<> Setting::Type GetRequestedType<bool>() const { return Setting::TypeBoolean; }
+
+		void CheckType(const Variant& variant, Setting::Type expectedType) const
+		{
+			if (!variant.IsSet()) return;
+			if(expectedType != variant.GetType())
+			{
+				assert(false); // fix your code to match the whole chain of this setting to one single type!
+				err << "'" << GetPath() << "' setting limits or default value is of incompatible type." << std::endl;
+			}
 		}
 
 		std::string name;
