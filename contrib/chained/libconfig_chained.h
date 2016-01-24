@@ -92,6 +92,7 @@ namespace libconfig
 			, setting(&setting)
 			, err(err)
 			, isSettingMandatory(false)
+			, anySettingIsMissing(false)
 			, anyMandatorySettingIsMissing(false)
 		{
 		}
@@ -138,6 +139,7 @@ namespace libconfig
 				{
 					AlertMandatorySettingMissing<T>();
 				}
+				PropagateAnySettingIsMissing();
 
 				return GetDefaultValue<T>();
 			}
@@ -227,6 +229,16 @@ namespace libconfig
 			return anyMandatorySettingIsMissing;
 		}
 
+		bool isAnySettingMissing() const
+		{
+			return anySettingIsMissing;
+		}
+
+		void clearAnySettingMissingFlag()
+		{
+			anySettingIsMissing = false;
+		}
+
 	private: 
 		
 		ChainedSetting(const std::string& name, std::ostream& err, ChainedSetting* parent)
@@ -236,7 +248,8 @@ namespace libconfig
 			, setting(NULL)
 			, err(err)
 			, isSettingMandatory(false)
-			, anyMandatorySettingIsMissing(true)
+			, anySettingIsMissing(true)
+			, anyMandatorySettingIsMissing(false)
 		{
 		}
 
@@ -247,7 +260,8 @@ namespace libconfig
 			, setting(NULL)
 			, err(err)
 			, isSettingMandatory(false)
-			, anyMandatorySettingIsMissing(true)
+			, anySettingIsMissing(true)
+			, anyMandatorySettingIsMissing(false)
 		{
 		}
 
@@ -265,6 +279,15 @@ namespace libconfig
 				return (parentPath.length() > 0) ? (parentPath + ((name.length() == 0) ? "" : ".") + path) : path;
 			}
 			return path;
+		}
+
+		void PropagateAnySettingIsMissing()
+		{
+			anySettingIsMissing = true;
+			if (parent)
+			{
+				parent->PropagateAnySettingIsMissing();
+			}
 		}
 
 		void PropagateAnyMandatorySettingIsMissing()
@@ -319,6 +342,7 @@ namespace libconfig
 		Variant maxVal;
 		std::string helpComment;
 		bool isSettingMandatory;
+		bool anySettingIsMissing;
 		bool anyMandatorySettingIsMissing;
 	};
 }

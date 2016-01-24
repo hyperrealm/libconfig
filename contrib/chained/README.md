@@ -35,6 +35,16 @@ Missing 'latitude' setting in configuration file.
 cannot proceed until all mandatory settings are set.
 ```
 
+Writing configuration files is not part of this extension.
+
+---
+
+### How to integrate into your project ###
+
+ 1. Link the libconfig++.[lib/la/a] library as usual (see standard use of libconfig++).
+ * Replace any includes of libconfig.h++ by libconfig_chained.h.
+ * Use method chained candy as displayed above.
+
 ### Features ###
 
  * default values

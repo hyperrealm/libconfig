@@ -60,7 +60,7 @@ void example2(Config& cfg)
 		int qty = book["qty"];
 
 		// Only output the record if all of the expected fields are present.
-		if(book.isAnyMandatorySettingMissing()) continue;
+		if(book.isAnySettingMissing()) continue;
 
 		cout << setw(30) << left << title << "  "
 			<< setw(30) << left << author << "  "
