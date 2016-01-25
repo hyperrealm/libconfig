@@ -85,6 +85,8 @@ namespace libconfig
 
 	public:
 
+		// Starting point for method chained libconfig.
+		// Pass a custom ostream to intercept any error messages (useful for Applications with UI).
 		ChainedSetting(Setting& setting, std::ostream& err = std::cerr)
 			: name(setting.isRoot() ? "<root>" : (setting.getName() ? setting.getName() : ""))
 			, index(setting.getIndex())
@@ -97,18 +99,25 @@ namespace libconfig
 		{
 		}
 
+		// Defines the default value for this setting if missing from config file.
 		template<typename T>
 		ChainedSetting& defaultValue(T defaultValue)
 		{
 			defaultVal = defaultValue;
 			return *this;
 		}
+
+		// Defines the inclusive minimum value for this setting.
+		// A lesser value set in a configuration file will be clamped to this limit.
 		template<typename T>
 		ChainedSetting& min(T min)
 		{
 			minVal = min;
 			return *this;
 		}
+
+		// Defines the inclusive maximum value for this setting.
+		// A greater value set in a configuration file will be clamped to this limit.
 		template<typename T>
 		ChainedSetting& max(T max)
 		{
@@ -116,16 +125,13 @@ namespace libconfig
 			return *this;
 		}
 
+		// Defines this setting to be mandatory.
+		// Any mandatory value missing in the configuration file will raise an error.
+		// Use isAnyMandatorySettingMissing() to check for any violations.
 		ChainedSetting& isMandatory()
 		{
 			isSettingMandatory = true;
 			if (parent) parent->isMandatory();
-			return *this;
-		}
-
-		ChainedSetting& comment(std::string comment)
-		{
-			this->helpComment = comment;
 			return *this;
 		}
 
@@ -228,6 +234,7 @@ namespace libconfig
 			return setting ? setting->getType() : Setting::TypeNone;
 		}
 
+		// Indicates whether this setting is present in the read configuration file.
 		bool exists() const
 		{
 			return setting != NULL;
@@ -325,9 +332,7 @@ namespace libconfig
 		{
 			PropagateAnyMandatorySettingIsMissing();
 
-			err << "Missing '" << GetPath() << "' setting in configuration file.";
-			if (helpComment.length() > 0) err << " ("<< helpComment << ")";
-			err << std::endl;
+			err << "Missing '" << GetPath() << "' setting in configuration file." << std::endl;
 		}
 
 		template<typename T>
@@ -390,7 +395,6 @@ namespace libconfig
 		Variant defaultVal;
 		Variant minVal;
 		Variant maxVal;
-		std::string helpComment;
 		bool isSettingMandatory;
 		bool anySettingIsMissing;
 		bool anyMandatorySettingIsMissing;
