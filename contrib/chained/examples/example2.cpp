@@ -56,8 +56,8 @@ void example2(Config& cfg)
 
 		string title = book["title"];
 		string author = book["author"];
-		double price = book["price"];
-		int qty = book["qty"];
+		double price = book["price"].min(0.0);
+		int qty = book["qty"].min(0);
 
 		// Only output the record if all of the expected fields are present.
 		if(book.isAnySettingMissing()) continue;

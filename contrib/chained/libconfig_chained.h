@@ -85,10 +85,10 @@ namespace libconfig
 
 	public:
 
-		ChainedSetting(Setting& setting, std::ostream& err = std::cerr, ChainedSetting* parent = NULL)
+		ChainedSetting(Setting& setting, std::ostream& err = std::cerr)
 			: name(setting.isRoot() ? "<root>" : (setting.getName() ? setting.getName() : ""))
 			, index(setting.getIndex())
-			, parent(parent)
+			, parent(NULL)
 			, setting(&setting)
 			, err(err)
 			, isSettingMandatory(false)
@@ -183,16 +183,16 @@ namespace libconfig
 		{
 			if (!setting)
 			{
-				return ChainedSetting(name, err, this);
+				return ChainedSetting(name, this);
 			}
 
 			if(setting->exists(name))
 			{
-				return ChainedSetting((*setting)[name], err, this);
+				return ChainedSetting((*setting)[name], this);
 			}
 			else
 			{
-				return ChainedSetting(name, err, this);
+				return ChainedSetting(name, this);
 			}
 		}
 
@@ -205,16 +205,16 @@ namespace libconfig
 		{
 			if (!setting)
 			{
-				return ChainedSetting(index, err, this);
+				return ChainedSetting(index, this);
 			}
 
 			if (index >= 0 && index < setting->getLength())
 			{
-				return ChainedSetting((*setting)[index], err, this);
+				return ChainedSetting((*setting)[index], this);
 			}
 			else
 			{
-				return ChainedSetting(index, err, this);
+				return ChainedSetting(index, this);
 			}
 		}
 
@@ -248,26 +248,38 @@ namespace libconfig
 			anySettingIsMissing = false;
 		}
 
-	private: 
+	private:
+
+		ChainedSetting(Setting& setting, ChainedSetting* parent)
+			: name(setting.isRoot() ? "<root>" : (setting.getName() ? setting.getName() : ""))
+			, index(setting.getIndex())
+			, parent(parent)
+			, setting(&setting)
+			, err(parent->err)
+			, isSettingMandatory(false)
+			, anySettingIsMissing(false)
+			, anyMandatorySettingIsMissing(false)
+		{
+		}
 		
-		ChainedSetting(const std::string& name, std::ostream& err, ChainedSetting* parent)
+		ChainedSetting(const std::string& name, ChainedSetting* parent)
 			: name(name)
 			, index(-1)
 			, parent(parent)
 			, setting(NULL)
-			, err(err)
+			, err(parent->err)
 			, isSettingMandatory(false)
 			, anySettingIsMissing(true)
 			, anyMandatorySettingIsMissing(false)
 		{
 		}
 
-		ChainedSetting(int index, std::ostream& err, ChainedSetting* parent)
+		ChainedSetting(int index, ChainedSetting* parent)
 			: name("")
 			, index(index)
 			, parent(parent)
 			, setting(NULL)
-			, err(err)
+			, err(parent->err)
 			, isSettingMandatory(false)
 			, anySettingIsMissing(true)
 			, anyMandatorySettingIsMissing(false)
