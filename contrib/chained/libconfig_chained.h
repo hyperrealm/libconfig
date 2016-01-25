@@ -103,12 +103,17 @@ namespace libconfig
 		{
 		}
 
+		// Starts capturing any configuration readings into the temporary config object.
 		void captureExpectedSpecification(Config* temporaryConfigSpecification)
 		{
 			capturedSpecification = temporaryConfigSpecification;
 			capturedSetting = &capturedSpecification->getRoot();
 		}
 
+		// Returns the captured configuration specification, 
+		// premised captureExpectedSpecification() was called earlier.
+		// The path parameter is needed to write the configuration 
+		// to disk before it can be read into a usable string.
 		std::string getCapturedSpecification(const std::string& tempFilePath)
 		{
 			try

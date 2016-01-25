@@ -31,7 +31,7 @@ using namespace std;
 using namespace libconfig;
 
 // This example reads basic information from config file 
-// and prints out expected configuration specification
+// and prints out the expected configuration specification.
 
 void example3(Config& cfg)
 {

@@ -1,8 +1,20 @@
-# method chained libconfig #
+# Method Chained libconfig #
 
 **Exception free + header only + method chained + config files**
 
 Provides reading the configuration and defining the configuration specification at once.
+
+### Features ###
+
+ * default values
+ * limits (min/max)
+ * mandatory/optional values
+ * help text output for expected config format on specification violation
+ * capturing and outputting expected configuration specification/defaults
+
+While it is possible to write a config file with this extension using the configuration specification capturing feature, it is not intended to be used as a full fledged config writer.
+
+### Example ###
 
 ```C++
 #include <libconfig_chained.h>
@@ -32,10 +44,8 @@ Console Output:
 ```sh
 'longitude' setting is out of valid bounds (max: 180). Value was: 1200.35
 Missing 'latitude' setting in configuration file.
-cannot proceed until all mandatory settings are set.
+Cannot proceed until all mandatory settings are set.
 ```
-
-Writing configuration files is not part of this extension.
 
 ---
 
@@ -45,10 +55,6 @@ Writing configuration files is not part of this extension.
  * Replace any includes of libconfig.h++ by libconfig_chained.h.
  * Use method chained candy as displayed above.
 
-### Features ###
+---
 
- * default values
- * limits (min/max)
- * mandatory/optional values
- * help text output for expected config format on specification violation
- * capturing and outputting expected configuration specification/defaults
+Create an issue for any questions or suggestions. Alternatively email me at github [at) hemofektik.de
