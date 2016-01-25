@@ -1,6 +1,8 @@
 
 #include <libconfig.h++>
 #include <cassert>
+#include <fstream>
+#include <sstream>
 
 namespace libconfig 
 {
@@ -96,7 +98,41 @@ namespace libconfig
 			, isSettingMandatory(false)
 			, anySettingIsMissing(false)
 			, anyMandatorySettingIsMissing(false)
+			, capturedSpecification(NULL)
+			, capturedSetting(NULL)
 		{
+		}
+
+		void captureExpectedSpecification(Config* temporaryConfigSpecification)
+		{
+			capturedSpecification = temporaryConfigSpecification;
+			capturedSetting = &capturedSpecification->getRoot();
+		}
+
+		std::string getCapturedSpecification(const std::string& tempFilePath)
+		{
+			try
+			{
+				capturedSpecification->writeFile(tempFilePath.c_str());
+			}
+			catch (const FileIOException&)
+			{
+				err << "I/O error while writing temporary setting file: " << tempFilePath << std::endl;
+				return "";
+			}
+
+			std::ifstream t(tempFilePath);
+			if (!t.is_open())
+			{
+				err << "I/O error while reading temporary setting file: " << tempFilePath << std::endl;
+				return "";
+			}
+			std::stringstream buffer;
+			buffer << t.rdbuf();
+
+			capturedSpecification = NULL;
+
+			return buffer.str();
 		}
 
 		// Defines the default value for this setting if missing from config file.
@@ -143,6 +179,8 @@ namespace libconfig
 			CheckType(minVal, requestedType);
 			CheckType(maxVal, requestedType);
 
+			CaptureSetting<T>(requestedType);
+
 			if (!setting)
 			{
 				if (isSettingMandatory)
@@ -187,6 +225,8 @@ namespace libconfig
 
 		ChainedSetting operator[](const char *name)
 		{
+			CaptureSetting<Setting>(Setting::TypeGroup);
+
 			if (!setting)
 			{
 				return ChainedSetting(name, this);
@@ -209,6 +249,10 @@ namespace libconfig
 
 		ChainedSetting operator[](int index)
 		{
+			// This could also be an TypeArray but we cannot be sure here.
+			// By using TypeList we ensure it will always work.
+			CaptureSetting<Setting>(Setting::TypeList);
+
 			if (!setting)
 			{
 				return ChainedSetting(index, this);
@@ -266,6 +310,8 @@ namespace libconfig
 			, isSettingMandatory(false)
 			, anySettingIsMissing(false)
 			, anyMandatorySettingIsMissing(false)
+			, capturedSpecification(NULL)
+			, capturedSetting(NULL)
 		{
 		}
 		
@@ -278,6 +324,8 @@ namespace libconfig
 			, isSettingMandatory(false)
 			, anySettingIsMissing(true)
 			, anyMandatorySettingIsMissing(false)
+			, capturedSpecification(NULL)
+			, capturedSetting(NULL)
 		{
 		}
 
@@ -290,8 +338,55 @@ namespace libconfig
 			, isSettingMandatory(false)
 			, anySettingIsMissing(true)
 			, anyMandatorySettingIsMissing(false)
+			, capturedSpecification(NULL)
+			, capturedSetting(NULL)
 		{
 		}
+
+		template<typename T>
+		void ConditionalSetCapturedDefaultValue()
+		{
+			*capturedSetting = GetDefaultValue<T>();
+		}
+
+		template<>
+		void ConditionalSetCapturedDefaultValue<Setting>()
+		{
+		}
+
+		template<typename T>
+		void CaptureSetting(Setting::Type type)
+		{
+			if (!capturedSetting && parent && parent->capturedSetting)
+			{
+				if (name.length() > 0)
+				{
+					if (!parent->capturedSetting->exists(name))
+					{
+						capturedSetting = &parent->capturedSetting->add(name, type);
+					}
+					else
+					{
+						capturedSetting = &(*parent->capturedSetting)[name];
+					}
+				}
+				else
+				{
+					if (index < parent->capturedSetting->getLength())
+					{
+						capturedSetting = &(*parent->capturedSetting)[0];
+					}
+					else
+					{
+						assert(index == parent->capturedSetting->getLength()); // you requested an index while omitting at least one of its previous siblings
+						capturedSetting = &parent->capturedSetting->add(type);
+					}
+				}
+
+				ConditionalSetCapturedDefaultValue<T>();
+			}
+		}
+
 
 		std::string GetPath() const
 		{
@@ -398,5 +493,7 @@ namespace libconfig
 		bool isSettingMandatory;
 		bool anySettingIsMissing;
 		bool anyMandatorySettingIsMissing;
+		Config* capturedSpecification;
+		Setting* capturedSetting;
 	};
 }

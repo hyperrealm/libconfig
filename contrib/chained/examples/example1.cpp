@@ -31,7 +31,7 @@ using namespace std;
 using namespace libconfig;
 
 // This example reads basic information from config file 
-// and reacts on missing mandatory values
+// and reacts on missing mandatory values.
 
 void example1(Config& cfg)
 {

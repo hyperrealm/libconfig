@@ -30,7 +30,7 @@
 using namespace std;
 using namespace libconfig;
 
-// This example reads complex types from config file using method chains
+// This example reads complex types from config file using method chains.
 
 void example2(Config& cfg)
 {

@@ -35,6 +35,7 @@ using namespace libconfig;
 
 void example1(Config& cfg);
 void example2(Config& cfg);
+void example3(Config& cfg);
 
 int main(int argc, char **argv)
 {
@@ -57,10 +58,12 @@ int main(int argc, char **argv)
     return(EXIT_FAILURE);
   }
 
-  cout << endl << "<<< Example 1 >>>" << endl;
+  cout << endl << endl << "<<< Example 1 >>>" << endl << endl;
   example1(cfg);
-  cout << endl << "<<< Example 2 >>>" << endl;
+  cout << endl << endl << "<<< Example 2 >>>" << endl << endl;
   example2(cfg);
+  cout << endl << endl << "<<< Example 3 >>>" << endl << endl;
+  example3(cfg);
 
   return(EXIT_SUCCESS);
 }

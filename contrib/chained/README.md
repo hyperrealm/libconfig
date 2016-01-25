@@ -50,5 +50,5 @@ Writing configuration files is not part of this extension.
  * default values
  * limits (min/max)
  * mandatory/optional values
- * help text output for expected config format
-
+ * help text output for expected config format on specification violation
+ * capturing and outputting expected configuration specification/defaults
