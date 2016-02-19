@@ -26,6 +26,7 @@
 #include <cassert>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 namespace libconfig 
 {
