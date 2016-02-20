@@ -22,6 +22,10 @@
    ----------------------------------------------------------------------------
 */
 
+#pragma once
+#ifndef _CHAINED_LIBCONFIG_H_
+#define _CHAINED_LIBCONFIG_H_
+
 #include <libconfig.h++>
 #include <cassert>
 #include <fstream>
@@ -526,3 +530,5 @@ namespace libconfig
 		Setting* capturedSetting;
 	};
 }
+
+#endif
