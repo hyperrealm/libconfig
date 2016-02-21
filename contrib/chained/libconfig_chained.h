@@ -382,10 +382,7 @@ namespace libconfig
 			*capturedSetting = GetDefaultValue<T>();
 		}
 
-		template<>
-		void ConditionalSetCapturedDefaultValue<Setting>()
-		{
-		}
+		
 
 		template<typename T>
 		void CaptureSetting(Setting::Type type)
@@ -400,7 +397,7 @@ namespace libconfig
 					}
 					else
 					{
-						capturedSetting = &(*parent->capturedSetting)[name];
+						capturedSetting = &(*parent->capturedSetting)[name.c_str()];
 					}
 				}
 				else
@@ -469,11 +466,7 @@ namespace libconfig
 			return (T)0;
 		}
 
-		template<>
-		std::string GetUnsetDefaultValue() const
-		{
-			return "";
-		}
+		
 
 		template<typename T>
 		T GetDefaultValue() const
@@ -489,21 +482,11 @@ namespace libconfig
 		template<typename T>
 		Setting::Type GetRequestedType() const
 		{
-			static_assert(false, "should never happen, unless you requested an unsupported type");
+			// TODO @ Hemofektik: Check whether the outcommented line is still needed. static_assert(false) is checked on compile time and, well, asserts :)
+            // static_assert(false, "should never happen, unless you requested an unsupported type");
 			return Setting::TypeNone;
 		}
-		template<> Setting::Type GetRequestedType<int8_t>() const { return Setting::TypeInt; }
-		template<> Setting::Type GetRequestedType<uint8_t>() const { return Setting::TypeInt; }
-		template<> Setting::Type GetRequestedType<int16_t>() const { return Setting::TypeInt; }
-		template<> Setting::Type GetRequestedType<uint16_t>() const { return Setting::TypeInt; }
-		template<> Setting::Type GetRequestedType<int32_t>() const { return Setting::TypeInt; }
-		template<> Setting::Type GetRequestedType<uint32_t>() const { return Setting::TypeInt; }
-		template<> Setting::Type GetRequestedType<int64_t>() const { return Setting::TypeInt64; }
-		template<> Setting::Type GetRequestedType<uint64_t>() const { return Setting::TypeInt64; }
-		template<> Setting::Type GetRequestedType<float>() const { return Setting::TypeFloat; }
-		template<> Setting::Type GetRequestedType<double>() const { return Setting::TypeFloat; }
-		template<> Setting::Type GetRequestedType<std::string>() const { return Setting::TypeString; }
-		template<> Setting::Type GetRequestedType<bool>() const { return Setting::TypeBoolean; }
+		
 
 		void CheckType(const Variant& variant, Setting::Type expectedType) const
 		{
@@ -529,6 +512,31 @@ namespace libconfig
 		Config* capturedSpecification;
 		Setting* capturedSetting;
 	};
+
+    template<>
+    inline 
+    void ChainedSetting::ConditionalSetCapturedDefaultValue<Setting>() { }
+	
+	template<>
+    inline 
+    std::string ChainedSetting::GetUnsetDefaultValue() const
+    {
+        return "";
+    }
+    
+    
+    template<> inline Setting::Type ChainedSetting::GetRequestedType<int8_t>() const { return Setting::TypeInt; }
+    template<> inline Setting::Type ChainedSetting::GetRequestedType<uint8_t>() const { return Setting::TypeInt; }
+    template<> inline Setting::Type ChainedSetting::GetRequestedType<int16_t>() const { return Setting::TypeInt; }
+    template<> inline Setting::Type ChainedSetting::GetRequestedType<uint16_t>() const { return Setting::TypeInt; }
+    template<> inline Setting::Type ChainedSetting::GetRequestedType<int32_t>() const { return Setting::TypeInt; }
+    template<> inline Setting::Type ChainedSetting::GetRequestedType<uint32_t>() const { return Setting::TypeInt; }
+    template<> inline Setting::Type ChainedSetting::GetRequestedType<int64_t>() const { return Setting::TypeInt64; }
+    template<> inline Setting::Type ChainedSetting::GetRequestedType<uint64_t>() const { return Setting::TypeInt64; }
+    template<> inline Setting::Type ChainedSetting::GetRequestedType<float>() const { return Setting::TypeFloat; }
+    template<> inline Setting::Type ChainedSetting::GetRequestedType<double>() const { return Setting::TypeFloat; }
+    template<> inline Setting::Type ChainedSetting::GetRequestedType<std::string>() const { return Setting::TypeString; }
+    template<> inline Setting::Type ChainedSetting::GetRequestedType<bool>() const { return Setting::TypeBoolean; }
 }
 
 #endif
