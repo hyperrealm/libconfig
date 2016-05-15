@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(libconfig, 1.5, hyperrealm@gmail.com, libconfig,
+AC_INIT(libconfig, 1.6, hyperrealm@gmail.com, libconfig,
 	[http://www.hyperrealm.com/main.php?s=libconfig])
 AC_CONFIG_AUX_DIR([aux-build])
 AC_CONFIG_MACRO_DIR([m4])
