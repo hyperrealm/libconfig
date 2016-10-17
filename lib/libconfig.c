@@ -726,6 +726,7 @@ int config_read_file(config_t *config, const char *filename)
 
 int config_write_file(config_t *config, const char *filename)
 {
+  int fd;
   FILE *stream = fopen(filename, "wt");
   if(stream == NULL)
   {
@@ -735,6 +736,24 @@ int config_write_file(config_t *config, const char *filename)
   }
 
   config_write(config, stream);
+
+  fd = fileno(stream);
+  if(fd < 0)
+  {
+    config->error_text = __io_error;
+    config->error_type = CONFIG_ERR_FILE_IO;
+    fclose(stream);
+    return(CONFIG_FALSE);
+  }
+
+  if(fsync(fd) < 0)
+  {
+      config->error_text = __io_error;
+      config->error_type = CONFIG_ERR_FILE_IO;
+      fclose(stream);
+      return(CONFIG_FALSE);
+  }
+
   fclose(stream);
   config->error_type = CONFIG_ERR_NONE;
   return(CONFIG_TRUE);
