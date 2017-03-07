@@ -251,6 +251,11 @@ include_dir_open  ^[ \t]*@include_dir[ \t]+\"
 
                     if((llval < INT_MIN) || (llval > INT_MAX))
                     {
+                      if((llval > UINT_MAX))
+			{
+			errno = -ERANGE;
+			return (TOK_ERROR);
+			}
                       yylval->llval = llval;
                       return(TOK_INTEGER64);
                     }
