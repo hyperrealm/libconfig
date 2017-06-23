@@ -104,9 +104,9 @@ static void rconfig_update_setting(config_setting_t* setting, VALUE value)
     case CONFIG_TYPE_FLOAT:
 // ruby1.9 check
 #if HAVE_RB_BLOCK_CALL
-      config_setting_set_float(setting, RFLOAT(value)->float_value);
+      config_setting_set_float(setting, RFLOAT_VALUE(value));
 #else
-      config_setting_set_float(setting, RFLOAT(value)->value);
+      config_setting_set_float(setting, RFLOAT_VALUE(value));
 #endif
       break;
     
