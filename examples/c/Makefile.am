@@ -11,5 +11,5 @@ LDADD = $(top_builddir)/lib/libconfig.la
 EXTRA_DIST = \
   example.cfg \
   example4.cfg \
-  book*.cfg \
-	*.vcproj
+  cfg_includes/*.cfg \
+  *.vcproj
