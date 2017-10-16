@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2015  Mark A Lindner
+   Copyright (C) 2005-2018  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -23,52 +23,77 @@
 #ifndef __libconfig_scanctx_h
 #define __libconfig_scanctx_h
 
-#include "libconfig.h"
-#include "strbuf.h"
-
 #include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
 
+#include "libconfig.h"
+#include "strbuf.h"
+#include "strvec.h"
+
 #define MAX_INCLUDE_DEPTH 10
+
+struct include_stack_frame
+{
+  const char **files;
+  const char **current_file;
+  FILE *current_stream;
+  void *parent_buffer;
+};
 
 struct scan_context
 {
   config_t *config;
   const char *top_filename;
-  const char *files[MAX_INCLUDE_DEPTH];
-  void *buffers[MAX_INCLUDE_DEPTH];
-  FILE *streams[MAX_INCLUDE_DEPTH];
+  struct include_stack_frame include_stack[MAX_INCLUDE_DEPTH];
+  int stack_depth;
   strbuf_t string;
-  const char **filenames;
-  unsigned int num_filenames;
-  int depth;
-  void **dentries;		/* dirent** */
-  const char *basedir;	/* basedir for @include_dir */
-  unsigned de_max, de_cur;	/* counters into dirent* array */
+  strvec_t filenames;
 };
 
-struct dirent;	/* forward decl */
-
 extern void scanctx_init(struct scan_context *ctx, const char *top_filename);
-extern const char **scanctx_cleanup(struct scan_context *ctx,
-                                    unsigned int *num_filenames);
+extern const char **scanctx_cleanup(struct scan_context *ctx);
 
-extern const char *scanctx_getpath(struct scan_context *ctx);
-extern const char *scanctx_filename(struct scan_context *ctx, const char *dirname, const char *filename);
-
-extern const char* scanctx_dirnext(struct scan_context* ctx);
-extern int   scanctx_dirscan(struct scan_context* ctx, const char* dirname,
-				int (*filter)(const struct dirent *),
-				int (*compar)(const struct dirent **, const struct dirent **));
-extern void  scanctx_dirend(struct scan_context* ctx);
-extern int   scanctx_inloop(const struct scan_context* ctx);
-
+/*
+ * Pushes a new frame onto the include stack, and returns an open stream to the
+ * first file in the include list, if any.
+ *
+ * ctx - The scan context
+ * prev_buffer - The current input buffer, to be restored when this frame is
+ * popped
+ * path - The string argument to the @include directive, to be expanded into a
+ * list of zero or more filenames using the function ctx->config->include_fn
+ * error - A pointer at which to store a static error message, if any.
+ *
+ * On success, the new frame will be pushed and the stream to the first file
+ * will be returned.
+ *
+ * On failure, the frame will not be pushed and NULL will be returned. If
+ * *error is NULL, it means there are no files in the list. Otherwise, it
+ * points to an error and parsing should be aborted.
+ */
 extern FILE *scanctx_push_include(struct scan_context *ctx, void *prev_buffer,
-                                  const char *file, const char **error);
+                                  const char *path, const char **error);
+
+/*
+ * Returns the next include file in the current include stack frame.
+ *
+ * Returns NULL on failure or if there are no more files left in the current
+ * frame. If there was an error, sets *error.
+ */
+extern FILE *scanctx_next_include_file(struct scan_context *ctx,
+                                       const char **error);
+
+/*
+ * Pops a frame off the include stack.
+ */
 extern void *scanctx_pop_include(struct scan_context *ctx);
 
-#define scanctx_append_string(C, S)             \
-  strbuf_append(&((C)->string), (S))
+#define scanctx_append_string(C, S) \
+  strbuf_append_string(&((C)->string), (S))
+
+#define scanctx_append_char(C, X) \
+  strbuf_append_char(&((C)->string), (X))
 
 extern char *scanctx_take_string(struct scan_context *ctx);
 

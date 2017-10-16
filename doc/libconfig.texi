@@ -6,8 +6,8 @@
 @setfilename libconfig.info
 @settitle libconfig
 
-@set edition 1.6
-@set update-date 31 Dec 2015
+@set edition 1.7
+@set update-date ?? Oct 2017
 @set subtitle-text A Library For Processing Structured Configuration Files
 @set author-text Mark A.@: Lindner
 
@@ -36,7 +36,7 @@
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2005-2015  Mark A Lindner
+Copyright @copyright{} 2004-2018  Mark A Lindner
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -468,9 +468,9 @@ The value may be a scalar value, an array, a group, or a list.
 
 A group has the form:
 
-@b{lbracechar}
+@b{@{}
    @i{settings ...}
-@b{rbracechar}
+@b{@}}
 
 Groups can contain any number of settings, but each setting must have
 a unique name within the group.
@@ -486,6 +486,8 @@ An array has the form:
 An array may have zero or more elements, but the elements must all be
 scalar values of the same type.
 
+The last element in an array may be followed by a comma, which will be ignored.
+
 @node Lists, Integer Values, Arrays, Configuration Files
 @comment  node-name,  next,  previous,  up
 @section Lists
@@ -496,6 +498,8 @@ A list has the form:
 
 A list may have zero or more elements, each of which can be a scalar
 value, an array, a group, or another list.
+
+The last element in a list may be followed by a comma, which will be ignored.
 
 @node Integer Values, 64-bit Integer Values, Lists, Configuration Files
 @comment  node-name,  next,  previous,  up
@@ -607,16 +611,25 @@ present in the original configuration will be lost.
 @section Include Directives
 
 @cindex include directive
-A configuration file may ``include'' the contents of another file
+A configuration file may ``include'' the contents of other files
 using an @i{include directive}. This directive has the effect of
-inlining the contents of the named file at the point of inclusion.
+inlining the contents of the named file(s) at the point of inclusion.
 
 An include directive must appear on its own line in the input. It has
 the form:
 
-@b{@@include "}@i{filename}@b{"}
+@b{@@include "}@i{path}@b{"}
 
-Any backslashes or double quotes in the filename must be escaped as
+@cindex include function
+The interpretation of @i{path} depends on the currently registered
+@i{include function}. The default include function prepends the include
+directory, if any, to @i{path}, and then interprets the result as a single,
+literal file path. The application may supply its own include function which
+does variable substitution, wildcard expansion, or other transformations,
+returning a list of zero or more paths to files whose contents should be inlined
+at the point of inclusion.
+
+Any backslashes or double quotes in the path must be escaped as
 @samp{\\} and @samp{\"}, respectively.
 
 For example, consider the following two configuration files:
@@ -645,58 +658,17 @@ info: @{
 
 The resulting configuration will be equivalent to one in which the
 contents of the ``quote.cfg`` file appeared at the point where the
-@@include directive is placed.
-
-@cindex include_dir directive
-Additionally, a directory containing configuration snippets can be
-processed using an @b{include_dir} directive. This directive has the
-effect of inlining the contents of the files contained in the named
-directory at the point of inclusion.
-The configuration files are ordered lexicographically before processing
-and ``hidden`` files (those having a name beginning with a dot) are
-skipped.
-
-An include_dir directive must appear on its own line in the input:
-
-@b{@@include_dir "}@i{dirname}@b{"}
-
-The same quoting rules as for @i{@@include} apply.
-
-@cartouche
-@smallexample
-# directory: myapp/conf.d
-00prolog.cfg
-01header.cfg
-02body.cfg
-03footer.cfg
-99epilog.cfg
-@end smallexample
-@end cartouche
-
-@cartouche
-@smallexample
-# file: test.cfg
-docinfo: @{
-  name = "Some complex config";
-  @@include_dir "myapp/conf.d"
-@};
-@end smallexample
-@end cartouche
-
-Please keep in mind that the included files will be read and processed in
-lexicographical order, as it has become customary.
+include directive is placed.
 
 Include files may be nested to a maximum of 10 levels; exceeding this
 limit results in a parse error.
 
-When the path argument to an @b{@@include} or @b{@@include_dir} directive
+When the path argument to an @b{@@include} directive
 begins with a PATH_SEPARATOR ('/' or '\'), it is considered to be absolute.
-Alternatively, when an @i{include_basedir} has been set by means of a
+Alternatively, when an include directory has been set by means of a
 @b{config_set_include_dir} call, the directory and/or filename will be
-taken as relative to the specified include_basedir.
-Otherwise, the name is interpreted as relative to the program's CWD
-(current working directory).
-
+taken as relative to that directory. Otherwise, the name is interpreted as
+relative to the program's current working directory.
 
 Like comments, include directives are not part of the configuration
 file syntax. They are processed before the configuration itself is
@@ -728,6 +700,16 @@ These functions initialize and destroy the configuration object @var{config}.
 @code{config_destroy()} destroys the configuration @var{config},
 deallocating all memory associated with the configuration, but does not
 attempt to deallocate the @i{config_t} structure itself.
+
+@end deftypefun
+
+@deftypefun void config_clear (@w{config_t * @var{config}})
+
+@b{Since @i{v1.7}}
+
+This function clears the configuration @var{config}. All child settings of the
+root setting are recursively destroyed. All other attributes of the configuration
+are left unchanged.
 
 @end deftypefun
 
@@ -821,6 +803,65 @@ file @file{/usr/local/etc/configs/extra.cfg}.
 
 @code{config_get_include_dir()} returns the current include directory for the
 configuration @var{config}, or @code{NULL} if none is set.
+
+@end deftypefun
+
+@deftypefun void config_set_include_func (@w{config_include_fn_t @var{func}})
+
+@b{Since @i{v1.7}}
+
+Specifies the include function @var{func} to use when processing
+include directives. If @var{func} is @code{NULL}, the default include function,
+@code{config_default_include_func()}, will be reinstated.
+
+@tindex config_include_fn_t
+The type @i{config_include_fn_t} is a type alias
+for a function whose signature is:
+
+@deftypefun @w{const char **} func (@w{config_t *@var{config}}, @w{const char *@var{include_dir}}, @w{const char *@var{path}}, @w{const char **@var{error}})
+
+The function receives the configuration @var{config}, the
+configuration's current include directory @var{include_dir}, the
+argument to the include directive @var{path}; and a pointer at which
+to return an error message @var{error}.
+
+On success, the function should return a @code{NULL}-terminated array
+of paths. Any relative paths must be relative to the program's current
+working directory. The contents of these files will be inlined at the point
+of inclusion, in the order that the paths appear in the
+array. Both the array and its elements should be heap allocated; the
+library will take ownership of and eventually free the strings in the
+array and the array itself.
+
+On failure, the function should return @code{NULL} and set @var{*error} to a
+static error string which should be used as the parse error for the
+configuration; the library does not take ownership of or free this string.
+
+The default include function, @code{config_default_include_func()},
+simply returns a @code{NULL}-terminated array containing either a copy
+of @var{path} if it's an absolute path, or a concatenation of
+@var{include_dir} and @var{path} if it's a relative path.
+
+@end deftypefun
+
+Application-supplied include functions can perform custom tasks like wildcard
+expansion or variable substitution. For example, consider the include directive:
+
+@cartouche
+@smallexample
+@@include "configs/*.cfg"
+@end smallexample
+@end cartouche
+
+The include function would be invoked with the path @samp{configs/*.cfg} and
+could do wildcard expansion on that path, returning a list of paths to files
+with the file extension @samp{.cfg} in the subdirectory @samp{configs}. Each of
+these files would then be inlined at the location of the include directive.
+
+Tasks like wildcard expansion and variable substitution are non-trivial to
+implement and typically require platform-specific code. In the interests of
+keeping the library as compact and platform-independent as possible,
+implementations of such include functions are not included.
 
 @end deftypefun
 
@@ -1229,6 +1270,17 @@ application-level errors.
 
 @end deftypefun
 
+@deftypefun void config_set_hook (@w{config_t * @var{config}}, @w{void * @var{hook}})
+@deftypefunx {void *} config_get_hook (@w{const config_t * @var{config}})
+
+@b{Since @i{v1.7}}
+
+These functions make it possible to attach arbitrary data to a configuration
+structure, for instance a ``wrapper'' or ``peer'' object written in
+another programming language.
+
+@end deftypefun
+
 @deftypefun void config_setting_set_hook (@w{config_setting_t * @var{setting}}, @w{void * @var{hook}})
 @deftypefunx {void *} config_setting_get_hook (@w{const config_setting_t * @var{setting}})
 
@@ -1336,6 +1388,16 @@ These methods create and destroy @code{Config} objects.
 
 @end deftypemethod
 
+@deftypemethod Config void clear ()
+
+@b{Since @i{v1.7}}
+
+This method clears the configuration. All child settings of the root
+setting are recursively destroyed. All other attributes of the
+configuration are left unchanged.
+
+@end deftypemethod
+
 @deftypemethod Config void read (@w{FILE * @var{stream}})
 @deftypemethodx Config void write (@w{FILE * @var{stream}})
 
@@ -1397,6 +1459,34 @@ file @file{/usr/local/etc/configs/extra.cfg}.
 
 @code{getIncludeDir()} returns the current include directory for the
 configuration, or @code{NULL} if none is set.
+
+@end deftypemethod
+
+@deftypemethod Config {virtual const char **} evaluateIncludePath (@w{const char * @var{path}}, @w{const char ** @var{error}})
+
+@b{Since @i{v1.7}}
+
+This method is called to evaluate the path of an @code{@@include} directive.
+The @var{path} is the literal path argument of the directive. The method may
+be overridden in a subclass to perform tasks like wildcard expansion and
+variable substitution.
+
+On success, the method should return a @code{NULL}-terminated array of paths.
+Any relative paths must be relative to the program's current working directory.
+The contents of these files will be inlined at the point of inclusion, in the
+order that the paths appear in the array. Both the array and its elements should
+be heap allocated; the library will take ownership of and eventually free the
+strings in the array and the array itself.
+
+On failure, the function should return @code{NULL} and set @var{*error} to a
+static error string which should be used as the parse error for the
+configuration; the library does not take ownership of or free this string.
+
+The default implementation simply returns a @code{NULL}-terminated array
+containing either a copy of @var{path} if it's an absolute path, or a
+concatenation of the include directory and @var{path} if it's a relative path.
+
+For more information see @code{config_set_include_func()} above.
 
 @end deftypemethod
 

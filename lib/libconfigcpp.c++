@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2015  Mark A Lindner
+   Copyright (C) 2005-2018  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -34,6 +34,17 @@
 #include <sstream>
 
 namespace libconfig {
+
+// ---------------------------------------------------------------------------
+
+static const char **__include_func(config_t *config,
+                                   const char *include_dir,
+                                   const char *path,
+                                   const char **error)
+{
+  Config *self = reinterpret_cast<Config *>(config_get_hook(config));
+  return(self->evaluateIncludePath(path, error));
+}
 
 // ---------------------------------------------------------------------------
 
@@ -307,7 +318,9 @@ Config::Config()
 {
   _config = new config_t;
   config_init(_config);
+  config_set_hook(_config, reinterpret_cast<void *>(this));
   config_set_destructor(_config, ConfigDestructor);
+  config_set_include_func(_config, __include_func);
 }
 
 // ---------------------------------------------------------------------------
@@ -316,6 +329,13 @@ Config::~Config()
 {
   config_destroy(_config);
   delete _config;
+}
+
+// ---------------------------------------------------------------------------
+
+void Config::clear()
+{
+  config_clear(_config);
 }
 
 // ---------------------------------------------------------------------------
@@ -398,6 +418,13 @@ void Config::setIncludeDir(const char *includeDir)
 const char *Config::getIncludeDir() const
 {
   return(config_get_include_dir(_config));
+}
+
+// ---------------------------------------------------------------------------
+
+const char **Config::evaluateIncludePath(const char *path, const char **error)
+{
+  return(config_default_include_func(_config, getIncludeDir(), path, error));
 }
 
 // ---------------------------------------------------------------------------

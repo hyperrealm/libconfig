@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2015  Mark A Lindner
+   Copyright (C) 2005-2018  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -40,7 +40,7 @@
 #endif /* WIN32 */
 
 #define LIBCONFIGXX_VER_MAJOR    1
-#define LIBCONFIGXX_VER_MINOR    5
+#define LIBCONFIGXX_VER_MINOR    7
 #define LIBCONFIGXX_VER_REVISION 0
 
 struct config_t; // fwd decl
@@ -453,6 +453,8 @@ class LIBCONFIGXX_API Config
   Config();
   virtual ~Config();
 
+  void clear();
+
   void setOptions(int options);
   int getOptions() const;
 
@@ -471,6 +473,9 @@ class LIBCONFIGXX_API Config
 
   void setIncludeDir(const char *includeDir);
   const char *getIncludeDir() const;
+
+  virtual const char **evaluateIncludePath(const char *path,
+                                           const char **error);
 
   void read(FILE *stream);
   void write(FILE *stream) const;

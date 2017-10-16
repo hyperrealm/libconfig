@@ -18,7 +18,7 @@
 #
 # For more info see section 6.3 of the GNU Libtool Manual.
 
-VERINFO = -version-info 11:1:3
+VERINFO = -version-info 12:0:4
 
 ## Flex
 PARSER_PREFIX = libconfig_yy
@@ -29,14 +29,13 @@ AM_YFLAGS = -d -p $(PARSER_PREFIX)
 
 
 libsrc = libconfig.c scanner.l grammar.y parsectx.h wincompat.h \
-	scanctx.c scanctx.h strbuf.c strbuf.h dir.c dir.h
+  scanctx.c scanctx.h strbuf.c strbuf.h strvec.c strvec.h util.c util.h
 libinc = libconfig.h
 
 libsrc_cpp =  $(libsrc) libconfigcpp.c++
 libinc_cpp =  libconfig.h++
 
 BUILT_SOURCES = scanner.c scanner.h grammar.c grammar.h
-
 
 
 ## Build mode: C-only or C & C++
@@ -73,7 +72,6 @@ endif
 libconfig_la_LDFLAGS = $(VERINFO) -no-undefined
 
 libconfig___la_LDFLAGS = $(VERINFO) -no-undefined
-
 
 
 EXTRA_DIST = \

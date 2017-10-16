@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2015  Mark A Lindner
+   Copyright (C) 2005-2018  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -52,10 +52,6 @@
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__) \
      || defined(__MINGW32__))
 
-/* Why does gcc on MinGW use the Visual C++ style format directives
- * for 64-bit integers? Inquiring minds want to know....
- */
-
 #define INT64_FMT "%I64d"
 #define UINT64_FMT "%I64u"
 
@@ -88,10 +84,16 @@
 #define INT32_MIN (-2147483647-1)
 #endif
 
+#define IS_RELATIVE_PATH(P) \
+  (PathIsRelative(P))
+
 #else /* defined(WIN32) && ! defined(__MINGW32__) */
 
 #define INT64_CONST(I)  (I ## LL)
 #define UINT64_CONST(I) (I ## ULL)
+
+#define IS_RELATIVE_PATH(P) \
+  ((P)[0] != '/')
 
 #endif /* defined(WIN32) && ! defined(__MINGW32__) */
 

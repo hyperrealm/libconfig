@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2015  Mark A Lindner
+   Copyright (C) 2005-2018  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -44,6 +44,7 @@
 #include "wincompat.h"
 #include "grammar.h"
 #include "scanner.h"
+#include "util.h"
 
 #define PATH_TOKENS ":./"
 #define CHUNK_SIZE 16
@@ -52,9 +53,6 @@
 #define TAB2DIGITS(x)  (((x) & 0xFF00) >> 8)
 #define DIGITS2TAB(x)  (((x) & 0xFF) << 8)
 #define TAB2TAB(x)     ((x) & 0xF)
-
-#define _new(T) (T *)calloc(1, sizeof(T)) /* zeroed */
-#define _delete(P) free((void *)(P))
 
 /* ------------------------------------------------------------------------- */
 
@@ -473,10 +471,10 @@ static void __config_setting_destroy(config_setting_t *setting)
   if(setting)
   {
     if(setting->name)
-      _delete(setting->name);
+      __delete(setting->name);
 
     if(setting->type == CONFIG_TYPE_STRING)
-      _delete(setting->value.sval);
+      __delete(setting->value.sval);
 
     else if((setting->type == CONFIG_TYPE_GROUP)
             || (setting->type == CONFIG_TYPE_ARRAY)
@@ -489,7 +487,7 @@ static void __config_setting_destroy(config_setting_t *setting)
     if(setting->hook && setting->config->destructor)
       setting->config->destructor(setting->hook);
 
-    _delete(setting);
+    __delete(setting);
   }
 }
 
@@ -508,10 +506,10 @@ static void __config_list_destroy(config_list_t *list)
     for(p = list->elements, i = 0; i < list->length; p++, i++)
       __config_setting_destroy(*p);
 
-    _delete(list->elements);
+    __delete(list->elements);
   }
 
-  _delete(list);
+  __delete(list);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -568,20 +566,7 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
   struct parse_context parse_ctx;
   int r;
 
-  /* Reinitialize the config */
-  void (*destructor)(void *) = config->destructor;
-  const char *include_dir = config->include_dir;
-  unsigned short tab_width = config->tab_width;
-  int options = config->options;
-
-  config->include_dir = NULL;
-  config_destroy(config);
-  config_init(config);
-
-  config->destructor = destructor;
-  config->include_dir = include_dir;
-  config->tab_width = tab_width;
-  config->options = options;
+  config_clear(config);
 
   parsectx_init(&parse_ctx);
   parse_ctx.config = config;
@@ -616,7 +601,7 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
   }
 
   libconfig_yylex_destroy(scanner);
-  config->filenames = scanctx_cleanup(&scan_ctx, &(config->num_filenames));
+  config->filenames = scanctx_cleanup(&scan_ctx);
   parsectx_cleanup(&parse_ctx);
 
   __config_locale_restore();
@@ -744,18 +729,22 @@ int config_write_file(config_t *config, const char *filename)
 
 void config_destroy(config_t *config)
 {
-  unsigned int count = config->num_filenames;
-  const char **f;
+  config_clear(config);
+  __delete(config->include_dir);
+  __zero(config);
+}
 
+/* ------------------------------------------------------------------------- */
+
+void config_clear(config_t *config)
+{
+  /* Destroy the root setting (recursively) and then create a new one. */
   __config_setting_destroy(config->root);
+  __delete_vec(config->filenames);
 
-  for(f = config->filenames; count > 0; ++f, --count)
-    _delete(*f);
-
-  _delete(config->filenames);
-  _delete(config->include_dir);
-
-  memset((void *)config, 0, sizeof(config_t));
+  config->root = __new(config_setting_t);
+  config->root->type = CONFIG_TYPE_GROUP;
+  config->root->config = config;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -791,11 +780,9 @@ unsigned short config_get_float_precision(const config_t *config)
 
 void config_init(config_t *config)
 {
-  memset((void *)config, 0, sizeof(config_t));
+  __zero(config);
+  config_clear(config);
 
-  config->root = _new(config_setting_t);
-  config->root->type = CONFIG_TYPE_GROUP;
-  config->root->config = config;
   config->options = (CONFIG_OPTION_SEMICOLON_SEPARATORS
                      | CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS
                      | CONFIG_OPTION_OPEN_BRACE_ON_SEPARATE_LINE);
@@ -841,6 +828,13 @@ int config_get_options(const config_t *config)
 
 /* ------------------------------------------------------------------------- */
 
+void config_set_hook(config_t *config, void *hook)
+{
+  config->hook = hook;
+}
+
+/* ------------------------------------------------------------------------- */
+
 static config_setting_t *config_setting_create(config_setting_t *parent,
                                                const char *name, int type)
 {
@@ -852,7 +846,7 @@ static config_setting_t *config_setting_create(config_setting_t *parent,
      && (parent->type != CONFIG_TYPE_LIST))
     return(NULL);
 
-  setting = _new(config_setting_t);
+  setting = __new(config_setting_t);
   setting->parent = parent;
   setting->name = (name == NULL) ? NULL : strdup(name);
   setting->type = type;
@@ -863,7 +857,7 @@ static config_setting_t *config_setting_create(config_setting_t *parent,
   list = parent->value.list;
 
   if(! list)
-    list = parent->value.list = _new(config_list_t);
+    list = parent->value.list = __new(config_list_t);
 
   __config_list_add(list, setting);
 
@@ -1198,7 +1192,7 @@ int config_setting_set_string(config_setting_t *setting, const char *value)
     return(CONFIG_FALSE);
 
   if(setting->value.sval)
-    _delete(setting->value.sval);
+    __delete(setting->value.sval);
 
   setting->value.sval = (value == NULL) ? NULL : strdup(value);
   return(CONFIG_TRUE);
@@ -1582,8 +1576,15 @@ void config_set_destructor(config_t *config, void (*destructor)(void *))
 
 void config_set_include_dir(config_t *config, const char *include_dir)
 {
-  _delete(config->include_dir);
+  __delete(config->include_dir);
   config->include_dir = strdup(include_dir);
+}
+
+/* ------------------------------------------------------------------------- */
+
+void config_set_include_func(config_t *config, config_include_fn_t func)
+{
+  config->include_fn = func ? func : config_default_include_func;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1723,6 +1724,35 @@ int config_setting_index(const config_setting_t *setting)
   }
 
   return(-1);
+}
+
+/* ------------------------------------------------------------------------- */
+
+const char **config_default_include_func(config_t *config,
+                                         const char *include_dir,
+                                         const char *path,
+                                         const char **error)
+{
+  char *file;
+  const char **files;
+
+  if(include_dir && IS_RELATIVE_PATH(path))
+  {
+    file = (char *)malloc(strlen(include_dir) + strlen(path) + 2);
+    strcpy(file, include_dir);
+    strcat(file, FILE_SEPARATOR);
+    strcat(file, path);
+  }
+  else
+    file = strdup(path);
+
+  *error = NULL;
+
+  files = (const char **)malloc(sizeof(char **) * 2);
+  files[0] = file;
+  files[1] = NULL;
+
+  return(files);
 }
 
 /* ------------------------------------------------------------------------- */
