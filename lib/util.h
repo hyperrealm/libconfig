@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2015  Mark A Lindner
+   Copyright (C) 2005-2018  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -20,11 +20,12 @@
    ----------------------------------------------------------------------------
 */
 
-#ifndef __libconfig_dir_h
-#define __libconfig_dir_h
+#define __new(T) (T *)calloc(1, sizeof(T)) /* zeroed */
+#define __delete(P) free((void *)(P))
+#define __zero(P) memset((void *)(P), 0, sizeof(*P))
 
-extern void *dir_open(const char *path);
-extern const char *dir_next_ordinary_file(void *dirp);
-extern void dir_close(void *dirp);
+extern void __delete_vec(const char * const *v);
 
-#endif // __libconfig_dir_h
+extern long long parse_integer(const char *s, int *ok);
+extern unsigned long long parse_hex64(const char *s);
+

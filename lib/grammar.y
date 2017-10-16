@@ -1,7 +1,7 @@
 /* -*- mode: C -*- */
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2015  Mark A Lindner
+   Copyright (C) 2005-2018  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -352,6 +352,7 @@ simple_value:
 value_list:
     value
   | value_list TOK_COMMA value
+  | value_list TOK_COMMA
   ;
 
 value_list_optional:
@@ -362,6 +363,7 @@ value_list_optional:
 simple_value_list:
     simple_value
   | simple_value_list TOK_COMMA simple_value
+  | simple_value_list TOK_COMMA
   ;
 
 simple_value_list_optional:

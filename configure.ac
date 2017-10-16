@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(libconfig, 1.6, hyperrealm@gmail.com, libconfig,
+AC_INIT(libconfig, 1.7, hyperrealm@gmail.com, libconfig,
 	[http://www.hyperrealm.com/main.php?s=libconfig])
 AC_CONFIG_AUX_DIR([aux-build])
 AC_CONFIG_MACRO_DIR([m4])
@@ -10,7 +10,7 @@ AM_CONFIG_HEADER(ac_config.h)
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-AC_MSG_NOTICE([libconfig - made with pride in California])
+AC_MSG_NOTICE([libconfig - made with pride in Colorado])
 sleep 3
 
 AC_DEFINE_UNQUOTED(TARGET, "${target}", [Configured target name.])

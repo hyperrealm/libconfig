@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2015  Mark A Lindner
+   Copyright (C) 2005-2018  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -40,7 +40,7 @@ extern "C" {
 #endif /* WIN32 */
 
 #define LIBCONFIG_VER_MAJOR    1
-#define LIBCONFIG_VER_MINOR    5
+#define LIBCONFIG_VER_MINOR    7
 #define LIBCONFIG_VER_REVISION 0
 
 #include <stdio.h>
@@ -102,6 +102,11 @@ typedef struct config_list_t
   config_setting_t **elements;
 } config_list_t;
 
+typedef const char ** (*config_include_fn_t)(struct config_t *,
+                                             const char *,
+                                             const char *,
+                                             const char **);
+
 typedef struct config_t
 {
   config_setting_t *root;
@@ -110,12 +115,13 @@ typedef struct config_t
   unsigned short tab_width;
   short default_format;
   const char *include_dir;
+  config_include_fn_t include_fn;
   const char *error_text;
   const char *error_file;
   int error_line;
   config_error_t error_type;
   const char **filenames;
-  unsigned int num_filenames;
+  void *hook;
 } config_t;
 
 extern LIBCONFIG_API int config_read(config_t *config, FILE *stream);
@@ -141,17 +147,26 @@ extern LIBCONFIG_API void config_set_destructor(config_t *config,
                                                 void (*destructor)(void *));
 extern LIBCONFIG_API void config_set_include_dir(config_t *config,
                                                  const char *include_dir);
+extern LIBCONFIG_API void config_set_include_func(config_t *config,
+                                                  config_include_fn_t func);
 
 extern LIBCONFIG_API void config_set_float_precision(config_t *config,
-                                                          unsigned short digits);
-extern LIBCONFIG_API unsigned short config_get_float_precision(const config_t *config);
+                                                     unsigned short digits);
+extern LIBCONFIG_API unsigned short config_get_float_precision(
+  const config_t *config);
 
 extern LIBCONFIG_API void config_set_tab_width(config_t *config,
                                                unsigned short width);
-extern LIBCONFIG_API unsigned short config_get_tab_width(const config_t *config);
+extern LIBCONFIG_API unsigned short config_get_tab_width(
+  const config_t *config);
+
+extern LIBCONFIG_API void config_set_hook(config_t *config, void *hook);
+
+#define config_get_hook(C) ((C)->hook)
 
 extern LIBCONFIG_API void config_init(config_t *config);
 extern LIBCONFIG_API void config_destroy(config_t *config);
+extern LIBCONFIG_API void config_clear(config_t *config);
 
 extern LIBCONFIG_API int config_setting_get_int(
   const config_setting_t *setting);
@@ -212,6 +227,10 @@ extern LIBCONFIG_API config_setting_t *config_setting_set_bool_elem(
   config_setting_t *setting, int idx, int value);
 extern LIBCONFIG_API config_setting_t *config_setting_set_string_elem(
   config_setting_t *setting, int idx, const char *value);
+
+extern LIBCONFIG_API const char **config_default_include_func(
+    config_t *config, const char *include_dir, const char *path,
+    const char **error);
 
 #define /* const char * */ config_get_include_dir(/* const config_t * */ C) \
   ((C)->include_dir)
