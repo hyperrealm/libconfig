@@ -63,6 +63,7 @@ extern "C" {
 #define CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS     0x04
 #define CONFIG_OPTION_COLON_ASSIGNMENT_FOR_NON_GROUPS 0x08
 #define CONFIG_OPTION_OPEN_BRACE_ON_SEPARATE_LINE     0x10
+#define CONFIG_OPTION_ALLOW_SCIENTIFIC_NOTATION       0x20
 
 #define CONFIG_TRUE  (1)
 #define CONFIG_FALSE (0)
@@ -113,7 +114,8 @@ typedef struct config_t
   void (*destructor)(void *);
   int options;
   unsigned short tab_width;
-  short default_format;
+  unsigned short float_precision;
+  unsigned short default_format;
   const char *include_dir;
   config_include_fn_t include_fn;
   const char *error_text;

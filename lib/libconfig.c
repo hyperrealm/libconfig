@@ -48,11 +48,8 @@
 
 #define PATH_TOKENS ":./"
 #define CHUNK_SIZE 16
-#define FLOAT_PRECISION 2
-
-#define TAB2DIGITS(x)  (((x) & 0xFF00) >> 8)
-#define DIGITS2TAB(x)  (((x) & 0xFF) << 8)
-#define TAB2TAB(x)     ((x) & 0xF)
+#define DEFAULT_TAB_WIDTH 2
+#define DEFAULT_FLOAT_PRECISION 6
 
 /* ------------------------------------------------------------------------- */
 
@@ -218,36 +215,10 @@ static void __config_write_value(const config_t *config,
     /* float */
     case CONFIG_TYPE_FLOAT:
     {
-      char *q;
-
-      snprintf(fbuf, sizeof(fbuf) - 3, "%.*f",
-               TAB2DIGITS(config->tab_width),   /* XXX: hack; See config_set_float_precision */
-               value->fval
-      );
-
-      /* check for exponent */
-      q = strchr(fbuf, 'e');
-      if(! q)
-      {
-        /* no exponent */
-        if(! strchr(fbuf, '.')) /* no decimal point */
-          strcat(fbuf, ".0");
-        else
-        {
-          /* has decimal point */
-          char *p;
-
-          for(p = fbuf + strlen(fbuf) - 1; p > fbuf; --p)
-          {
-            if(*p != '0')
-            {
-              *(++p) = '\0';
-              break;
-            }
-          }
-        }
-      }
-
+      const int sci_ok = ((config->options
+                           & CONFIG_OPTION_ALLOW_SCIENTIFIC_NOTATION) != 0);
+      format_double(value->fval, config->float_precision, sci_ok, fbuf,
+                    sizeof(fbuf));
       fputs(fbuf, stream);
       break;
     }
@@ -370,7 +341,7 @@ static void __config_write_value(const config_t *config,
           fputc('\n', stream);
 
           if(depth > 1)
-            __config_indent(stream, depth, TAB2TAB(config->tab_width));
+            __config_indent(stream, depth, config->tab_width);
         }
 
         fprintf(stream, "{\n");
@@ -386,7 +357,7 @@ static void __config_write_value(const config_t *config,
       }
 
       if(depth > 1)
-        __config_indent(stream, depth, TAB2TAB(config->tab_width));
+        __config_indent(stream, depth, config->tab_width);
 
       if(depth > 0)
         fputc('}', stream);
@@ -636,7 +607,7 @@ static void __config_write_setting(const config_t *config,
     config, CONFIG_OPTION_COLON_ASSIGNMENT_FOR_NON_GROUPS) ? ':' : '=';
 
   if(depth > 1)
-    __config_indent(stream, depth, TAB2TAB(config->tab_width));
+    __config_indent(stream, depth, config->tab_width);
 
 
   if(setting->name)
@@ -749,10 +720,9 @@ void config_clear(config_t *config)
 
 /* ------------------------------------------------------------------------- */
 
-void config_set_tab_width(config_t *config,
-                          unsigned short width)
+void config_set_tab_width(config_t *config, unsigned short width)
 {
-  /* As per documentation: valid range= 0..15 */
+  /* As per documentation: valid range is 0 - 15. */
   config->tab_width = (width <= 15) ? width : 15;
 }
 
@@ -760,20 +730,21 @@ void config_set_tab_width(config_t *config,
 
 unsigned short config_get_tab_width(const config_t *config)
 {
-  return TAB2TAB(config->tab_width);
+  return config->tab_width;
 }
 
 /* ------------------------------------------------------------------------- */
 
-void config_set_float_precision(config_t *config,
-                                          unsigned short digits)
+void config_set_float_precision(config_t *config, unsigned short digits)
 {
-  config->tab_width |= DIGITS2TAB(digits);
+  config->float_precision = digits;
 }
+
+/* ------------------------------------------------------------------------- */
 
 unsigned short config_get_float_precision(const config_t *config)
 {
-  return TAB2DIGITS(config->tab_width);
+  return config->float_precision;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -791,8 +762,8 @@ void config_init(config_t *config)
    * (ab)using the existing macros' 0x0F mask in order to preserve
    * API & ABI compatibility ; changes are fully backwards compatible
    */
-  config->tab_width = FLOAT_PRECISION;
-  config->tab_width |= DIGITS2TAB(2);    /* float_digits */
+  config->tab_width = DEFAULT_TAB_WIDTH;
+  config->float_precision = DEFAULT_FLOAT_PRECISION;
 }
 
 /* ------------------------------------------------------------------------- */

@@ -870,14 +870,13 @@ implementations of such include functions are not included.
 
 @b{Since @i{v1.6}}
 
-These functions set and get the number of decimal digits to output when writing
-the configuration to a file or stream.
+These functions set and get the number of decimal digits to output after the
+radix character when writing the configuration to a file or stream.
 
-@code{config_set_float_precision(config,digits)} specifies "the number of
-digits to appear after the radix character". Please refer to printf(3) for details.
+Valid values for @var{digits} range from 0 (no decimals) to about 15
+(implementation defined). This parameter has no effect on parsing.
 
-Valid float precision range from 0 (no decimals) to about 15 (implementation defined).
-This parameter has no effect on parsing.
+The default float precision is 6.
 
 @end deftypefun
 
@@ -924,6 +923,12 @@ This option controls whether an open brace (`@{') will be written on its own
 line when the configuration is written to a file or stream. If the option is
 turned off, the brace will be written at the end of the previous line.
 By default this option is turned on.
+
+@item CONFIG_OPTION_ALLOW_SCIENTIFIC_NOTATION
+This option controls whether scientific notation may be used as appropriate
+when writing floating point values (corresponding to @code{printf()}
+@samp{%g} format) or should never be used (corresponding to @code{printf()}
+@samp{%f} format). By default this option is turned off.
 
 @end table
 
@@ -1533,6 +1538,12 @@ This option controls whether an open brace (`@{') will be written on its own
 line when the configuration is written to a file or stream. If the option is
 turned off, the brace will be written at the end of the previous line.
 By default this option is turned on.
+
+@item OptionAllowScientificNotation
+This option controls whether scientific notation may be used as appropriate
+when writing floating point values (corresponding to @code{printf()}
+@samp{%g} format) or should never be used (corresponding to @code{printf()}
+@samp{%f} format). By default this option is turned off.
 
 @end table
 

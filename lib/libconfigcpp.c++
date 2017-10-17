@@ -699,9 +699,6 @@ Setting::operator unsigned int() const
 
   int v = config_setting_get_int(_setting);
 
-  if(v < 0)
-    v = 0;
-
   return(static_cast<unsigned int>(v));
 }
 
@@ -741,9 +738,6 @@ Setting::operator unsigned long long() const
   assertType(TypeInt64);
 
   long long v = config_setting_get_int64(_setting);
-
-  if(v < INT64_CONST(0))
-    v = INT64_CONST(0);
 
   return(static_cast<unsigned long long>(v));
 }

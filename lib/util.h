@@ -20,6 +20,8 @@
    ----------------------------------------------------------------------------
 */
 
+#include <sys/types.h>
+
 #define __new(T) (T *)calloc(1, sizeof(T)) /* zeroed */
 #define __delete(P) free((void *)(P))
 #define __zero(P) memset((void *)(P), 0, sizeof(*P))
@@ -28,4 +30,7 @@ extern void __delete_vec(const char * const *v);
 
 extern long long parse_integer(const char *s, int *ok);
 extern unsigned long long parse_hex64(const char *s);
+
+extern void format_double(double val, int precision, int sci_ok, char *buf,
+                          size_t buflen);
 
