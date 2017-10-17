@@ -508,6 +508,13 @@ static int __config_vector_checktype(const config_setting_t *vector, int type)
 
 /* ------------------------------------------------------------------------- */
 
+static int __config_type_is_scalar(int type)
+{
+  return((type >= CONFIG_TYPE_INT) && (type <= CONFIG_TYPE_BOOL));
+}
+
+/* ------------------------------------------------------------------------- */
+
 static int __config_validate_name(const char *name)
 {
   const char *p = name;
@@ -1591,6 +1598,9 @@ config_setting_t *config_setting_add(config_setting_t *parent,
   if(! parent)
     return(NULL);
 
+  if((parent->type == CONFIG_TYPE_ARRAY) && !__config_type_is_scalar(type))
+    return(NULL); /* only scalars can be added to arrays */
+
   if((parent->type == CONFIG_TYPE_ARRAY) || (parent->type == CONFIG_TYPE_LIST))
     name = NULL;
 
@@ -1728,3 +1738,9 @@ const char **config_default_include_func(config_t *config,
 
 /* ------------------------------------------------------------------------- */
 
+int config_setting_is_scalar(const config_setting_t *setting)
+{
+  return(__config_type_is_scalar(setting->type));
+}
+
+/* ------------------------------------------------------------------------- */

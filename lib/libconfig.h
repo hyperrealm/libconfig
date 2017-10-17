@@ -234,6 +234,9 @@ extern LIBCONFIG_API const char **config_default_include_func(
     config_t *config, const char *include_dir, const char *path,
     const char **error);
 
+extern LIBCONFIG_API int config_setting_is_scalar(
+    const config_setting_t *setting);
+
 #define /* const char * */ config_get_include_dir(/* const config_t * */ C) \
   ((C)->include_dir)
 
@@ -256,10 +259,6 @@ extern LIBCONFIG_API const char **config_default_include_func(
   (((S)->type == CONFIG_TYPE_INT)                                       \
    || ((S)->type == CONFIG_TYPE_INT64)                                  \
    || ((S)->type == CONFIG_TYPE_FLOAT))
-
-#define /* int */ config_setting_is_scalar(/* const config_setting_t * */ S) \
-  (((S)->type == CONFIG_TYPE_BOOL) || ((S)->type == CONFIG_TYPE_STRING) \
-   || config_setting_is_number(S))
 
 #define /* const char * */ config_setting_name( \
   /* const config_setting_t * */ S)             \
