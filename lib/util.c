@@ -23,7 +23,11 @@
 #include "util.h"
 
 #include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+/* ------------------------------------------------------------------------- */
 
 void __delete_vec(const char * const *v)
 {
@@ -34,6 +38,8 @@ void __delete_vec(const char * const *v)
 
   __delete(v);
 }
+
+/* ------------------------------------------------------------------------- */
 
 long long parse_integer(const char *s, int *ok)
 {
@@ -53,6 +59,8 @@ long long parse_integer(const char *s, int *ok)
   *ok = 1;
   return(llval);
 }
+
+/* ------------------------------------------------------------------------- */
 
 unsigned long long parse_hex64(const char *s)
 {
@@ -87,3 +95,39 @@ unsigned long long parse_hex64(const char *s)
 
 #endif /* __MINGW32__ */
 }
+
+/* ------------------------------------------------------------------------- */
+
+void format_double(double val, int precision, int sci_ok, char *buf,
+                   size_t buflen)
+{
+  char *p, *q;
+  const char *fmt = sci_ok ? "%.*g" : "%.*f";
+
+  snprintf(buf, buflen - 3, fmt, precision, val);
+
+  /* Check for exponent. */
+  p = strchr(buf, 'e');
+  if (p) return;
+
+  /* Check for decimal point. */
+  p = strchr(buf, '.');
+  if (!p)
+  {
+    /* No decimal point. Add trailing ".0". */
+    strcat(buf, ".0");
+  }
+  else
+  {
+    /* Remove any excess trailing 0's after decimal point. */
+    for(q = buf + strlen(buf) - 1; q > p + 1; --q)
+    {
+      if(*q == '0')
+        *q = '\0';
+      else
+        break;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------- */

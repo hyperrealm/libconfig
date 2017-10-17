@@ -177,7 +177,8 @@ class LIBCONFIGXX_API Setting
     OptionSemicolonSeparators = 0x02,
     OptionColonAssignmentForGroups = 0x04,
     OptionColonAssignmentForNonGroups = 0x08,
-    OptionOpenBraceOnSeparateLine = 0x10
+    OptionOpenBraceOnSeparateLine = 0x10,
+    OptionAllowScientificNotation = 0x20
   };
 
   typedef SettingIterator iterator;
