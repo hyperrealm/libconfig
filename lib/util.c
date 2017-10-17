@@ -108,11 +108,11 @@ void format_double(double val, int precision, int sci_ok, char *buf,
 
   /* Check for exponent. */
   p = strchr(buf, 'e');
-  if (p) return;
+  if(p) return;
 
   /* Check for decimal point. */
   p = strchr(buf, '.');
-  if (!p)
+  if(!p)
   {
     /* No decimal point. Add trailing ".0". */
     strcat(buf, ".0");
