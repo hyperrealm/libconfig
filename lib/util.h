@@ -20,6 +20,7 @@
    ----------------------------------------------------------------------------
 */
 
+#include <string.h>
 #include <sys/types.h>
 
 #define __new(T) (T *)calloc(1, sizeof(T)) /* zeroed */

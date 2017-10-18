@@ -21,6 +21,7 @@
 */
 
 #include "util.h"
+#include "wincompat.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -31,9 +32,11 @@
 
 void __delete_vec(const char * const *v)
 {
+  const char * const *p;
+
   if(!v) return;
 
-  for(const char * const *p = v; *p; ++p)
+  for(p = v; *p; ++p)
     __delete(*p);
 
   __delete(v);
