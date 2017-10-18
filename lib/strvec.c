@@ -50,7 +50,9 @@ void strvec_append(strvec_t *vec, const char *s)
 const char **strvec_release(strvec_t *vec)
 {
   const char **r = vec->strings;
-  *(vec->end) = NULL;
+  if(r)
+    *(vec->end) = NULL;
+
   __zero(vec);
   return(r);
 }

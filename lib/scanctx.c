@@ -88,7 +88,10 @@ FILE *scanctx_push_include(struct scan_context *ctx, void *prev_buffer,
                                     path, error);
 
   if(*error || !files)
+  {
+    __delete_vec(files);
     return(NULL);
+  }
 
   if(!*files)
   {
@@ -160,7 +163,7 @@ void *scanctx_pop_include(struct scan_context *ctx)
   --(ctx->stack_depth);
   frame = &(ctx->include_stack[ctx->stack_depth]);
 
-  __delete(frame->files);
+  __delete_vec(frame->files);
   if(frame->current_stream)
   {
     fclose(frame->current_stream);
