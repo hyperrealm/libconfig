@@ -258,7 +258,7 @@ TT_TEST(BigInt2)
 
   rc = config_lookup_int64(&cfg, "someint", &llval);
   TT_ASSERT_TRUE(rc);
-  TT_ASSERT_INT64_EQ(llval, 8589934592);
+  TT_ASSERT_INT64_EQ(llval, 8589934592LL);
 
   config_destroy(&cfg);
 }
@@ -288,7 +288,7 @@ TT_TEST(BigInt3)
 
   rc = config_lookup_int64(&cfg, "someint", &llval);
   TT_ASSERT_TRUE(rc);
-  TT_ASSERT_INT64_EQ(llval, -8589934592);
+  TT_ASSERT_INT64_EQ(llval, -8589934592LL);
 
   config_destroy(&cfg);
 }
@@ -316,7 +316,7 @@ TT_TEST(BigInt4)
 
   rc = config_lookup_int64(&cfg, "someint", &llval);
   TT_ASSERT_TRUE(rc);
-  TT_ASSERT_INT64_EQ(llval, 2147483647);
+  TT_ASSERT_INT64_EQ(llval, 2147483647LL);
 
   config_destroy(&cfg);
 }
@@ -346,7 +346,7 @@ TT_TEST(BigInt5)
 
   rc = config_lookup_int64(&cfg, "someint", &llval);
   TT_ASSERT_TRUE(rc);
-  TT_ASSERT_INT64_EQ(llval, 2147483648);
+  TT_ASSERT_INT64_EQ(llval, 2147483648LL);
 
   config_destroy(&cfg);
 }
@@ -370,11 +370,11 @@ TT_TEST(BigInt6)
 
   rc = config_lookup_int(&cfg, "someint", &ival);
   TT_ASSERT_TRUE(rc);
-  TT_ASSERT_INT_EQ(ival, -2147483648);
+  TT_ASSERT_INT_EQ(ival, -2147483648LL);
 
   rc = config_lookup_int64(&cfg, "someint", &llval);
   TT_ASSERT_TRUE(rc);
-  TT_ASSERT_INT64_EQ(llval, -2147483648);
+  TT_ASSERT_INT64_EQ(llval, -2147483648LL);
 
   config_destroy(&cfg);
 }
@@ -404,7 +404,7 @@ TT_TEST(BigInt7)
 
   rc = config_lookup_int64(&cfg, "someint", &llval);
   TT_ASSERT_TRUE(rc);
-  TT_ASSERT_INT64_EQ(llval, -2147483649);
+  TT_ASSERT_INT64_EQ(llval, -2147483649LL);
 
   config_destroy(&cfg);
 }
