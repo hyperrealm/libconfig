@@ -82,6 +82,7 @@
 #define INT32_MIN (-2147483647-1)
 #endif
 
+#include <Shlwapi.h>
 #define IS_RELATIVE_PATH(P) \
   (PathIsRelative(P))
 
@@ -90,7 +91,6 @@
 #define INT64_CONST(I)  (I ## LL)
 #define UINT64_CONST(I) (I ## ULL)
 
-#include <Shlwapi.h>
 #define IS_RELATIVE_PATH(P) \
   ((P)[0] != '/')
 
