@@ -41,6 +41,10 @@
 #define strtoll   _strtoi64
 #endif
 
+#if !defined(S_ISDIR) && defined(S_IFMT) && defined(S_IFDIR)
+#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+#endif
+
 #endif
 
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__) \
@@ -86,6 +90,7 @@
 #define INT64_CONST(I)  (I ## LL)
 #define UINT64_CONST(I) (I ## ULL)
 
+#include <Shlwapi.h>
 #define IS_RELATIVE_PATH(P) \
   ((P)[0] != '/')
 

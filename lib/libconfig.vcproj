@@ -54,6 +54,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="Shlwapi.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
 				GenerateDebugInformation="true"
 				GenerateMapFile="true"
@@ -121,6 +122,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="Shlwapi.lib"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 			/>
@@ -175,6 +177,14 @@
 				RelativePath=".\strbuf.c"
 				>
 			</File>
+			<File
+				RelativePath=".\strvec.c"
+				>
+			</File>
+			<File
+				RelativePath=".\util.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -211,6 +221,18 @@
 			</File>
 			<File
 				RelativePath=".\win32\stdint.h"
+				>
+			</File>
+			<File
+				RelativePath=".\strbuf.h"
+				>
+			</File>
+			<File
+				RelativePath=".\strvec.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util.h"
 				>
 			</File>
 			<File
