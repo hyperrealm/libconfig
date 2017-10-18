@@ -35,6 +35,10 @@
 
 struct include_stack_frame
 {
+  /*
+   * Member strings are not owned; they are pointers into scan_context's
+   * filenames vector.
+   */
   const char **files;
   const char **current_file;
   FILE *current_stream;

@@ -58,7 +58,7 @@ const char **scanctx_cleanup(struct scan_context *ctx)
     if(frame->current_stream)
       fclose(frame->current_stream);
 
-    __delete_vec(frame->files);
+    __delete(frame->files);
   }
 
   __delete(strbuf_release(&(ctx->string)));
@@ -163,7 +163,9 @@ void *scanctx_pop_include(struct scan_context *ctx)
   --(ctx->stack_depth);
   frame = &(ctx->include_stack[ctx->stack_depth]);
 
-  __delete_vec(frame->files);
+  __delete(frame->files);
+  frame->files = NULL;
+
   if(frame->current_stream)
   {
     fclose(frame->current_stream);
