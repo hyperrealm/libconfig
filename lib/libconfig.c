@@ -764,13 +764,9 @@ void config_init(config_t *config)
   config->options = (CONFIG_OPTION_SEMICOLON_SEPARATORS
                      | CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS
                      | CONFIG_OPTION_OPEN_BRACE_ON_SEPARATE_LINE);
-
-  /* @version 1.6: piggyback float_digits on top of tab_width
-   * (ab)using the existing macros' 0x0F mask in order to preserve
-   * API & ABI compatibility ; changes are fully backwards compatible
-   */
   config->tab_width = DEFAULT_TAB_WIDTH;
   config->float_precision = DEFAULT_FLOAT_PRECISION;
+  config->include_fn = config_default_include_func;
 }
 
 /* ------------------------------------------------------------------------- */

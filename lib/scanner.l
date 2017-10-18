@@ -167,12 +167,11 @@ include_open ^[ \t]*@include[ \t]+\"
   const char *error = NULL;
   FILE *fp;
 
-  yy_delete_buffer(YY_CURRENT_BUFFER, yyscanner);
-
   fp = scanctx_next_include_file(yyextra, &error);
   if(fp)
   {
     yyin = fp;
+    yy_delete_buffer(YY_CURRENT_BUFFER, yyscanner);
     yy_switch_to_buffer(yy_create_buffer(yyin, YY_BUF_SIZE, yyscanner),
                         yyscanner);
   }
@@ -188,7 +187,10 @@ include_open ^[ \t]*@include[ \t]+\"
     /* No more files in the current include list. */
     YY_BUFFER_STATE buf = (YY_BUFFER_STATE)scanctx_pop_include(yyextra);
     if(buf)
+    {
+      yy_delete_buffer(YY_CURRENT_BUFFER, yyscanner);
       yy_switch_to_buffer(buf, yyscanner);
+    }
     else
       yyterminate();
   }
