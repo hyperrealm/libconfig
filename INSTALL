@@ -7,10 +7,34 @@ Software Foundation, Inc.
 This file is free documentation; the Free Software Foundation gives
 unlimited permission to copy, distribute and modify it.
 
+Installation from Cloned Git Repository
+=======================================
+
+If you obtained the package by cloning the git repository, there are some
+additional steps required to build the package, as the generated 'configure'
+script and other supporting build files are not included in the repository.
+
+You must have the GNU autotools installed:
+
+- autoconf (version 2.69 or newer recommended)
+- automake (version 1.15 or newer recommended)
+- libtool (version 2.4.6 or newer recommended)
+
+If you plan to modify the source code, you may also need the following:
+
+- GNU Bison (verison 3.0.4 or newer required)
+- flex (version 2.6.4 or newer required)
+
+Generate the 'configure' script and other necessary build files by running
+'autoreconf' in the toplevel libconfig directory.
+
+Then, follow the basic installation instructions below.
+
 Basic Installation
 ==================
 
-These are generic installation instructions.
+These are generic installation instructions when building from a released
+distribution tarball.
 
    The `configure' shell script attempts to guess correct values for
 various system-dependent variables used during compilation.  It uses
