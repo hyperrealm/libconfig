@@ -37,8 +37,6 @@ included. Windows users may build the package using either gcc in the
 MinGW environment or with Visual Studio 2008 or later using the provided 
 solution file.
 
-<p align="center">
-
-[libconfig-1.7.tar.gz](dist/libconfig-1.7.tar.gz)
-
-</p>
+<center>
+<a href="dist/libconfig-1.7.tar.gz"><b>libconfig-1.7.tar.gz</b></a>
+</center>
