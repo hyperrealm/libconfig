@@ -135,8 +135,9 @@ extern LIBCONFIG_API void config_set_default_format(config_t *config,
 extern LIBCONFIG_API void config_set_options(config_t *config, int options);
 extern LIBCONFIG_API int config_get_options(const config_t *config);
 
-extern LIBCONFIG_API void config_set_auto_convert(config_t *config, int flag);
-extern LIBCONFIG_API int config_get_auto_convert(const config_t *config);
+extern LIBCONFIG_API void config_set_option(config_t *config, int option,
+                                            int flag);
+extern LIBCONFIG_API int config_get_option(const config_t *config, int option);
 
 extern LIBCONFIG_API int config_read_string(config_t *config, const char *str);
 
@@ -237,8 +238,16 @@ extern LIBCONFIG_API const char **config_default_include_func(
 extern LIBCONFIG_API int config_setting_is_scalar(
     const config_setting_t *setting);
 
+extern LIBCONFIG_API int config_setting_is_aggregate(
+    const config_setting_t *setting);
+
 #define /* const char * */ config_get_include_dir(/* const config_t * */ C) \
   ((C)->include_dir)
+
+#define /* void */ config_set_auto_convert(/* config_t * */ C, F) \
+  config_set_option((C), CONFIG_OPTION_AUTOCONVERT, (F))
+#define /* int */ config_get_auto_convert(/* const config_t * */ C) \
+  config_get_option((C), CONFIG_OPTION_AUTOCONVERT)
 
 #define /* int */ config_setting_type(/* const config_setting_t * */ S) \
   ((S)->type)
@@ -249,11 +258,6 @@ extern LIBCONFIG_API int config_setting_is_scalar(
   ((S)->type == CONFIG_TYPE_ARRAY)
 #define /* int */ config_setting_is_list(/* const config_setting_t * */ S) \
   ((S)->type == CONFIG_TYPE_LIST)
-
-#define /* int */ config_setting_is_aggregate( \
-  /* const config_setting_t * */ S)                                     \
-  (((S)->type == CONFIG_TYPE_GROUP) || ((S)->type == CONFIG_TYPE_LIST)  \
-   || ((S)->type == CONFIG_TYPE_ARRAY))
 
 #define /* int */ config_setting_is_number(/* const config_setting_t * */ S) \
   (((S)->type == CONFIG_TYPE_INT)                                       \

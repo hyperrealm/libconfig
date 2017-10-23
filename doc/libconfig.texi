@@ -7,7 +7,7 @@
 @settitle libconfig
 
 @set edition 1.7
-@set update-date ?? Oct 2017
+@set update-date 31 Oct 2017
 @set subtitle-text A Library For Processing Structured Configuration Files
 @set author-text Mark A.@: Lindner
 
@@ -865,12 +865,12 @@ implementations of such include functions are not included.
 
 @end deftypefun
 
-@deftypefun void config_set_float_precision(@w{config_t *@var{config}}, @w{unsigned short @var{digits}})
-@deftypefunx {unsigned short} config_get_float_precision(@w{config_t *@var{config}})
+@deftypefun {unsigned short} config_get_float_precision(@w{config_t *@var{config}})
+@deftypefunx void config_set_float_precision(@w{config_t *@var{config}}, @w{unsigned short @var{digits}})
 
 @b{Since @i{v1.6}}
 
-These functions set and get the number of decimal digits to output after the
+These functions get and set the number of decimal digits to output after the
 radix character when writing the configuration to a file or stream.
 
 Valid values for @var{digits} range from 0 (no decimals) to about 15
@@ -880,10 +880,10 @@ The default float precision is 6.
 
 @end deftypefun
 
-@deftypefun void config_set_options (@w{config_t *@var{config}}, @w{int @var{options}})
-@deftypefunx int config_get_options (@w{config_t *@var{config}})
+@deftypefun int config_get_options (@w{config_t *@var{config}})
+@deftypefunx void config_set_options (@w{config_t *@var{config}}, @w{int @var{options}})
 
-These functions set and get the options for the configuration
+These functions get and set the options for the configuration
 @var{config}. The options affect how configurations are read and
 written. The following options are defined:
 
@@ -925,6 +925,7 @@ turned off, the brace will be written at the end of the previous line.
 By default this option is turned on.
 
 @item CONFIG_OPTION_ALLOW_SCIENTIFIC_NOTATION
+(@b{Since @i{v1.7}})
 This option controls whether scientific notation may be used as appropriate
 when writing floating point values (corresponding to @code{printf()}
 @samp{%g} format) or should never be used (corresponding to @code{printf()}
@@ -934,19 +935,33 @@ when writing floating point values (corresponding to @code{printf()}
 
 @end deftypefun
 
-@deftypefun void config_set_auto_convert (@w{config_t *@var{config}}, @w{int @var{flag}})
-@deftypefunx int config_get_auto_convert (@w{const config_t *@var{config}})
+@deftypefun int config_get_option (@w{config_t *@var{config}}, @w{int @var{option}})
+@deftypefunx void config_set_option (@w{config_t *@var{config}}, @w{int @var{option}}, @w{int @var{flag}})
 
-These functions get and set the @code{CONFIG_OPTION_AUTO_CONVERT}
-option. They are obsoleted by the @code{config_set_options()} and
-@code{config_get_options()} functions described above.
+@b{Since @i{v1.7}}
+
+These functions get and set the given @var{option} of the configuration
+@var{config}. The option is enabled if @var{flag} is @code{CONFIG_TRUE} and
+disabled if it is @code{CONFIG_FALSE}.
+
+See @code{config_set_options()} above for the list of available options.
 
 @end deftypefun
 
-@deftypefun void config_set_default_format (@w{config_t * @var{config}}, @w{short @var{format}})
-@deftypefunx short config_get_default_format (@w{config_t * @var{config}})
 
-These functions, which are implemented as macros, set and get the
+@deftypefun int config_get_auto_convert (@w{const config_t *@var{config}})
+@deftypefunx void config_set_auto_convert (@w{config_t *@var{config}}, @w{int @var{flag}})
+
+These functions get and set the @code{CONFIG_OPTION_AUTO_CONVERT}
+option. They are obsoleted by the @code{config_set_option()} and
+@code{config_get_option()} functions described above.
+
+@end deftypefun
+
+@deftypefun short config_get_default_format (@w{config_t * @var{config}})
+@deftypefunx void config_set_default_format (@w{config_t * @var{config}}, @w{short @var{format}})
+
+These functions, which are implemented as macros, get and set the
 default external format for settings in the configuration
 @var{config}. If a non-default format has not been set for a setting
 with @code{config_setting_set_format()}, this configuration-wide
@@ -955,10 +970,10 @@ file or stream.
 
 @end deftypefun
 
-@deftypefun void config_set_tab_width (@w{config_t * @var{config}}, @w{unsigned short @var{width}})
-@deftypefunx {unsigned short} config_get_tab_width (@w{const config_t * @var{config}})
+@deftypefun {unsigned short} config_get_tab_width (@w{const config_t * @var{config}})
+@deftypefunx void config_set_tab_width (@w{config_t * @var{config}}, @w{unsigned short @var{width}})
 
-These functions, which are implemented as macros, set and get the tab
+These functions, which are implemented as macros, get and set the tab
 width for the configuration @var{config}. The tab width affects the
 formatting of the configuration when it is written to a file or
 stream: each level of nesting is indented by @var{width} spaces, or
@@ -1376,7 +1391,7 @@ reading/writing a configuration from/to a file.
 @code{SettingNameException} all extend the common base
 exception @code{SettingException}, which provides the following method:
 
-@deftypemethod SettingException {const char *} getPath ()
+@deftypemethod SettingException {const char *} getPath () const
 
 Returns the path to the setting associated with the exception, or
 @code{NULL} if there is no applicable path.
@@ -1404,7 +1419,7 @@ configuration are left unchanged.
 @end deftypemethod
 
 @deftypemethod Config void read (@w{FILE * @var{stream}})
-@deftypemethodx Config void write (@w{FILE * @var{stream}})
+@deftypemethodx Config void write (@w{FILE * @var{stream}}) const
 
 The @code{read()} method reads and parses a configuration from the given
 @var{stream}. A @code{ParseException} is thrown if a parse error occurs.
@@ -1414,7 +1429,7 @@ The @code{write()} method writes the configuration to the given @var{stream}.
 @end deftypemethod
 
 @deftypemethod Config void readFile (@w{const char * @var{filename}})
-@deftypemethodx Config void writeFile (@w{const char * @var{filename}})
+@deftypemethodx Config void writeFile (@w{const char * @var{filename}}) const
 
 The @code{readFile()} method reads and parses a configuration from the
 file named @var{filename}. A @code{ParseException} is thrown if a
@@ -1435,9 +1450,9 @@ These methods read and parse a configuration from the string
 
 @end deftypemethod
 
-@deftypemethod ParseException {const char *} getError ()
-@deftypemethodx ParseException {const char *} getFile ()
-@deftypemethodx ParseException int getLine ()
+@deftypemethod ParseException {const char *} getError () const
+@deftypemethodx ParseException {const char *} getFile () const
+@deftypemethodx ParseException int getLine () const
 
 If a call to @code{readFile()}, @code{readString()}, or @code{read()}
 resulted in a @code{ParseException}, these methods can be called on
@@ -1449,7 +1464,7 @@ be freed by the caller.
 @end deftypemethod
 
 @deftypemethod Config void setIncludeDir (@w{const char *@var{includeDir}})
-@deftypemethodx Config {const char *} getIncludeDir ()
+@deftypemethodx Config {const char *} getIncludeDir () const
 
 @code{setIncludeDir()} specifies the include directory,
 @var{includeDir}, relative to which the files specified in
@@ -1495,16 +1510,18 @@ For more information see @code{config_set_include_func()} above.
 
 @end deftypemethod
 
-@deftypemethod Config void setOptions (int @var{options})
-@deftypemethodx Config int getOptions ()
+@deftypemethod Config int getOptions () const
+@deftypemethodx Config void setOptions (int @var{options})
 
-These methods set and get the options for the configuration. The
-options affect how configurations are read and written. The following
-options are defined:
+@tindex Config::Option
+These methods get and set the options for the configuration. The
+options affect how configurations are read and written. The parameter
+@var{options} should be a bitwise-OR of the following @var{Config::Option}
+enumeration values:
 
 @table @code
 
-@item OptionAutoConvert
+@item Config::OptionAutoConvert
 Turning this option on enables number auto-conversion for
 the configuration. When this feature is enabled, an attempt to retrieve a
 floating point setting's value into an integer (or vice versa), or
@@ -1513,33 +1530,34 @@ will cause the library to silently perform the necessary conversion
 (possibly leading to loss of data), rather than reporting failure. By
 default this option is turned off.
 
-@item OptionSemicolonSeparators
+@item Config::OptionSemicolonSeparators
 This option controls whether a semicolon (`;') is output after each setting
 when the configuration is written to a file or stream. (The semicolon
 separators are optional in the configuration syntax.) By default this
 option is turned on.
 
-@item OptionColonAssignmentForGroups
+@item Config::OptionColonAssignmentForGroups
 This option controls whether a colon (`:') is output between each
 group setting's name and its value when the configuration is written to
 a file or stream. If the option is turned off, an equals sign (`=') is
 output instead. (These tokens are interchangeable in the configuration
 syntax.) By default this option is turned on.
 
-@item OptionColonAssignmentForNonGroups
+@item Config::OptionColonAssignmentForNonGroups
 This option controls whether a colon (`:') is output between each
 non-group setting's name and its value when the configuration is written
 to a file or stream. If the option is turned off, an equals sign (`=')
 is output instead. (These tokens are interchangeable in the configuration
 syntax.) By default this option is turned off.
 
-@item OptionOpenBraceOnSeparateLine
+@item Config::OptionOpenBraceOnSeparateLine
 This option controls whether an open brace (`@{') will be written on its own
 line when the configuration is written to a file or stream. If the option is
 turned off, the brace will be written at the end of the previous line.
 By default this option is turned on.
 
-@item OptionAllowScientificNotation
+@item Config::OptionAllowScientificNotation
+(@b{Since @i{v1.7}})
 This option controls whether scientific notation may be used as appropriate
 when writing floating point values (corresponding to @code{printf()}
 @samp{%g} format) or should never be used (corresponding to @code{printf()}
@@ -1549,19 +1567,32 @@ when writing floating point values (corresponding to @code{printf()}
 
 @end deftypemethod
 
-@deftypemethod Config void setAutoConvert (bool @var{flag})
-@deftypemethodx Config bool getAutoConvert ()
+@deftypemethod Config bool getOption (@w{Config::Option @var{option}}) const
+@deftypemethodx Config void setOption (@w{Config::Option @var{option}}, @w{bool @var{flag}})
+
+@b{Since @i{v1.7}}
+
+These methods get and set the option @var{option} for the configuration. The
+option is enabled if @var{flag} is @code{true} and disabled if it is
+@code{false}.
+
+See @code{setOptions()} above for the list of available options.
+
+@end deftypemethod
+
+@deftypemethod Config bool getAutoConvert () const
+@deftypemethodx Config void setAutoConvert (bool @var{flag})
 
 These methods get and set the @code{OptionAutoConvert} option. They
-are obsoleted by the @code{setOptions()} and @code{getOptions()}
+are obsoleted by the @code{setOption()} and @code{getOption()}
 methods described above.
 
 @end deftypemethod
 
-@deftypemethod Config void setDefaultFormat (@w{Setting::Format @var{format}})
-@deftypemethodx Config Setting::Format getDefaultFormat ()
+@deftypemethod Config Setting::Format getDefaultFormat () const
+@deftypemethodx Config void setDefaultFormat (@w{Setting::Format @var{format}})
 
-These methods set and get the default external format for settings in
+These methods get and set the default external format for settings in
 the configuration. If a non-default format has not been set for a
 setting with @code{Setting::setFormat()}, this configuration-wide
 default format will be used instead when that setting is written to a
@@ -1569,10 +1600,10 @@ file or stream.
 
 @end deftypemethod
 
-@deftypemethod Config void setTabWidth (@w{unsigned short @var{width}})
-@deftypemethodx Config {unsigned short} getTabWidth ()
+@deftypemethod Config {unsigned short} getTabWidth () const
+@deftypemethodx Config void setTabWidth (@w{unsigned short @var{width}})
 
-These methods set and get the tab width for the configuration. The tab
+These methods get and set the tab width for the configuration. The tab
 width affects the formatting of the configuration when it is written
 to a file or stream: each level of nesting is indented by @var{width}
 spaces, or by a single tab character if @var{width} is 0. The tab
@@ -1582,10 +1613,10 @@ Valid tab widths range from 0 to 15. The default tab width is 2.
 
 @end deftypemethod
 
-@deftypemethod Config void setFloatPrecision (@w{unsigned short @var{width}})
-@deftypemethodx Config {unsigned short} getFloatPrecision ()
+@deftypemethod Config {unsigned short} getFloatPrecision () const
+@deftypemethodx Config void setFloatPrecision (@w{unsigned short @var{width}})
 
-These methods set and get the float precision for the configuration. 
+These methods get and set the float precision for the configuration.
 This parameter influences the formatting of floating point settings in
 the configuration when it is written to a file or stream.
 Float precision has no effect on parsing.
@@ -1595,22 +1626,22 @@ though the library will accept and store values up to 255.
 
 @end deftypemethod
 
-@deftypemethod Config {Setting &} getRoot ()
+@deftypemethod Config {Setting &} getRoot () const
 
 This method returns the root setting for the configuration, which is a group.
 
 @end deftypemethod
 
-@deftypemethod Config {Setting &} lookup (@w{const std::string &@var{path}})
-@deftypemethodx Config {Setting &} lookup (@w{const char * @var{path}})
+@deftypemethod Config {Setting &} lookup (@w{const std::string &@var{path}}) const
+@deftypemethodx Config {Setting &} lookup (@w{const char * @var{path}}) const
 
 These methods locate the setting specified by the path @var{path}. If
 the requested setting is not found, a @code{SettingNotFoundException} is
 thrown.
 
 @end deftypemethod
-@deftypemethod Config bool exists (@w{const std::string &@var{path}})
-@deftypemethodx Config bool exists (@w{const char *@var{path}})
+@deftypemethod Config bool exists (@w{const std::string &@var{path}}) const
+@deftypemethodx Config bool exists (@w{const char *@var{path}}) const
 
 These methods test if a setting with the given @var{path} exists in
 the configuration. They return @code{true} if the setting exists, and
@@ -1618,29 +1649,29 @@ the configuration. They return @code{true} if the setting exists, and
 
 @end deftypemethod
 
-@deftypemethod Config bool lookupValue (@w{const char *@var{path}}, @w{bool &@var{value}})
-@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{bool &@var{value}})
+@deftypemethod Config bool lookupValue (@w{const char *@var{path}}, @w{bool &@var{value}}) const
+@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{bool &@var{value}}) const
 
-@deftypemethodx Config bool lookupValue (@w{const char *@var{path}}, @w{int &@var{value}})
-@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{int &@var{value}})
+@deftypemethodx Config bool lookupValue (@w{const char *@var{path}}, @w{int &@var{value}}) const
+@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{int &@var{value}}) const
 
-@deftypemethodx Config bool lookupValue (@w{const char *@var{path}}, @w{unsigned int &@var{value}})
-@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{unsigned int &@var{value}})
+@deftypemethodx Config bool lookupValue (@w{const char *@var{path}}, @w{unsigned int &@var{value}}) const
+@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{unsigned int &@var{value}}) const
 
-@deftypemethodx Config bool lookupValue (@w{const char *@var{path}}, @w{long long &@var{value}})
-@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{long long &@var{value}})
+@deftypemethodx Config bool lookupValue (@w{const char *@var{path}}, @w{long long &@var{value}}) const
+@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{long long &@var{value}}) const
 
-@deftypemethodx Config bool lookupValue (@w{const char *@var{path}}, @w{float &@var{value}})
-@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{float &@var{value}})
+@deftypemethodx Config bool lookupValue (@w{const char *@var{path}}, @w{float &@var{value}}) const
+@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{float &@var{value}}) const
 
-@deftypemethodx Config bool lookupValue (@w{const char *@var{path}}, @w{double &@var{value}})
-@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{double &@var{value}})
+@deftypemethodx Config bool lookupValue (@w{const char *@var{path}}, @w{double &@var{value}}) const
+@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{double &@var{value}}) const
 
-@deftypemethodx Config bool lookupValue (@w{const char *@var{path}}, @w{const char *&@var{value}})
-@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{const char *&@var{value}})
+@deftypemethodx Config bool lookupValue (@w{const char *@var{path}}, @w{const char *&@var{value}}) const
+@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{const char *&@var{value}}) const
 
-@deftypemethodx Config bool lookupValue (@w{const char *@var{path}}, @w{std::string &@var{value}})
-@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{std::string &@var{value}})
+@deftypemethodx Config bool lookupValue (@w{const char *@var{path}}, @w{std::string &@var{value}}) const
+@deftypemethodx Config bool lookupValue (@w{const std::string &@var{path}}, @w{std::string &@var{value}}) const
 
 These are convenience methods for looking up the value of a setting
 with the given @var{path}. If the setting is found and is of an
@@ -1686,18 +1717,18 @@ remaining lookups are skipped entirely.
 
 @end deftypemethod
 
-@deftypemethod Setting {} {operator bool ()}
-@deftypemethodx Setting {} {operator int ()}
-@deftypemethodx Setting {} {operator unsigned int ()}
-@deftypemethodx Setting {} {operator long ()}
-@deftypemethodx Setting {} {operator unsigned long ()}
-@deftypemethodx Setting {} {operator long long ()}
-@deftypemethodx Setting {} {operator unsigned long long ()}
-@deftypemethodx Setting {} {operator float ()}
-@deftypemethodx Setting {} {operator double ()}
-@deftypemethodx Setting {} {operator const char * ()}
-@deftypemethodx Setting {} {operator std::string ()}
-@deftypemethodx Setting {const char *} c_str ()
+@deftypemethod Setting {} {operator bool ()} const
+@deftypemethodx Setting {} {operator int ()} const
+@deftypemethodx Setting {} {operator unsigned int ()} const
+@deftypemethodx Setting {} {operator long ()} const
+@deftypemethodx Setting {} {operator unsigned long ()} const
+@deftypemethodx Setting {} {operator long long ()} const
+@deftypemethodx Setting {} {operator unsigned long long ()} const
+@deftypemethodx Setting {} {operator float ()} const
+@deftypemethodx Setting {} {operator double ()} const
+@deftypemethodx Setting {} {operator const char * ()} const
+@deftypemethodx Setting {} {operator std::string ()} const
+@deftypemethodx Setting {const char *} c_str () const
 
 These cast operators allow a @code{Setting} object to be assigned to a
 variable of type @i{bool} if it is of type @code{TypeBoolean};
@@ -1820,9 +1851,9 @@ If the assignment is invalid due to a type mismatch, a
 
 @end deftypemethod
 
-@deftypemethod Setting {Setting &} {operator[]} (@w{int @var{index}})
-@deftypemethodx Setting {Setting &} {operator[]} (@w{const std::string &@var{name}})
-@deftypemethodx Setting {Setting &} {operator[]} (@w{const char *@var{name}})
+@deftypemethod Setting {Setting &} {operator[]} (@w{int @var{index}}) const
+@deftypemethodx Setting {Setting &} {operator[]} (@w{const std::string &@var{name}}) const
+@deftypemethodx Setting {Setting &} {operator[]} (@w{const char *@var{name}}) const
 
 A @code{Setting} object may be subscripted with an integer index
 @var{index} if it is an array or list, or with either a string
@@ -1848,8 +1879,8 @@ configuration.
 
 @end deftypemethod
 
-@deftypemethod Setting {Setting &} lookup (@w{const char * @var{path}})
-@deftypemethodx Setting {Setting &} lookup (@w{const std::string &@var{path}})
+@deftypemethod Setting {Setting &} lookup (@w{const char * @var{path}}) const
+@deftypemethodx Setting {Setting &} lookup (@w{const std::string &@var{path}}) const
 
 This function locates a setting by a path @var{path} relative to
 this setting. If requested setting is not found, a
@@ -1857,32 +1888,32 @@ this setting. If requested setting is not found, a
 
 @end deftypemethod
 
-@deftypemethod Setting bool lookupValue (@w{const char *@var{name}}, @w{bool &@var{value}})
-@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{bool &@var{value}})
+@deftypemethod Setting bool lookupValue (@w{const char *@var{name}}, @w{bool &@var{value}}) const
+@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{bool &@var{value}}) const
 
-@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{int &@var{value}})
-@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{int &@var{value}})
+@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{int &@var{value}}) const
+@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{int &@var{value}}) const
 
-@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{unsigned int &@var{value}})
-@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{unsigned int &@var{value}})
+@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{unsigned int &@var{value}}) const
+@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{unsigned int &@var{value}}) const
 
-@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{long long &@var{value}})
-@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{long long &@var{value}})
+@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{long long &@var{value}}) const
+@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{long long &@var{value}}) const
 
-@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{unsigned long long &@var{value}})
-@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{unsigned long long &@var{value}})
+@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{unsigned long long &@var{value}}) const
+@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{unsigned long long &@var{value}}) const
 
-@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{float &@var{value}})
-@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{float &@var{value}})
+@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{float &@var{value}}) const
+@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{float &@var{value}}) const
 
-@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{double &@var{value}})
-@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{double &@var{value}})
+@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{double &@var{value}}) const
+@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{double &@var{value}}) const
 
-@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{const char *&@var{value}})
-@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{const char *&@var{value}})
+@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{const char *&@var{value}}) const
+@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{const char *&@var{value}}) const
 
-@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{std::string &@var{value}})
-@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{std::string &@var{value}})
+@deftypemethodx Setting bool lookupValue (@w{const char *@var{name}}, @w{std::string &@var{value}}) const
+@deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{std::string &@var{value}}) const
 
 These are convenience methods for looking up the value of a child setting
 with the given @var{name}. If the setting is found and is of an
@@ -1986,7 +2017,7 @@ a @code{SettingNotFoundException} is thrown.
 
 @end deftypemethod
 
-@deftypemethod Setting {const char *} getName ()
+@deftypemethod Setting {const char *} getName () const
 
 This method returns the name of the setting, or @code{NULL} if the
 setting has no name. Storage for the returned string is managed by the
@@ -1996,7 +2027,7 @@ consider assigning the return value to a @code{std::string}.
 
 @end deftypemethod
 
-@deftypemethod Setting {std::string} getPath ()
+@deftypemethod Setting {std::string} getPath () const
 
 This method returns the complete dot-separated path to the
 setting. Settings which do not have a name (list and array elements)
@@ -2004,28 +2035,28 @@ are represented by their index in square brackets.
 
 @end deftypemethod
 
-@deftypemethod Setting {Setting &} getParent ()
+@deftypemethod Setting {Setting &} getParent () const
 
 This method returns the parent setting of the setting. If the setting
 is the root setting, a @code{SettingNotFoundException} is thrown.
 
 @end deftypemethod
 
-@deftypemethod Setting bool isRoot ()
+@deftypemethod Setting bool isRoot () const
 
 This method returns @code{true} if the setting is the root setting, and
 @code{false} otherwise.
 
 @end deftypemethod
 
-@deftypemethod Setting int getIndex ()
+@deftypemethod Setting int getIndex () const
 
 This method returns the index of the setting within its parent
 setting. When applied to the root setting, this method returns -1.
 
 @end deftypemethod
 
-@deftypemethod Setting Setting::Type getType ()
+@deftypemethod Setting Setting::Type getType () const
 
 @tindex Setting::Type
 This method returns the type of the setting. The
@@ -2036,7 +2067,7 @@ This method returns the type of the setting. The
 
 @end deftypemethod
 
-@deftypemethod Setting Setting::Format getFormat ()
+@deftypemethod Setting Setting::Format getFormat () const
 @deftypemethodx Setting void setFormat (@w{Setting::Format @var{format}})
 
 These methods get and set the external format for the setting.
@@ -2071,7 +2102,7 @@ or group, they throw a @code{SettingTypeException}.
 
 @end deftypemethod
 
-@deftypemethod Setting int getLength ()
+@deftypemethod Setting int getLength () const
 
 This method returns the number of settings in a group, or the number of
 elements in a list or array. For other types of settings, it returns
@@ -2079,17 +2110,17 @@ elements in a list or array. For other types of settings, it returns
 
 @end deftypemethod
 
-@deftypemethod Setting bool isGroup ()
-@deftypemethodx Setting bool isArray ()
-@deftypemethodx Setting bool isList ()
+@deftypemethod Setting bool isGroup () const
+@deftypemethodx Setting bool isArray () const
+@deftypemethodx Setting bool isList () const
 
 These convenience methods test if a setting is of a given type.
 
 @end deftypemethod
 
-@deftypemethod Setting bool isAggregate ()
-@deftypemethodx Setting bool isScalar ()
-@deftypemethodx Setting bool isNumber ()
+@deftypemethod Setting bool isAggregate () const
+@deftypemethodx Setting bool isScalar () const
+@deftypemethodx Setting bool isNumber () const
 
 These convenience methods test if a setting is of an aggregate type (a
 group, array, or list), of a scalar type (integer, 64-bit integer,
@@ -2098,7 +2129,7 @@ integer, or floating point), respectively.
 
 @end deftypemethod
 
-@deftypemethod Setting {const char *} getSourceFile ()
+@deftypemethod Setting {const char *} getSourceFile () const
 
 This function returns the name of the file from which the setting was
 read, or NULL if the setting was not read from a file. This
@@ -2109,7 +2140,7 @@ not be freed by the caller.
 
 @end deftypemethod
 
-@deftypemethod Setting {unsigned int} getSourceLine ()
+@deftypemethod Setting {unsigned int} getSourceLine () const
 
 This function returns the line number of the configuration file or
 stream at which the setting @var{setting} was read, or 0 if no line

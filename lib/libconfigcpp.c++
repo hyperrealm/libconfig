@@ -340,13 +340,6 @@ void Config::clear()
 
 // ---------------------------------------------------------------------------
 
-void Config::setAutoConvert(bool flag)
-{
-  config_set_auto_convert(_config, (flag ? CONFIG_TRUE : CONFIG_FALSE));
-}
-
-// ---------------------------------------------------------------------------
-
 void Config::setOptions(int options)
 {
   config_set_options(_config, options);
@@ -361,9 +354,16 @@ int Config::getOptions() const
 
 // ---------------------------------------------------------------------------
 
-bool Config::getAutoConvert() const
+void Config::setOption(Config::Option option, bool flag)
 {
-  return(config_get_auto_convert(_config) != CONFIG_FALSE);
+  config_set_option(_config, (int)option, flag ? CONFIG_TRUE : CONFIG_FALSE);
+}
+
+// ---------------------------------------------------------------------------
+
+bool Config::getOption(Config::Option option) const
+{
+  return(config_get_option(_config, (int)option) == CONFIG_TRUE);
 }
 
 // ---------------------------------------------------------------------------

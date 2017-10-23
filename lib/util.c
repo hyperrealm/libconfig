@@ -30,9 +30,9 @@
 
 /* ------------------------------------------------------------------------- */
 
-void __delete_vec(const char * const *v)
+void __delete_vec(const char *const *v)
 {
-  const char * const *p;
+  const char *const *p;
 
   if(!v) return;
 
@@ -104,8 +104,8 @@ unsigned long long parse_hex64(const char *s)
 void format_double(double val, int precision, int sci_ok, char *buf,
                    size_t buflen)
 {
-  char *p, *q;
   const char *fmt = sci_ok ? "%.*g" : "%.*f";
+  char *p, *q;
 
   snprintf(buf, buflen - 3, fmt, precision, val);
 
