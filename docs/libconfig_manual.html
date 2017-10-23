@@ -58,7 +58,7 @@ ul.no-bullet {list-style: none}
 <hr noshade size=6 color="black">
 <div align=right>A Library For Processing Structured Configuration Files<br>
 Version 1.7<br>
-?? Oct 2017</div>
+31 Oct 2017</div>
 <br><br><br><br>
 <font size=+1>Mark A. Lindner</font>
 <hr size=3 noshade color="black">
@@ -1049,12 +1049,12 @@ implementations of such include functions are not included.
 </dd></dl>
 
 <dl>
-<dt><a name="index-config_005fset_005ffloat_005fprecision_0028config_005ft-_002aconfig_002c"></a>Function: <em>void</em> <strong>config_set_float_precision(<span class="nolinebreak">config_t</span>&nbsp;*<var>config</var><!-- /@w -->,</strong> <em>unsigned&nbsp;short&nbsp;<var>digits</var><!-- /@w -->)</em></dt>
 <dt><a name="index-config_005fget_005ffloat_005fprecision_0028config_005ft-_002aconfig_0029"></a>Function: <em>unsigned short</em> <strong>config_get_float_precision(<span class="nolinebreak">config_t</span>&nbsp;*<var>config</var><!-- /@w -->)</strong></dt>
+<dt><a name="index-config_005fset_005ffloat_005fprecision_0028config_005ft-_002aconfig_002c"></a>Function: <em>void</em> <strong>config_set_float_precision(<span class="nolinebreak">config_t</span>&nbsp;*<var>config</var><!-- /@w -->,</strong> <em>unsigned&nbsp;short&nbsp;<var>digits</var><!-- /@w -->)</em></dt>
 <dd>
 <p><b>Since <i>v1.6</i></b>
 </p>
-<p>These functions set and get the number of decimal digits to output after the
+<p>These functions get and set the number of decimal digits to output after the
 radix character when writing the configuration to a file or stream.
 </p>
 <p>Valid values for <var>digits</var> range from 0 (no decimals) to about 15
@@ -1065,10 +1065,10 @@ radix character when writing the configuration to a file or stream.
 </dd></dl>
 
 <dl>
-<dt><a name="index-config_005fset_005foptions"></a>Function: <em>void</em> <strong>config_set_options</strong> <em>(<span class="nolinebreak">config_t</span>&nbsp;*<var>config</var><!-- /@w -->, int&nbsp;<var>options</var><!-- /@w -->)</em></dt>
 <dt><a name="index-config_005fget_005foptions"></a>Function: <em>int</em> <strong>config_get_options</strong> <em>(<span class="nolinebreak">config_t</span>&nbsp;*<var>config</var><!-- /@w -->)</em></dt>
+<dt><a name="index-config_005fset_005foptions"></a>Function: <em>void</em> <strong>config_set_options</strong> <em>(<span class="nolinebreak">config_t</span>&nbsp;*<var>config</var><!-- /@w -->, int&nbsp;<var>options</var><!-- /@w -->)</em></dt>
 <dd>
-<p>These functions set and get the options for the configuration
+<p>These functions get and set the options for the configuration
 <var>config</var>. The options affect how configurations are read and
 written. The following options are defined:
 </p>
@@ -1114,7 +1114,8 @@ By default this option is turned on.
 </p>
 </dd>
 <dt><code>CONFIG_OPTION_ALLOW_SCIENTIFIC_NOTATION</code></dt>
-<dd><p>This option controls whether scientific notation may be used as appropriate
+<dd><p>(<b>Since <i>v1.7</i></b>)
+This option controls whether scientific notation may be used as appropriate
 when writing floating point values (corresponding to <code>printf()</code>
 &lsquo;<samp>%g</samp>&rsquo; format) or should never be used (corresponding to <code>printf()</code>
 &lsquo;<samp>%f</samp>&rsquo; format). By default this option is turned off.
@@ -1125,20 +1126,35 @@ when writing floating point values (corresponding to <code>printf()</code>
 </dd></dl>
 
 <dl>
-<dt><a name="index-config_005fset_005fauto_005fconvert"></a>Function: <em>void</em> <strong>config_set_auto_convert</strong> <em>(<span class="nolinebreak">config_t</span>&nbsp;*<var>config</var><!-- /@w -->, int&nbsp;<var>flag</var><!-- /@w -->)</em></dt>
+<dt><a name="index-config_005fget_005foption"></a>Function: <em>int</em> <strong>config_get_option</strong> <em>(<span class="nolinebreak">config_t</span>&nbsp;*<var>config</var><!-- /@w -->, int&nbsp;<var>option</var><!-- /@w -->)</em></dt>
+<dt><a name="index-config_005fset_005foption"></a>Function: <em>void</em> <strong>config_set_option</strong> <em>(<span class="nolinebreak">config_t</span>&nbsp;*<var>config</var><!-- /@w -->, int&nbsp;<var>option</var><!-- /@w -->, int&nbsp;<var>flag</var><!-- /@w -->)</em></dt>
+<dd>
+<p><b>Since <i>v1.7</i></b>
+</p>
+<p>These functions get and set the given <var>option</var> of the configuration
+<var>config</var>. The option is enabled if <var>flag</var> is <code>CONFIG_TRUE</code> and
+disabled if it is <code>CONFIG_FALSE</code>.
+</p>
+<p>See <code>config_set_options()</code> above for the list of available options.
+</p>
+</dd></dl>
+
+
+<dl>
 <dt><a name="index-config_005fget_005fauto_005fconvert"></a>Function: <em>int</em> <strong>config_get_auto_convert</strong> <em>(const&nbsp;<span class="nolinebreak">config_t</span>&nbsp;*<var>config</var><!-- /@w -->)</em></dt>
+<dt><a name="index-config_005fset_005fauto_005fconvert"></a>Function: <em>void</em> <strong>config_set_auto_convert</strong> <em>(<span class="nolinebreak">config_t</span>&nbsp;*<var>config</var><!-- /@w -->, int&nbsp;<var>flag</var><!-- /@w -->)</em></dt>
 <dd>
 <p>These functions get and set the <code>CONFIG_OPTION_AUTO_CONVERT</code>
-option. They are obsoleted by the <code>config_set_options()</code> and
-<code>config_get_options()</code> functions described above.
+option. They are obsoleted by the <code>config_set_option()</code> and
+<code>config_get_option()</code> functions described above.
 </p>
 </dd></dl>
 
 <dl>
-<dt><a name="index-config_005fset_005fdefault_005fformat"></a>Function: <em>void</em> <strong>config_set_default_format</strong> <em>(<span class="nolinebreak">config_t</span>&nbsp;*&nbsp;<var>config</var><!-- /@w -->, short&nbsp;<var>format</var><!-- /@w -->)</em></dt>
 <dt><a name="index-config_005fget_005fdefault_005fformat"></a>Function: <em>short</em> <strong>config_get_default_format</strong> <em>(<span class="nolinebreak">config_t</span>&nbsp;*&nbsp;<var>config</var><!-- /@w -->)</em></dt>
+<dt><a name="index-config_005fset_005fdefault_005fformat"></a>Function: <em>void</em> <strong>config_set_default_format</strong> <em>(<span class="nolinebreak">config_t</span>&nbsp;*&nbsp;<var>config</var><!-- /@w -->, short&nbsp;<var>format</var><!-- /@w -->)</em></dt>
 <dd>
-<p>These functions, which are implemented as macros, set and get the
+<p>These functions, which are implemented as macros, get and set the
 default external format for settings in the configuration
 <var>config</var>. If a non-default format has not been set for a setting
 with <code>config_setting_set_format()</code>, this configuration-wide
@@ -1148,10 +1164,10 @@ file or stream.
 </dd></dl>
 
 <dl>
-<dt><a name="index-config_005fset_005ftab_005fwidth"></a>Function: <em>void</em> <strong>config_set_tab_width</strong> <em>(<span class="nolinebreak">config_t</span>&nbsp;*&nbsp;<var>config</var><!-- /@w -->, unsigned&nbsp;short&nbsp;<var>width</var><!-- /@w -->)</em></dt>
 <dt><a name="index-config_005fget_005ftab_005fwidth"></a>Function: <em>unsigned short</em> <strong>config_get_tab_width</strong> <em>(const&nbsp;<span class="nolinebreak">config_t</span>&nbsp;*&nbsp;<var>config</var><!-- /@w -->)</em></dt>
+<dt><a name="index-config_005fset_005ftab_005fwidth"></a>Function: <em>void</em> <strong>config_set_tab_width</strong> <em>(<span class="nolinebreak">config_t</span>&nbsp;*&nbsp;<var>config</var><!-- /@w -->, unsigned&nbsp;short&nbsp;<var>width</var><!-- /@w -->)</em></dt>
 <dd>
-<p>These functions, which are implemented as macros, set and get the tab
+<p>These functions, which are implemented as macros, get and set the tab
 width for the configuration <var>config</var>. The tab width affects the
 formatting of the configuration when it is written to a file or
 stream: each level of nesting is indented by <var>width</var> spaces, or
@@ -1607,7 +1623,7 @@ reading/writing a configuration from/to a file.
 exception <code>SettingException</code>, which provides the following method:
 </p>
 <dl>
-<dt><a name="index-getPath-on-SettingException"></a>Method on SettingException: <em>const char *</em> <strong>getPath</strong> <em>()</em></dt>
+<dt><a name="index-getPath-on-SettingException"></a>Method on SettingException: <em>const char *</em> <strong>getPath</strong> <em>() const</em></dt>
 <dd>
 <p>Returns the path to the setting associated with the exception, or
 <code>NULL</code> if there is no applicable path.
@@ -1638,7 +1654,7 @@ configuration are left unchanged.
 
 <dl>
 <dt><a name="index-read-on-Config"></a>Method on Config: <em>void</em> <strong>read</strong> <em>(FILE&nbsp;*&nbsp;<var>stream</var><!-- /@w -->)</em></dt>
-<dt><a name="index-write-on-Config"></a>Method on Config: <em>void</em> <strong>write</strong> <em>(FILE&nbsp;*&nbsp;<var>stream</var><!-- /@w -->)</em></dt>
+<dt><a name="index-write-on-Config"></a>Method on Config: <em>void</em> <strong>write</strong> <em>(FILE&nbsp;*&nbsp;<var>stream</var><!-- /@w -->) const</em></dt>
 <dd>
 <p>The <code>read()</code> method reads and parses a configuration from the given
 <var>stream</var>. A <code>ParseException</code> is thrown if a parse error occurs.
@@ -1649,7 +1665,7 @@ configuration are left unchanged.
 
 <dl>
 <dt><a name="index-readFile-on-Config"></a>Method on Config: <em>void</em> <strong>readFile</strong> <em>(const&nbsp;char&nbsp;*&nbsp;<var>filename</var><!-- /@w -->)</em></dt>
-<dt><a name="index-writeFile-on-Config"></a>Method on Config: <em>void</em> <strong>writeFile</strong> <em>(const&nbsp;char&nbsp;*&nbsp;<var>filename</var><!-- /@w -->)</em></dt>
+<dt><a name="index-writeFile-on-Config"></a>Method on Config: <em>void</em> <strong>writeFile</strong> <em>(const&nbsp;char&nbsp;*&nbsp;<var>filename</var><!-- /@w -->) const</em></dt>
 <dd>
 <p>The <code>readFile()</code> method reads and parses a configuration from the
 file named <var>filename</var>. A <code>ParseException</code> is thrown if a
@@ -1672,9 +1688,9 @@ be written.
 </dd></dl>
 
 <dl>
-<dt><a name="index-getError-on-ParseException"></a>Method on ParseException: <em>const char *</em> <strong>getError</strong> <em>()</em></dt>
-<dt><a name="index-getFile-on-ParseException"></a>Method on ParseException: <em>const char *</em> <strong>getFile</strong> <em>()</em></dt>
-<dt><a name="index-getLine-on-ParseException"></a>Method on ParseException: <em>int</em> <strong>getLine</strong> <em>()</em></dt>
+<dt><a name="index-getError-on-ParseException"></a>Method on ParseException: <em>const char *</em> <strong>getError</strong> <em>() const</em></dt>
+<dt><a name="index-getFile-on-ParseException"></a>Method on ParseException: <em>const char *</em> <strong>getFile</strong> <em>() const</em></dt>
+<dt><a name="index-getLine-on-ParseException"></a>Method on ParseException: <em>int</em> <strong>getLine</strong> <em>() const</em></dt>
 <dd>
 <p>If a call to <code>readFile()</code>, <code>readString()</code>, or <code>read()</code>
 resulted in a <code>ParseException</code>, these methods can be called on
@@ -1687,7 +1703,7 @@ be freed by the caller.
 
 <dl>
 <dt><a name="index-setIncludeDir-on-Config"></a>Method on Config: <em>void</em> <strong>setIncludeDir</strong> <em>(const&nbsp;char&nbsp;*<var>includeDir</var><!-- /@w -->)</em></dt>
-<dt><a name="index-getIncludeDir-on-Config"></a>Method on Config: <em>const char *</em> <strong>getIncludeDir</strong> <em>()</em></dt>
+<dt><a name="index-getIncludeDir-on-Config"></a>Method on Config: <em>const char *</em> <strong>getIncludeDir</strong> <em>() const</em></dt>
 <dd>
 <p><code>setIncludeDir()</code> specifies the include directory,
 <var>includeDir</var>, relative to which the files specified in
@@ -1735,15 +1751,17 @@ concatenation of the include directory and <var>path</var> if it&rsquo;s a relat
 </dd></dl>
 
 <dl>
+<dt><a name="index-getOptions-on-Config"></a>Method on Config: <em>int</em> <strong>getOptions</strong> <em>() const</em></dt>
 <dt><a name="index-setOptions-on-Config"></a>Method on Config: <em>void</em> <strong>setOptions</strong> <em>(int <var>options</var>)</em></dt>
-<dt><a name="index-getOptions-on-Config"></a>Method on Config: <em>int</em> <strong>getOptions</strong> <em>()</em></dt>
 <dd>
-<p>These methods set and get the options for the configuration. The
-options affect how configurations are read and written. The following
-options are defined:
+<a name="index-Config_003a_003aOption"></a>
+<p>These methods get and set the options for the configuration. The
+options affect how configurations are read and written. The parameter
+<var>options</var> should be a bitwise-OR of the following <var>Config::Option</var>
+enumeration values:
 </p>
 <dl compact="compact">
-<dt><code>OptionAutoConvert</code></dt>
+<dt><code>Config::OptionAutoConvert</code></dt>
 <dd><p>Turning this option on enables number auto-conversion for
 the configuration. When this feature is enabled, an attempt to retrieve a
 floating point setting&rsquo;s value into an integer (or vice versa), or
@@ -1753,14 +1771,14 @@ will cause the library to silently perform the necessary conversion
 default this option is turned off.
 </p>
 </dd>
-<dt><code>OptionSemicolonSeparators</code></dt>
+<dt><code>Config::OptionSemicolonSeparators</code></dt>
 <dd><p>This option controls whether a semicolon (&lsquo;;&rsquo;) is output after each setting
 when the configuration is written to a file or stream. (The semicolon
 separators are optional in the configuration syntax.) By default this
 option is turned on.
 </p>
 </dd>
-<dt><code>OptionColonAssignmentForGroups</code></dt>
+<dt><code>Config::OptionColonAssignmentForGroups</code></dt>
 <dd><p>This option controls whether a colon (&lsquo;:&rsquo;) is output between each
 group setting&rsquo;s name and its value when the configuration is written to
 a file or stream. If the option is turned off, an equals sign (&lsquo;=&rsquo;) is
@@ -1768,7 +1786,7 @@ output instead. (These tokens are interchangeable in the configuration
 syntax.) By default this option is turned on.
 </p>
 </dd>
-<dt><code>OptionColonAssignmentForNonGroups</code></dt>
+<dt><code>Config::OptionColonAssignmentForNonGroups</code></dt>
 <dd><p>This option controls whether a colon (&lsquo;:&rsquo;) is output between each
 non-group setting&rsquo;s name and its value when the configuration is written
 to a file or stream. If the option is turned off, an equals sign (&lsquo;=&rsquo;)
@@ -1776,15 +1794,16 @@ is output instead. (These tokens are interchangeable in the configuration
 syntax.) By default this option is turned off.
 </p>
 </dd>
-<dt><code>OptionOpenBraceOnSeparateLine</code></dt>
+<dt><code>Config::OptionOpenBraceOnSeparateLine</code></dt>
 <dd><p>This option controls whether an open brace (&lsquo;{&rsquo;) will be written on its own
 line when the configuration is written to a file or stream. If the option is
 turned off, the brace will be written at the end of the previous line.
 By default this option is turned on.
 </p>
 </dd>
-<dt><code>OptionAllowScientificNotation</code></dt>
-<dd><p>This option controls whether scientific notation may be used as appropriate
+<dt><code>Config::OptionAllowScientificNotation</code></dt>
+<dd><p>(<b>Since <i>v1.7</i></b>)
+This option controls whether scientific notation may be used as appropriate
 when writing floating point values (corresponding to <code>printf()</code>
 &lsquo;<samp>%g</samp>&rsquo; format) or should never be used (corresponding to <code>printf()</code>
 &lsquo;<samp>%f</samp>&rsquo; format). By default this option is turned off.
@@ -1795,20 +1814,34 @@ when writing floating point values (corresponding to <code>printf()</code>
 </dd></dl>
 
 <dl>
+<dt><a name="index-getOption-on-Config"></a>Method on Config: <em>bool</em> <strong>getOption</strong> <em>(Config::Option&nbsp;<var>option</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-setOption-on-Config"></a>Method on Config: <em>void</em> <strong>setOption</strong> <em>(Config::Option&nbsp;<var>option</var><!-- /@w -->, bool&nbsp;<var>flag</var><!-- /@w -->)</em></dt>
+<dd>
+<p><b>Since <i>v1.7</i></b>
+</p>
+<p>These methods get and set the option <var>option</var> for the configuration. The
+option is enabled if <var>flag</var> is <code>true</code> and disabled if it is
+<code>false</code>.
+</p>
+<p>See <code>setOptions()</code> above for the list of available options.
+</p>
+</dd></dl>
+
+<dl>
+<dt><a name="index-getAutoConvert-on-Config"></a>Method on Config: <em>bool</em> <strong>getAutoConvert</strong> <em>() const</em></dt>
 <dt><a name="index-setAutoConvert-on-Config"></a>Method on Config: <em>void</em> <strong>setAutoConvert</strong> <em>(bool <var>flag</var>)</em></dt>
-<dt><a name="index-getAutoConvert-on-Config"></a>Method on Config: <em>bool</em> <strong>getAutoConvert</strong> <em>()</em></dt>
 <dd>
 <p>These methods get and set the <code>OptionAutoConvert</code> option. They
-are obsoleted by the <code>setOptions()</code> and <code>getOptions()</code>
+are obsoleted by the <code>setOption()</code> and <code>getOption()</code>
 methods described above.
 </p>
 </dd></dl>
 
 <dl>
+<dt><a name="index-getDefaultFormat-on-Config"></a>Method on Config: <em>Setting::Format</em> <strong>getDefaultFormat</strong> <em>() const</em></dt>
 <dt><a name="index-setDefaultFormat-on-Config"></a>Method on Config: <em>void</em> <strong>setDefaultFormat</strong> <em>(Setting::Format&nbsp;<var>format</var><!-- /@w -->)</em></dt>
-<dt><a name="index-getDefaultFormat-on-Config"></a>Method on Config: <em>Setting::Format</em> <strong>getDefaultFormat</strong> <em>()</em></dt>
 <dd>
-<p>These methods set and get the default external format for settings in
+<p>These methods get and set the default external format for settings in
 the configuration. If a non-default format has not been set for a
 setting with <code>Setting::setFormat()</code>, this configuration-wide
 default format will be used instead when that setting is written to a
@@ -1817,10 +1850,10 @@ file or stream.
 </dd></dl>
 
 <dl>
+<dt><a name="index-getTabWidth-on-Config"></a>Method on Config: <em>unsigned short</em> <strong>getTabWidth</strong> <em>() const</em></dt>
 <dt><a name="index-setTabWidth-on-Config"></a>Method on Config: <em>void</em> <strong>setTabWidth</strong> <em>(unsigned&nbsp;short&nbsp;<var>width</var><!-- /@w -->)</em></dt>
-<dt><a name="index-getTabWidth-on-Config"></a>Method on Config: <em>unsigned short</em> <strong>getTabWidth</strong> <em>()</em></dt>
 <dd>
-<p>These methods set and get the tab width for the configuration. The tab
+<p>These methods get and set the tab width for the configuration. The tab
 width affects the formatting of the configuration when it is written
 to a file or stream: each level of nesting is indented by <var>width</var>
 spaces, or by a single tab character if <var>width</var> is 0. The tab
@@ -1831,10 +1864,10 @@ width has no effect on parsing.
 </dd></dl>
 
 <dl>
+<dt><a name="index-getFloatPrecision-on-Config"></a>Method on Config: <em>unsigned short</em> <strong>getFloatPrecision</strong> <em>() const</em></dt>
 <dt><a name="index-setFloatPrecision-on-Config"></a>Method on Config: <em>void</em> <strong>setFloatPrecision</strong> <em>(unsigned&nbsp;short&nbsp;<var>width</var><!-- /@w -->)</em></dt>
-<dt><a name="index-getFloatPrecision-on-Config"></a>Method on Config: <em>unsigned short</em> <strong>getFloatPrecision</strong> <em>()</em></dt>
 <dd>
-<p>These methods set and get the float precision for the configuration. 
+<p>These methods get and set the float precision for the configuration.
 This parameter influences the formatting of floating point settings in
 the configuration when it is written to a file or stream.
 Float precision has no effect on parsing.
@@ -1845,15 +1878,15 @@ though the library will accept and store values up to 255.
 </dd></dl>
 
 <dl>
-<dt><a name="index-getRoot-on-Config"></a>Method on Config: <em>Setting &amp;</em> <strong>getRoot</strong> <em>()</em></dt>
+<dt><a name="index-getRoot-on-Config"></a>Method on Config: <em>Setting &amp;</em> <strong>getRoot</strong> <em>() const</em></dt>
 <dd>
 <p>This method returns the root setting for the configuration, which is a group.
 </p>
 </dd></dl>
 
 <dl>
-<dt><a name="index-lookup-on-Config"></a>Method on Config: <em>Setting &amp;</em> <strong>lookup</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookup-on-Config-1"></a>Method on Config: <em>Setting &amp;</em> <strong>lookup</strong> <em>(const&nbsp;char&nbsp;*&nbsp;<var>path</var><!-- /@w -->)</em></dt>
+<dt><a name="index-lookup-on-Config"></a>Method on Config: <em>Setting &amp;</em> <strong>lookup</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookup-on-Config-1"></a>Method on Config: <em>Setting &amp;</em> <strong>lookup</strong> <em>(const&nbsp;char&nbsp;*&nbsp;<var>path</var><!-- /@w -->) const</em></dt>
 <dd>
 <p>These methods locate the setting specified by the path <var>path</var>. If
 the requested setting is not found, a <code>SettingNotFoundException</code> is
@@ -1861,8 +1894,8 @@ thrown.
 </p>
 </dd></dl>
 <dl>
-<dt><a name="index-exists-on-Config"></a>Method on Config: <em>bool</em> <strong>exists</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->)</em></dt>
-<dt><a name="index-exists-on-Config-1"></a>Method on Config: <em>bool</em> <strong>exists</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->)</em></dt>
+<dt><a name="index-exists-on-Config"></a>Method on Config: <em>bool</em> <strong>exists</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-exists-on-Config-1"></a>Method on Config: <em>bool</em> <strong>exists</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->) const</em></dt>
 <dd>
 <p>These methods test if a setting with the given <var>path</var> exists in
 the configuration. They return <code>true</code> if the setting exists, and
@@ -1871,22 +1904,22 @@ the configuration. They return <code>true</code> if the setting exists, and
 </dd></dl>
 
 <dl>
-<dt><a name="index-lookupValue-on-Config"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, bool&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-1"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, bool&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-2"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, int&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-3"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, int&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-4"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, unsigned&nbsp;int&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-5"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, unsigned&nbsp;int&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-6"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, long&nbsp;long&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-7"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, long&nbsp;long&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-8"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, float&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-9"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, float&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-10"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, double&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-11"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, double&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-12"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, const&nbsp;char&nbsp;*&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-13"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, const&nbsp;char&nbsp;*&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-14"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, std::string&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Config-15"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, std::string&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
+<dt><a name="index-lookupValue-on-Config"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, bool&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-1"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, bool&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-2"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, int&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-3"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, int&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-4"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, unsigned&nbsp;int&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-5"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, unsigned&nbsp;int&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-6"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, long&nbsp;long&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-7"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, long&nbsp;long&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-8"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, float&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-9"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, float&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-10"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, double&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-11"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, double&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-12"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, const&nbsp;char&nbsp;*&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-13"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, const&nbsp;char&nbsp;*&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-14"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>path</var><!-- /@w -->, std::string&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Config-15"></a>Method on Config: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->, std::string&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
 <dd>
 <p>These are convenience methods for looking up the value of a setting
 with the given <var>path</var>. If the setting is found and is of an
@@ -1933,18 +1966,18 @@ remaining lookups are skipped entirely.
 </dd></dl>
 
 <dl>
-<dt><a name="index-operator-bool-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator bool ()</strong></dt>
-<dt><a name="index-operator-int-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator int ()</strong></dt>
-<dt><a name="index-operator-unsigned-int-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator unsigned int ()</strong></dt>
-<dt><a name="index-operator-long-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator long ()</strong></dt>
-<dt><a name="index-operator-unsigned-long-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator unsigned long ()</strong></dt>
-<dt><a name="index-operator-long-long-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator long long ()</strong></dt>
-<dt><a name="index-operator-unsigned-long-long-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator unsigned long long ()</strong></dt>
-<dt><a name="index-operator-float-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator float ()</strong></dt>
-<dt><a name="index-operator-double-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator double ()</strong></dt>
-<dt><a name="index-operator-const-char-_002a-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator const char * ()</strong></dt>
-<dt><a name="index-operator-std_003a_003astring-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator std::string ()</strong></dt>
-<dt><a name="index-c_005fstr-on-Setting"></a>Method on Setting: <em>const char *</em> <strong>c_str</strong> <em>()</em></dt>
+<dt><a name="index-operator-bool-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator bool ()</strong> <em>const</em></dt>
+<dt><a name="index-operator-int-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator int ()</strong> <em>const</em></dt>
+<dt><a name="index-operator-unsigned-int-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator unsigned int ()</strong> <em>const</em></dt>
+<dt><a name="index-operator-long-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator long ()</strong> <em>const</em></dt>
+<dt><a name="index-operator-unsigned-long-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator unsigned long ()</strong> <em>const</em></dt>
+<dt><a name="index-operator-long-long-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator long long ()</strong> <em>const</em></dt>
+<dt><a name="index-operator-unsigned-long-long-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator unsigned long long ()</strong> <em>const</em></dt>
+<dt><a name="index-operator-float-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator float ()</strong> <em>const</em></dt>
+<dt><a name="index-operator-double-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator double ()</strong> <em>const</em></dt>
+<dt><a name="index-operator-const-char-_002a-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator const char * ()</strong> <em>const</em></dt>
+<dt><a name="index-operator-std_003a_003astring-_0028_0029-on-Setting"></a>Method on Setting: <em></em> <strong>operator std::string ()</strong> <em>const</em></dt>
+<dt><a name="index-c_005fstr-on-Setting"></a>Method on Setting: <em>const char *</em> <strong>c_str</strong> <em>() const</em></dt>
 <dd>
 <p>These cast operators allow a <code>Setting</code> object to be assigned to a
 variable of type <i>bool</i> if it is of type <code>TypeBoolean</code>;
@@ -2069,9 +2102,9 @@ setting = 1024;
 </dd></dl>
 
 <dl>
-<dt><a name="index-operator_005b_005d-on-Setting"></a>Method on Setting: <em>Setting &amp;</em> <strong>operator[]</strong> <em>(int&nbsp;<var>index</var><!-- /@w -->)</em></dt>
-<dt><a name="index-operator_005b_005d-on-Setting-1"></a>Method on Setting: <em>Setting &amp;</em> <strong>operator[]</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->)</em></dt>
-<dt><a name="index-operator_005b_005d-on-Setting-2"></a>Method on Setting: <em>Setting &amp;</em> <strong>operator[]</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->)</em></dt>
+<dt><a name="index-operator_005b_005d-on-Setting"></a>Method on Setting: <em>Setting &amp;</em> <strong>operator[]</strong> <em>(int&nbsp;<var>index</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-operator_005b_005d-on-Setting-1"></a>Method on Setting: <em>Setting &amp;</em> <strong>operator[]</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-operator_005b_005d-on-Setting-2"></a>Method on Setting: <em>Setting &amp;</em> <strong>operator[]</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->) const</em></dt>
 <dd>
 <p>A <code>Setting</code> object may be subscripted with an integer index
 <var>index</var> if it is an array or list, or with either a string
@@ -2098,8 +2131,8 @@ configuration.
 </dd></dl>
 
 <dl>
-<dt><a name="index-lookup-on-Setting"></a>Method on Setting: <em>Setting &amp;</em> <strong>lookup</strong> <em>(const&nbsp;char&nbsp;*&nbsp;<var>path</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookup-on-Setting-1"></a>Method on Setting: <em>Setting &amp;</em> <strong>lookup</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->)</em></dt>
+<dt><a name="index-lookup-on-Setting"></a>Method on Setting: <em>Setting &amp;</em> <strong>lookup</strong> <em>(const&nbsp;char&nbsp;*&nbsp;<var>path</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookup-on-Setting-1"></a>Method on Setting: <em>Setting &amp;</em> <strong>lookup</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->) const</em></dt>
 <dd>
 <p>This function locates a setting by a path <var>path</var> relative to
 this setting. If requested setting is not found, a
@@ -2108,24 +2141,24 @@ this setting. If requested setting is not found, a
 </dd></dl>
 
 <dl>
-<dt><a name="index-lookupValue-on-Setting"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, bool&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-1"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, bool&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-2"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, int&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-3"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, int&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-4"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, unsigned&nbsp;int&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-5"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, unsigned&nbsp;int&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-6"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, long&nbsp;long&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-7"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, long&nbsp;long&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-8"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, unsigned&nbsp;long&nbsp;long&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-9"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, unsigned&nbsp;long&nbsp;long&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-10"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, float&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-11"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, float&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-12"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, double&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-13"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, double&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-14"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, const&nbsp;char&nbsp;*&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-15"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, const&nbsp;char&nbsp;*&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-16"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, std::string&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
-<dt><a name="index-lookupValue-on-Setting-17"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, std::string&nbsp;&amp;<var>value</var><!-- /@w -->)</em></dt>
+<dt><a name="index-lookupValue-on-Setting"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, bool&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-1"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, bool&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-2"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, int&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-3"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, int&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-4"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, unsigned&nbsp;int&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-5"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, unsigned&nbsp;int&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-6"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, long&nbsp;long&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-7"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, long&nbsp;long&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-8"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, unsigned&nbsp;long&nbsp;long&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-9"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, unsigned&nbsp;long&nbsp;long&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-10"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, float&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-11"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, float&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-12"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, double&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-13"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, double&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-14"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, const&nbsp;char&nbsp;*&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-15"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, const&nbsp;char&nbsp;*&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-16"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->, std::string&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-lookupValue-on-Setting-17"></a>Method on Setting: <em>bool</em> <strong>lookupValue</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->, std::string&nbsp;&amp;<var>value</var><!-- /@w -->) const</em></dt>
 <dd>
 <p>These are convenience methods for looking up the value of a child setting
 with the given <var>name</var>. If the setting is found and is of an
@@ -2234,7 +2267,7 @@ a <code>SettingNotFoundException</code> is thrown.
 </dd></dl>
 
 <dl>
-<dt><a name="index-getName-on-Setting"></a>Method on Setting: <em>const char *</em> <strong>getName</strong> <em>()</em></dt>
+<dt><a name="index-getName-on-Setting"></a>Method on Setting: <em>const char *</em> <strong>getName</strong> <em>() const</em></dt>
 <dd>
 <p>This method returns the name of the setting, or <code>NULL</code> if the
 setting has no name. Storage for the returned string is managed by the
@@ -2245,7 +2278,7 @@ consider assigning the return value to a <code>std::string</code>.
 </dd></dl>
 
 <dl>
-<dt><a name="index-getPath-on-Setting"></a>Method on Setting: <em>std::string</em> <strong>getPath</strong> <em>()</em></dt>
+<dt><a name="index-getPath-on-Setting"></a>Method on Setting: <em>std::string</em> <strong>getPath</strong> <em>() const</em></dt>
 <dd>
 <p>This method returns the complete dot-separated path to the
 setting. Settings which do not have a name (list and array elements)
@@ -2254,7 +2287,7 @@ are represented by their index in square brackets.
 </dd></dl>
 
 <dl>
-<dt><a name="index-getParent-on-Setting"></a>Method on Setting: <em>Setting &amp;</em> <strong>getParent</strong> <em>()</em></dt>
+<dt><a name="index-getParent-on-Setting"></a>Method on Setting: <em>Setting &amp;</em> <strong>getParent</strong> <em>() const</em></dt>
 <dd>
 <p>This method returns the parent setting of the setting. If the setting
 is the root setting, a <code>SettingNotFoundException</code> is thrown.
@@ -2262,7 +2295,7 @@ is the root setting, a <code>SettingNotFoundException</code> is thrown.
 </dd></dl>
 
 <dl>
-<dt><a name="index-isRoot-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isRoot</strong> <em>()</em></dt>
+<dt><a name="index-isRoot-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isRoot</strong> <em>() const</em></dt>
 <dd>
 <p>This method returns <code>true</code> if the setting is the root setting, and
 <code>false</code> otherwise.
@@ -2270,7 +2303,7 @@ is the root setting, a <code>SettingNotFoundException</code> is thrown.
 </dd></dl>
 
 <dl>
-<dt><a name="index-getIndex-on-Setting"></a>Method on Setting: <em>int</em> <strong>getIndex</strong> <em>()</em></dt>
+<dt><a name="index-getIndex-on-Setting"></a>Method on Setting: <em>int</em> <strong>getIndex</strong> <em>() const</em></dt>
 <dd>
 <p>This method returns the index of the setting within its parent
 setting. When applied to the root setting, this method returns -1.
@@ -2278,7 +2311,7 @@ setting. When applied to the root setting, this method returns -1.
 </dd></dl>
 
 <dl>
-<dt><a name="index-getType-on-Setting"></a>Method on Setting: <em>Setting::Type</em> <strong>getType</strong> <em>()</em></dt>
+<dt><a name="index-getType-on-Setting"></a>Method on Setting: <em>Setting::Type</em> <strong>getType</strong> <em>() const</em></dt>
 <dd>
 <a name="index-Setting_003a_003aType"></a>
 <p>This method returns the type of the setting. The
@@ -2290,7 +2323,7 @@ setting. When applied to the root setting, this method returns -1.
 </dd></dl>
 
 <dl>
-<dt><a name="index-getFormat-on-Setting"></a>Method on Setting: <em>Setting::Format</em> <strong>getFormat</strong> <em>()</em></dt>
+<dt><a name="index-getFormat-on-Setting"></a>Method on Setting: <em>Setting::Format</em> <strong>getFormat</strong> <em>() const</em></dt>
 <dt><a name="index-setFormat-on-Setting"></a>Method on Setting: <em>void</em> <strong>setFormat</strong> <em>(Setting::Format&nbsp;<var>format</var><!-- /@w -->)</em></dt>
 <dd>
 <p>These methods get and set the external format for the setting.
@@ -2327,7 +2360,7 @@ or group, they throw a <code>SettingTypeException</code>.
 </dd></dl>
 
 <dl>
-<dt><a name="index-getLength-on-Setting"></a>Method on Setting: <em>int</em> <strong>getLength</strong> <em>()</em></dt>
+<dt><a name="index-getLength-on-Setting"></a>Method on Setting: <em>int</em> <strong>getLength</strong> <em>() const</em></dt>
 <dd>
 <p>This method returns the number of settings in a group, or the number of
 elements in a list or array. For other types of settings, it returns
@@ -2336,18 +2369,18 @@ elements in a list or array. For other types of settings, it returns
 </dd></dl>
 
 <dl>
-<dt><a name="index-isGroup-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isGroup</strong> <em>()</em></dt>
-<dt><a name="index-isArray-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isArray</strong> <em>()</em></dt>
-<dt><a name="index-isList-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isList</strong> <em>()</em></dt>
+<dt><a name="index-isGroup-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isGroup</strong> <em>() const</em></dt>
+<dt><a name="index-isArray-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isArray</strong> <em>() const</em></dt>
+<dt><a name="index-isList-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isList</strong> <em>() const</em></dt>
 <dd>
 <p>These convenience methods test if a setting is of a given type.
 </p>
 </dd></dl>
 
 <dl>
-<dt><a name="index-isAggregate-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isAggregate</strong> <em>()</em></dt>
-<dt><a name="index-isScalar-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isScalar</strong> <em>()</em></dt>
-<dt><a name="index-isNumber-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isNumber</strong> <em>()</em></dt>
+<dt><a name="index-isAggregate-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isAggregate</strong> <em>() const</em></dt>
+<dt><a name="index-isScalar-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isScalar</strong> <em>() const</em></dt>
+<dt><a name="index-isNumber-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isNumber</strong> <em>() const</em></dt>
 <dd>
 <p>These convenience methods test if a setting is of an aggregate type (a
 group, array, or list), of a scalar type (integer, 64-bit integer,
@@ -2357,7 +2390,7 @@ integer, or floating point), respectively.
 </dd></dl>
 
 <dl>
-<dt><a name="index-getSourceFile-on-Setting"></a>Method on Setting: <em>const char *</em> <strong>getSourceFile</strong> <em>()</em></dt>
+<dt><a name="index-getSourceFile-on-Setting"></a>Method on Setting: <em>const char *</em> <strong>getSourceFile</strong> <em>() const</em></dt>
 <dd>
 <p>This function returns the name of the file from which the setting was
 read, or NULL if the setting was not read from a file. This
@@ -2369,7 +2402,7 @@ not be freed by the caller.
 </dd></dl>
 
 <dl>
-<dt><a name="index-getSourceLine-on-Setting"></a>Method on Setting: <em>unsigned int</em> <strong>getSourceLine</strong> <em>()</em></dt>
+<dt><a name="index-getSourceLine-on-Setting"></a>Method on Setting: <em>unsigned int</em> <strong>getSourceLine</strong> <em>() const</em></dt>
 <dd>
 <p>This function returns the line number of the configuration file or
 stream at which the setting <var>setting</var> was read, or 0 if no line
@@ -3108,6 +3141,7 @@ Next: <a href="#Type-Index" accesskey="n" rel="next">Type Index</a>, Previous: <
 <tr><td></td><td valign="top"><a href="#index-config_005fget_005ffloat_005fprecision_0028config_005ft-_002aconfig_0029"><code>config_get_float_precision(<span class="nolinebreak">config_t</span>&nbsp;*<var>config</var><!-- /@w -->)</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-config_005fget_005fhook"><code>config_get_hook</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-config_005fget_005finclude_005fdir"><code>config_get_include_dir</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-config_005fget_005foption"><code>config_get_option</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-config_005fget_005foptions"><code>config_get_options</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-config_005fget_005ftab_005fwidth"><code>config_get_tab_width</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-config_005finit"><code>config_init</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
@@ -3177,6 +3211,7 @@ Next: <a href="#Type-Index" accesskey="n" rel="next">Type Index</a>, Previous: <
 <tr><td></td><td valign="top"><a href="#index-config_005fset_005fhook"><code>config_set_hook</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-config_005fset_005finclude_005fdir"><code>config_set_include_dir</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-config_005fset_005finclude_005ffunc"><code>config_set_include_func</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-config_005fset_005foption"><code>config_set_option</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-config_005fset_005foptions"><code>config_set_options</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-config_005fset_005ftab_005fwidth"><code>config_set_tab_width</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-config_005fwrite"><code>config_write</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
@@ -3207,6 +3242,7 @@ Next: <a href="#Type-Index" accesskey="n" rel="next">Type Index</a>, Previous: <
 <tr><td></td><td valign="top"><a href="#index-getLength-on-Setting"><code>getLength on Setting</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-getLine-on-ParseException"><code>getLine on ParseException</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-getName-on-Setting"><code>getName on Setting</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-getOption-on-Config"><code>getOption on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-getOptions-on-Config"><code>getOptions on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-getParent-on-Setting"><code>getParent on Setting</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-getPath-on-Setting"><code>getPath on Setting</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
@@ -3314,6 +3350,7 @@ Next: <a href="#Type-Index" accesskey="n" rel="next">Type Index</a>, Previous: <
 <tr><td></td><td valign="top"><a href="#index-setFloatPrecision-on-Config"><code>setFloatPrecision on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-setFormat-on-Setting"><code>setFormat on Setting</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-setIncludeDir-on-Config"><code>setIncludeDir on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-setOption-on-Config"><code>setOption on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-setOptions-on-Config"><code>setOptions on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-setTabWidth-on-Config"><code>setTabWidth on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-SettingNameException-on-SettingNameException"><code>SettingNameException on SettingNameException</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
@@ -3383,6 +3420,7 @@ Next: <a href="#Concept-Index" accesskey="n" rel="next">Concept Index</a>, Previ
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Type-Index_tp_letter-C">C</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-Config"><code>Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Config_003a_003aOption"><code>Config::Option</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-ConfigException"><code>ConfigException</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-config_005ferror_005ft"><code>config_error_t</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-config_005finclude_005ffn_005ft"><code>config_include_fn_t</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
