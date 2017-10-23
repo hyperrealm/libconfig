@@ -160,8 +160,7 @@ void *scanctx_pop_include(struct scan_context *ctx)
   if(ctx->stack_depth == 0)
     return(NULL); /* stack underflow */
 
-  --(ctx->stack_depth);
-  frame = &(ctx->include_stack[ctx->stack_depth]);
+  frame = &(ctx->include_stack[--(ctx->stack_depth)]);
 
   __delete(frame->files);
   frame->files = NULL;
