@@ -23,6 +23,8 @@
 #ifndef __wincompat_h
 #define __wincompat_h
 
+#include <limits.h>
+
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
 
 #ifdef _MSC_VER
@@ -74,17 +76,17 @@
 #define INT64_CONST(I)  (I ## i64)
 #define UINT64_CONST(I) (I ## Ui64)
 
-#ifndef INT32_MAX
-#define INT32_MAX (2147483647)
+#ifndef INT_MAX
+#define INT_MAX (2147483647)
 #endif
 
-#ifndef INT32_MIN
-#define INT32_MIN (-2147483647-1)
+#ifndef INT_MIN
+#define INT_MIN (-2147483647-1)
 #endif
 
 #include <Shlwapi.h>
 #define IS_RELATIVE_PATH(P) \
-  (PathIsRelative(P))
+  (PathIsRelativeA(P))
 
 #else /* defined(WIN32) && ! defined(__MINGW32__) */
 
