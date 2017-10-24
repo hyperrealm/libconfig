@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2015  Mark A Lindner
+   Copyright (C) 2005-2018  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -58,6 +58,8 @@ static void parse_and_compare(const char *input_file, const char *output_file)
   config_destroy(&cfg);
 }
 
+/* ------------------------------------------------------------------------- */
+
 static void parse_file_and_compare_error(const char *input_file,
                                          const char *parse_error)
 {
@@ -80,6 +82,8 @@ static void parse_file_and_compare_error(const char *input_file,
   TT_ASSERT_STR_EQ(actual_error, expected_error);
 }
 
+/* ------------------------------------------------------------------------- */
+
 static void parse_string_and_compare_error(const char *input_text,
                                            const char *parse_error)
 {
@@ -100,6 +104,8 @@ static void parse_string_and_compare_error(const char *input_text,
 
   TT_ASSERT_STR_EQ(actual_error, expected_error);
 }
+
+/* ------------------------------------------------------------------------- */
 
 static const char *read_file_to_string(const char *file)
 {
@@ -215,7 +221,6 @@ TT_TEST(BigInt1)
   int ival;
   long long llval;
 
-  /* int = 5 */
   buf = "someint=5;";
 
   config_init(&cfg);
@@ -240,21 +245,19 @@ TT_TEST(BigInt2)
   char *buf;
   config_t cfg;
   int rc;
-  int ival;
+  int ival = 123;
   long long llval;
 
-  /* int = 2^33 */
-  buf = "someint=8589934592;";
+  buf = "someint=8589934592;"; /* 2^33 */
 
   config_init(&cfg);
   rc = config_read_string(&cfg, buf);
   TT_ASSERT_TRUE(rc);
 
+  /* Should fail because value was parsed as an int64. */
   rc = config_lookup_int(&cfg, "someint", &ival);
-  TT_ASSERT_TRUE(rc);
-  /* This looks very wrong. config_lookup_int should fail
-   * instead. */
-  TT_ASSERT_INT_EQ(ival, 0);
+  TT_ASSERT_FALSE(rc);
+  TT_ASSERT_INT_EQ(ival, 123);
 
   rc = config_lookup_int64(&cfg, "someint", &llval);
   TT_ASSERT_TRUE(rc);
@@ -270,21 +273,19 @@ TT_TEST(BigInt3)
   char *buf;
   config_t cfg;
   int rc;
-  int ival;
+  int ival = 123;
   long long llval;
 
-  /* int = -2^33 */
-  buf = "someint=-8589934592;";
+  buf = "someint=-8589934592;"; /* -2^33 */
 
   config_init(&cfg);
   rc = config_read_string(&cfg, buf);
   TT_ASSERT_TRUE(rc);
 
+  /* Should fail because value was parsed as an int64. */
   rc = config_lookup_int(&cfg, "someint", &ival);
-  TT_ASSERT_TRUE(rc);
-  /* This looks very wrong. config_lookup_int should fail
-   * instead. */
-  TT_ASSERT_INT_EQ(ival, 0);
+  TT_ASSERT_FALSE(rc);
+  TT_ASSERT_INT_EQ(ival, 123);
 
   rc = config_lookup_int64(&cfg, "someint", &llval);
   TT_ASSERT_TRUE(rc);
@@ -300,11 +301,10 @@ TT_TEST(BigInt4)
   char *buf;
   config_t cfg;
   int rc;
-  int ival;
+  int ival = 123;
   long long llval;
 
-  /* int = 2^31-1 */
-  buf = "someint=2147483647;";
+  buf = "someint=2147483647;";  /* 2^31-1 */
 
   config_init(&cfg);
   rc = config_read_string(&cfg, buf);
@@ -328,21 +328,19 @@ TT_TEST(BigInt5)
   char *buf;
   config_t cfg;
   int rc;
-  int ival;
+  int ival = 123;
   long long llval;
 
-  /* int = 2^31 */
-  buf = "someint=2147483648;";
+  buf = "someint=2147483648;"; /* 2^31 */
 
   config_init(&cfg);
   rc = config_read_string(&cfg, buf);
   TT_ASSERT_TRUE(rc);
 
+  /* Should fail because value was parsed as an int64. */
   rc = config_lookup_int(&cfg, "someint", &ival);
-  TT_ASSERT_TRUE(rc);
-  /* This looks very wrong. config_lookup_int should fail
-   * instead. */
-  TT_ASSERT_INT_EQ(ival, 0);
+  TT_ASSERT_FALSE(rc);
+  TT_ASSERT_INT_EQ(ival, 123);
 
   rc = config_lookup_int64(&cfg, "someint", &llval);
   TT_ASSERT_TRUE(rc);
@@ -361,8 +359,7 @@ TT_TEST(BigInt6)
   int ival;
   long long llval;
 
-  /* int = -2^31 */
-  buf = "someint=-2147483648;";
+  buf = "someint=-2147483648;"; /* -2^31 */
 
   config_init(&cfg);
   rc = config_read_string(&cfg, buf);
@@ -386,21 +383,19 @@ TT_TEST(BigInt7)
   char *buf;
   config_t cfg;
   int rc;
-  int ival;
+  int ival = 123;
   long long llval;
 
-  /* int = -2^31-1 */
-  buf = "someint=-2147483649;";
+  buf = "someint=-2147483649;"; /* -2^31-1 */
 
   config_init(&cfg);
   rc = config_read_string(&cfg, buf);
   TT_ASSERT_TRUE(rc);
 
+  /* Should fail because value was parsed as an int64. */
   rc = config_lookup_int(&cfg, "someint", &ival);
-  TT_ASSERT_TRUE(rc);
-  /* This looks very wrong. config_lookup_int should fail
-   * instead. */
-  TT_ASSERT_INT_EQ(ival, 0);
+  TT_ASSERT_FALSE(rc);
+  TT_ASSERT_INT_EQ(ival, 123);
 
   rc = config_lookup_int64(&cfg, "someint", &llval);
   TT_ASSERT_TRUE(rc);
@@ -428,7 +423,7 @@ TT_TEST(RemoveSetting)
   rc = config_setting_remove(rootSetting, "a.c");
   TT_ASSERT_TRUE(rc);
 
-  // a and a.b are found
+  /* a and a.b are found */
   rootSetting = config_lookup(&cfg, "a");
   TT_EXPECT_PTR_NOTNULL(rootSetting);
   rootSetting = config_lookup(&cfg, "a.b");

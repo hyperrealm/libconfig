@@ -842,12 +842,14 @@ static int __config_setting_get_int(const config_setting_t *setting,
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_INT64:
-      if((setting->value.llval > INT32_MAX)
-         || (setting->value.llval < INT32_MIN))
-        *value = 0;
-      else
+      if((setting->value.llval >= INT_MIN)
+         && (setting->value.llval <= INT_MAX))
+      {
         *value = (int)(setting->value.llval);
-      return(CONFIG_TRUE);
+        return(CONFIG_TRUE);
+      }
+      else
+        return(CONFIG_FALSE);
 
     case CONFIG_TYPE_FLOAT:
       if(config_get_option(setting->config, CONFIG_OPTION_AUTOCONVERT))
@@ -856,7 +858,7 @@ static int __config_setting_get_int(const config_setting_t *setting,
         return(CONFIG_TRUE);
       }
       else
-      { /* fall through */ }
+        return(CONFIG_FALSE);
 
     default:
       return(CONFIG_FALSE);
@@ -894,7 +896,7 @@ static int __config_setting_get_int64(const config_setting_t *setting,
         return(CONFIG_TRUE);
       }
       else
-      { /* fall through */ }
+        return(CONFIG_FALSE);
 
     default:
       return(CONFIG_FALSE);
@@ -961,7 +963,7 @@ static int __config_setting_get_float(const config_setting_t *setting,
         return(CONFIG_TRUE);
       }
       else
-      { /* fall through */ }
+        return(CONFIG_FALSE);
 
     default:
       return(CONFIG_FALSE);
@@ -1064,11 +1066,13 @@ int config_setting_set_int64(config_setting_t *setting, long long value)
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_INT:
-      if((value > INT32_MAX) || (value < INT32_MIN))
-        setting->value.ival = 0;
-      else
+      if((value >= INT_MIN) && (value <= INT_MAX))
+      {
         setting->value.ival = (int)value;
-      return(CONFIG_TRUE);
+        return(CONFIG_TRUE);
+      }
+      else
+        return(CONFIG_FALSE);
 
     case CONFIG_TYPE_FLOAT:
       if(config_get_auto_convert(setting->config))
