@@ -555,7 +555,7 @@ characters, dashes (&lsquo;<samp>-</samp>&rsquo;), underscores (&lsquo;<samp>_</
 characters are allowed.
 </p>
 <p>In C and C++, integer, 64-bit integer, floating point, and string
-values are mapped to the types <code>int</code>, <code>long long</code>,
+values are mapped to the native types <code>int</code>, <code>long long</code>,
 <code>double</code>, and <code>const char *</code>, respectively. The boolean type
 is mapped to <code>int</code> in C and <code>bool</code> in C++.
 </p>
@@ -669,6 +669,16 @@ value. For example, &lsquo;<samp>0L</samp>&rsquo; indicates a 64-bit integer val
 of version 1.5 of the library, the trailing &lsquo;L&rsquo; is optional; if the
 integer value exceeds the range of a 32-bit integer, it will
 automatically be interpreted as a 64-bit integer.
+</p>
+<p>The <i>integer</i> and <i>64-bit integer</i> setting types are interchangeable to the
+extent that a conversion between the corresponding native types would not
+result in an overflow or underflow. For example, a <i>long long</i> value can be
+written to a setting that has an <i>integer</i> type, if that value is within the
+range of an <i>int</i>. This rule applies to every API function or method that
+reads a value from or writes a value to a setting: if the type conversion would
+not result in an overflow or underflow, then the call will succeed, and
+otherwise it will fail. This behavior was not well-defined prior to version 1.7
+of the library.
 </p>
 <hr>
 <a name="Floating-Point-Values"></a>
@@ -2339,8 +2349,8 @@ applies to settings of type <code>TypeInt</code> and <code>TypeInt64</code>. If
 </dd></dl>
 
 <dl>
-<dt><a name="index-exists-on-Setting"></a>Method on Setting: <em>bool</em> <strong>exists</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->)</em></dt>
-<dt><a name="index-exists-on-Setting-1"></a>Method on Setting: <em>bool</em> <strong>exists</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->)</em></dt>
+<dt><a name="index-exists-on-Setting"></a>Method on Setting: <em>bool</em> <strong>exists</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>name</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-exists-on-Setting-1"></a>Method on Setting: <em>bool</em> <strong>exists</strong> <em>(const&nbsp;char&nbsp;*<var>name</var><!-- /@w -->) const</em></dt>
 <dd>
 <p>These methods test if the setting has a child setting with the given
 <var>name</var>. They return <code>true</code> if the setting exists, and
@@ -2452,6 +2462,11 @@ another file.
 </dd>
 <dt><samp>examples/c++/example3.cpp</samp></dt>
 <dd><p>The C++ equivalent of <samp>example3.c</samp>
+</p>
+</dd>
+<dt><samp>examples/c/example4.c</samp></dt>
+<dd><p>An example C program that uses a custom include function for processing
+wildcard includes. Note that this code will not compile on Windows.
 </p>
 </dd>
 </dl>
