@@ -32,28 +32,19 @@
 %{
 #include <string.h>
 #include <stdlib.h>
+
 #include "libconfig.h"
-#ifdef WIN32
-#include "wincompat.h"
-
-/* prevent warnings about redefined malloc/free in generated code: */
-#ifndef _STDLIB_H
-#define _STDLIB_H
-#endif
-
-#include <malloc.h>
-#endif
 #include "parsectx.h"
 #include "scanctx.h"
+#include "util.h"
+#include "wincompat.h"
 
-/* these delcarations are provided to suppress compiler warnings */
+/* These declarations are provided to suppress compiler warnings. */
 extern int libconfig_yylex();
 extern int libconfig_yyget_lineno();
 
 static const char *err_array_elem_type = "mismatched element type in array";
 static const char *err_duplicate_setting = "duplicate setting name";
-
-#define _delete(P) free((void *)(P))
 
 #define IN_ARRAY() \
   (ctx->parent && (ctx->parent->type == CONFIG_TYPE_ARRAY))
@@ -328,7 +319,7 @@ simple_value:
     {
       const char *s = parsectx_take_string(ctx);
       config_setting_t *e = config_setting_set_string_elem(ctx->parent, -1, s);
-      _delete(s);
+      __delete(s);
 
       if(! e)
       {
@@ -344,7 +335,7 @@ simple_value:
     {
       const char *s = parsectx_take_string(ctx);
       config_setting_set_string(ctx->setting, s);
-      _delete(s);
+      __delete(s);
     }
   }
   ;
