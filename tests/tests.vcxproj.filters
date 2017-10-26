@@ -2,15 +2,15 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{e1cc6ced-54a8-4f2b-a307-428e34c92fa6}</UniqueIdentifier>
+      <UniqueIdentifier>{b79fd02f-2ff5-4e09-9079-46978369327c}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{48bae339-ce6c-422b-821e-58ce8c6b27c6}</UniqueIdentifier>
+      <UniqueIdentifier>{2a17aaac-682f-4305-a6ce-30bbc44247fe}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Data Files">
-      <UniqueIdentifier>{f6de1049-d93d-4058-89d6-20025fd4f14c}</UniqueIdentifier>
+      <UniqueIdentifier>{ea1c6038-dca9-421d-81fb-5bd9e51167c5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -55,13 +55,11 @@
     <None Include="testdata\output_4.cfg">
       <Filter>Data Files</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="testdata\parse_error_0.txt">
+    <None Include="testdata\parse_error_0.txt">
       <Filter>Data Files</Filter>
-    </Text>
-    <Text Include="testdata\parse_error_1.txt">
+    </None>
+    <None Include="testdata\parse_error_1.txt">
       <Filter>Data Files</Filter>
-    </Text>
+    </None>
   </ItemGroup>
 </Project>
