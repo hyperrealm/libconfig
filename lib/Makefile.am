@@ -77,7 +77,8 @@ libconfig___la_LDFLAGS = $(VERINFO) -no-undefined
 EXTRA_DIST = \
 	$(BUILT_SOURCES) \
 	libconfigcpp.cc libconfig.hh \
-	*.vcproj
+	*.vcproj \
+	*.vcxproj
 
 pkgconfigdir = $(libdir)/pkgconfig
 

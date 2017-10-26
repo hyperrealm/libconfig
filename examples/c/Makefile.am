@@ -9,7 +9,8 @@ AM_CPPFLAGS = -I $(top_srcdir)/lib
 LDADD = $(top_builddir)/lib/libconfig.la
 
 EXTRA_DIST = \
-  example.cfg \
-  example4.cfg \
-  cfg_includes/*.cfg \
-  *.vcproj
+	example.cfg \
+	example4.cfg \
+	cfg_includes/*.cfg \
+	*.vcproj \
+	*.vcxproj

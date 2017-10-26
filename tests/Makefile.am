@@ -13,5 +13,6 @@ libconfig_tests_LDADD = -L$(top_builddir)/tinytest -ltinytest \
 
 EXTRA_DIST = \
 	tests.vcproj \
+	tests.vcxproj \
 	testdata/*.cfg \
 	testdata/*.txt
