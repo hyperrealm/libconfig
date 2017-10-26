@@ -25,7 +25,15 @@
 
 #include <limits.h>
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) \
+  || defined(WIN64) || defined(_WIN64) || defined(__WIN64__)
+
+/* Prevent warnings about redefined malloc/free in generated code. */
+#ifndef _STDLIB_H
+#define _STDLIB_H
+#endif
+
+#include <malloc.h>
 
 #ifdef _MSC_VER
 #pragma warning (disable: 4996)
@@ -53,7 +61,8 @@
 #endif
 
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__) \
-     || defined(__MINGW32__))
+  || defined(WIN64) || defined(_WIN64) || defined(__WIN64__) \
+  || defined(__MINGW32__))
 
 #define INT64_FMT "%I64d"
 #define UINT64_FMT "%I64u"
@@ -73,7 +82,8 @@
 
 #endif /* defined(WIN32) || defined(__MINGW32__) */
 
-#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)) \
+#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__) \
+  || defined(WIN64) || defined(_WIN64) || defined(__WIN64__)) \
   && ! defined(__MINGW32__)
 
 #define INT64_CONST(I)  (I ## i64)
@@ -91,7 +101,7 @@
 #define IS_RELATIVE_PATH(P) \
   (PathIsRelativeA(P))
 
-#else /* defined(WIN32) && ! defined(__MINGW32__) */
+#else /* defined(WIN32/WIN64) && ! defined(__MINGW32__) */
 
 #define INT64_CONST(I)  (I ## LL)
 #define UINT64_CONST(I) (I ## ULL)
@@ -99,6 +109,6 @@
 #define IS_RELATIVE_PATH(P) \
   ((P)[0] != '/')
 
-#endif /* defined(WIN32) && ! defined(__MINGW32__) */
+#endif /* defined(WIN32/WIN64) && ! defined(__MINGW32__) */
 
 #endif /* __wincompat_h */
