@@ -12,4 +12,5 @@ LDADD = $(top_builddir)/lib/libconfig++.la
 
 EXTRA_DIST = \
 	example.cfg invalid.cfg \
-	*.vcproj
+	*.vcproj \
+	*.vcxproj
