@@ -77,8 +77,9 @@ Version @value{edition}<br>
 * The C API::
 * The C++ API::
 * Example Programs::
-* Configuration File Grammar::
+* Other Bindings and Implementations::
 * License::
+* Configuration File Grammar::
 * Function Index::
 * Type Index::
 * Concept Index::
@@ -667,18 +668,18 @@ info: @{
 @end cartouche
 
 The resulting configuration will be equivalent to one in which the
-contents of the ``quote.cfg`` file appeared at the point where the
+contents of the file @samp{quote.cfg} appeared at the point where the
 include directive is placed.
 
 Include files may be nested to a maximum of 10 levels; exceeding this
 limit results in a parse error.
 
-When the path argument to an @b{@@include} directive
-begins with a PATH_SEPARATOR ('/' or '\'), it is considered to be absolute.
-Alternatively, when an include directory has been set by means of a
-@b{config_set_include_dir} call, the directory and/or filename will be
-taken as relative to that directory. Otherwise, the name is interpreted as
-relative to the program's current working directory.
+When the path argument to an @b{@@include} directive is a relative
+path, then it will be interpreted as being relative to the include
+directory that has been been set by means of
+@code{config_set_include_dir()}. If no include directory has been set,
+then it will be taken as being relative to the program's current
+working directory.
 
 Like comments, include directives are not part of the configuration
 file syntax. They are processed before the configuration itself is
@@ -1271,7 +1272,7 @@ the setting @var{setting} is of a given type. They return
 @deftypefunx int config_setting_is_number (@w{const config_setting_t * @var{setting}})
 
 @cindex aggregate value
-These convenience functions, which are implemented as macros, test if
+These convenience functions, some of which are implemented as macros, test if
 the setting @var{setting} is of an aggregate type (a group, array, or
 list), of a scalar type (integer, 64-bit integer, floating point,
 boolean, or string), and of a number (integer, 64-bit integer, or
@@ -2159,7 +2160,7 @@ application-level errors.
 
 @end deftypemethod
 
-@node Example Programs, Configuration File Grammar, The C++ API, Top
+@node Example Programs, Other Bindings and Implementations, The C++ API, Top
 @comment  node-name,  next,  previous,  up
 @chapter Example Programs
 
@@ -2198,37 +2199,165 @@ wildcard includes. Note that this code will not compile on Windows.
 
 @end table
 
-@node Configuration File Grammar, License, Example Programs, Top
+@node Other Bindings and Implementations, License, Example Programs, Top
 @comment  node-name,  next,  previous,  up
-@chapter Configuration File Grammar
+@chapter Other Bindings and Implementations
+@menu
+* Bourne Shell::
+* D::
+* Haskell::
+* Java::
+* Lisp::
+* Perl::
+* Python::
+* Ruby::
+@end menu
+
+Various open-source libraries have been written that provide access to
+@i{libconfig}-style configuration files from other programming languages. Some
+of these libraries are wrappers which add new language bindings for
+@i{libconfig} while others are syntax-compatible reimplementations in other
+languages.
+
+Here is a list of some of these implementations.
+
+@node Bourne Shell, D, , Other Bindings and Implementations
+@comment  node-name,  next,  previous,  up
+@section Bourne Shell
+
+@L{}ukasz A. Grabowski's @i{ls-config} provides a means to read and write
+values in @i{libconfig} configuration files from Bourne shell scripts. The
+implementation is included in the @i{libconfig} git repository at
+@url{https://github.com/hyperrealm/libconfig}, in the @file{contrib/ls-config}
+subdirectory.
+
+@node D, Haskell, Bourne Shell, Other Bindings and Implementations
+@comment  node-name,  next,  previous,  up
+@section D
+
+Remi Thebault's @i{libconfig-d} is a port of @i{libconfig} to the D programming
+language. It may be found at @url{https://code.dlang.org/packages/libconfig-d}.
+
+@node Haskell, Java, D, Other Bindings and Implementations
+@comment  node-name,  next,  previous,  up
+@section Haskell
+
+Matthew Peddie's @i{libconfig} provides Haskell bindings to
+@i{libconfig}. It may be found at
+@url{https://hackage.haskell.org/package/libconfig-0.3.0.0}.
+
+@node Java, Lisp, Haskell, Other Bindings and Implementations
+@comment  node-name,  next,  previous,  up
+@section Java
+
+Andrey V. Pleskach has a pure-Java implementation of @i{libconfig}. It may be
+found on github at @url{https://github.com/willyborankin/libconfig}.
+
+@node Lisp, Perl, Java, Other Bindings and Implementations
+@comment  node-name,  next,  previous,  up
+@section Lisp
+
+Oleg Shalaev's @i{cl-libconfig} provides Common Lisp bindings for @i{libconfig}.
+It may be found on github at @url{https://github.com/chalaev/cl-libconfig}.
+
+@node Perl, Python, Lisp, Other Bindings and Implementations
+@comment  node-name,  next,  previous,  up
+@section Perl
+
+The @i{Conf::Libconfig} module provides Perl bindings for @i{libconfig}. It may
+be found on CPAN at @url{http://search.cpan.org/~cnangel/Conf-Libconfig-0.05/}
+or on github at @url{https://github.com/cnangel/Conf-Libconfig}.
+
+@node Python, Ruby, Perl, Other Bindings and Implementations
+@comment  node-name,  next,  previous,  up
+@section Python
+
+Heiner Tholen's @i{pylibconfig2} is a Python library that is syntax-compatible
+with @i{libconfig}. It may be found at
+@url{https://pypi.python.org/pypi/pylibconfig2/0.1.2}.
+
+Christian Aichinger's @i{libconf} is another pure-Python implementation with a
+more permissive license. It may be found at
+@url{https://pypi.python.org/pypi/libconf} or on github at
+@url{https://github.com/Grk0/python-libconf}.
+
+The @i{python-libconfig} wrapper provides Python bindings to @i{libconfig}. It
+may be found on github at @url{https://github.com/cnangel/python-libconfig/}.
+
+@node Ruby, , Python, Other Bindings and Implementations
+@comment  node-name,  next,  previous,  up
+@section Ruby
+
+Christopher Mark Gore's @i{ruby-libconfig} is a Ruby library that provides Ruby
+bindings for @i{libconfig}. It may be found at
+@url{https://rubygems.org/gems/libconfig/versions/0.0.1} or on github at
+@url{https://github.com/cgore/ruby-libconfig}.
+
+There is also another Ruby wrapper, @i{libconfig-ruby}, that is included in
+the @i{libconfig} git repository at @url{https://github.com/hyperrealm/libconfig},
+in the @file{contrib/libconfig-ruby} subdirectory.
+
+@node License, Configuration File Grammar, Other Bindings and Implementations, Top
+@comment  node-name,  next,  previous,  up
+@appendix License
+
+@include LGPL.texi
+
+@node Configuration File Grammar, Function Index, License, Top
+@comment  node-name,  next,  previous,  up
+@appendix Configuration File Grammar
 
 Below is the BNF grammar for configuration files. Comments and include
 directives are not part of the grammar, so they are not included here.
 
 @sp 1
 @example
-configuration = setting-list | empty
+<configuration> ::=
+      <setting-list>
+    | <empty>
 
-setting-list = setting | setting-list setting
+<setting-list> ::=
+      <setting>
+    | <setting-list> <setting>
 
-setting = name (":" | "=") value (";" | "," | empty)
+<setting> ::=
+      <name> ( ":" | "=" ) <value> ( ";" | "," | <empty> )
 
-value = scalar-value | array | list | group
+<value> ::=
+      <scalar-value>
+    | <array>
+    | <list>
+    | <group>
 
-value-list = value | value-list "," value
+<value-list> ::=
+      <value>
+    | <value-list> "," <value>
+    | <value-list> ","
 
-scalar-value = boolean | integer | integer64 | hex | hex64 | float
-               | string
+<scalar-value> ::=
+      <boolean>
+    | <integer>
+    | <integer64>
+    | <hex>
+    | <hex64>
+    | <float>
+    | <string>
 
-scalar-value-list = scalar-value | scalar-value-list "," scalar-value
+<scalar-value-list> ::=
+      <scalar-value>
+    | <scalar-value-list> "," <scalar-value>
+    | <scalar-value-list> ","
 
-array = "[" (scalar-value-list | empty) "]"
+<array> ::=
+      "[" ( <scalar-value-list> | <empty> ) "]"
 
-list = "(" (value-list | empty) ")"
+<list> ::=
+      "(" ( <value-list> | <empty> ) ")"
 
-group = "@{" (setting-list | empty) "@}"
+<group> ::=
+      "@{" ( <setting-list> | <empty> ) "@}"
 
-empty =
+<empty> ::=
 @end example
 
 @sp 2
@@ -2236,31 +2365,29 @@ Terminals are defined below as regular expressions:
 @sp 1
 
 @multitable @columnfractions .2 .8
-@item @code{boolean} @tab
+@item @code{<boolean>} @tab
 @code{([Tt][Rr][Uu][Ee])|([Ff][Aa][Ll][Ss][Ee])}
-@item @code{string} @tab
+@item @code{<string>} @tab
 @code{\"([^\"\\]|\\.)*\"}
-@item @code{name} @tab
+@item @code{<name>} @tab
 @code{[A-Za-z\*][-A-Za-z0-9_\*]*}
-@item @code{integer} @tab
+@item @code{<integer>} @tab
 @code{[-+]?[0-9]+}
-@item @code{integer64} @tab
+@item @code{<integer64>} @tab
 @code{[-+]?[0-9]+L(L)?}
-@item @code{hex} @tab
+@item @code{<hex>} @tab
 @code{0[Xx][0-9A-Fa-f]+}
-@item @code{hex64} @tab
+@item @code{<hex64>} @tab
 @code{0[Xx][0-9A-Fa-f]+(L(L)?)?}
-@item @code{float} @tab
+@item @code{<float>} @tab
 @code{([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)}
 @end multitable
 
-@node License, Function Index, Configuration File Grammar, Top
-@comment  node-name,  next,  previous,  up
-@appendix License
+Note that adjacent strings are automatically concatenated. Non-printable
+characters can be represented within strings using a sequence @samp{\xx},
+representing the ASCII value as two hex digits.
 
-@include LGPL.texi
-
-@node Function Index, Type Index, License, Top
+@node Function Index, Type Index, Configuration File Grammar, Top
 @comment  node-name,  next,  previous,  up
 @unnumbered Function Index
 
