@@ -97,8 +97,19 @@ Version 1.7<br>
   <li><a name="toc-The-C-API-1" href="#The-C-API">3 The C API</a></li>
   <li><a name="toc-The-C_002b_002b-API-1" href="#The-C_002b_002b-API">4 The C++ API</a></li>
   <li><a name="toc-Example-Programs-1" href="#Example-Programs">5 Example Programs</a></li>
-  <li><a name="toc-Configuration-File-Grammar-1" href="#Configuration-File-Grammar">6 Configuration File Grammar</a></li>
+  <li><a name="toc-Other-Bindings-and-Implementations-1" href="#Other-Bindings-and-Implementations">6 Other Bindings and Implementations</a>
+  <ul class="no-bullet">
+    <li><a name="toc-Bourne-Shell-1" href="#Bourne-Shell">6.1 Bourne Shell</a></li>
+    <li><a name="toc-D-1" href="#D">6.2 D</a></li>
+    <li><a name="toc-Haskell-1" href="#Haskell">6.3 Haskell</a></li>
+    <li><a name="toc-Java-1" href="#Java">6.4 Java</a></li>
+    <li><a name="toc-Lisp-1" href="#Lisp">6.5 Lisp</a></li>
+    <li><a name="toc-Perl-1" href="#Perl">6.6 Perl</a></li>
+    <li><a name="toc-Python-1" href="#Python">6.7 Python</a></li>
+    <li><a name="toc-Ruby-1" href="#Ruby">6.8 Ruby</a></li>
+  </ul></li>
   <li><a name="toc-License-1" href="#License">Appendix A License</a></li>
+  <li><a name="toc-Configuration-File-Grammar-1" href="#Configuration-File-Grammar">Appendix B Configuration File Grammar</a></li>
   <li><a name="toc-Function-Index-1" href="#Function-Index">Function Index</a></li>
   <li><a name="toc-Type-Index-1" href="#Type-Index">Type Index</a></li>
   <li><a name="toc-Concept-Index-1" href="#Concept-Index">Concept Index</a></li>
@@ -125,13 +136,15 @@ Next: <a href="#Introduction" accesskey="n" rel="next">Introduction</a>, Up: <a 
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Example-Programs" accesskey="5">Example Programs</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Configuration-File-Grammar" accesskey="6">Configuration File Grammar</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="#Other-Bindings-and-Implementations" accesskey="6">Other Bindings and Implementations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#License" accesskey="7">License</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Function-Index" accesskey="8">Function Index</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="#Configuration-File-Grammar" accesskey="8">Configuration File Grammar</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Type-Index" accesskey="9">Type Index</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="#Function-Index" accesskey="9">Function Index</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Type-Index">Type Index</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Concept-Index">Concept Index</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
@@ -833,18 +846,18 @@ info: {
 </td></tr></table>
 
 <p>The resulting configuration will be equivalent to one in which the
-contents of the &ldquo;quote.cfg&ldquo; file appeared at the point where the
+contents of the file &lsquo;<samp>quote.cfg</samp>&rsquo; appeared at the point where the
 include directive is placed.
 </p>
 <p>Include files may be nested to a maximum of 10 levels; exceeding this
 limit results in a parse error.
 </p>
-<p>When the path argument to an <b>@include</b> directive
-begins with a PATH_SEPARATOR (&rsquo;/&rsquo; or &rsquo;\&rsquo;), it is considered to be absolute.
-Alternatively, when an include directory has been set by means of a
-<b>config_set_include_dir</b> call, the directory and/or filename will be
-taken as relative to that directory. Otherwise, the name is interpreted as
-relative to the program&rsquo;s current working directory.
+<p>When the path argument to an <b>@include</b> directive is a relative
+path, then it will be interpreted as being relative to the include
+directory that has been been set by means of
+<code>config_set_include_dir()</code>. If no include directory has been set,
+then it will be taken as being relative to the program&rsquo;s current
+working directory.
 </p>
 <p>Like comments, include directives are not part of the configuration
 file syntax. They are processed before the configuration itself is
@@ -1488,7 +1501,7 @@ the setting <var>setting</var> is of a given type. They return
 <dt><a name="index-config_005fsetting_005fis_005fnumber"></a>Function: <em>int</em> <strong>config_setting_is_number</strong> <em>(const&nbsp;<span class="nolinebreak">config_setting_t</span>&nbsp;*&nbsp;<var>setting</var><!-- /@w -->)</em></dt>
 <dd>
 <a name="index-aggregate-value"></a>
-<p>These convenience functions, which are implemented as macros, test if
+<p>These convenience functions, some of which are implemented as macros, test if
 the setting <var>setting</var> is of an aggregate type (a group, array, or
 list), of a scalar type (integer, 64-bit integer, floating point,
 boolean, or string), and of a number (integer, 64-bit integer, or
@@ -2425,7 +2438,7 @@ application-level errors.
 <a name="Example-Programs"></a>
 <div class="header">
 <p>
-Next: <a href="#Configuration-File-Grammar" accesskey="n" rel="next">Configuration File Grammar</a>, Previous: <a href="#The-C_002b_002b-API" accesskey="p" rel="prev">The C++ API</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Other-Bindings-and-Implementations" accesskey="n" rel="next">Other Bindings and Implementations</a>, Previous: <a href="#The-C_002b_002b-API" accesskey="p" rel="prev">The C++ API</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="Example-Programs-1"></a>
 <h2 class="chapter">5 Example Programs</h2>
@@ -2472,64 +2485,161 @@ wildcard includes. Note that this code will not compile on Windows.
 </dl>
 
 <hr>
-<a name="Configuration-File-Grammar"></a>
+<a name="Other-Bindings-and-Implementations"></a>
 <div class="header">
 <p>
 Next: <a href="#License" accesskey="n" rel="next">License</a>, Previous: <a href="#Example-Programs" accesskey="p" rel="prev">Example Programs</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Configuration-File-Grammar-1"></a>
-<h2 class="chapter">6 Configuration File Grammar</h2>
-
-<p>Below is the BNF grammar for configuration files. Comments and include
-directives are not part of the grammar, so they are not included here.
-</p>
-<br>
-<div class="example">
-<pre class="example">configuration = setting-list | empty
-
-setting-list = setting | setting-list setting
-
-setting = name (&quot;:&quot; | &quot;=&quot;) value (&quot;;&quot; | &quot;,&quot; | empty)
-
-value = scalar-value | array | list | group
-
-value-list = value | value-list &quot;,&quot; value
-
-scalar-value = boolean | integer | integer64 | hex | hex64 | float
-               | string
-
-scalar-value-list = scalar-value | scalar-value-list &quot;,&quot; scalar-value
-
-array = &quot;[&quot; (scalar-value-list | empty) &quot;]&quot;
-
-list = &quot;(&quot; (value-list | empty) &quot;)&quot;
-
-group = &quot;{&quot; (setting-list | empty) &quot;}&quot;
-
-empty =
-</pre></div>
-
-<br>
-<br>
-<p>Terminals are defined below as regular expressions:
-</p><br>
-
-<table>
-<tr><td width="20%"><code>boolean</code></td><td width="80%"><code>([Tt][Rr][Uu][Ee])|([Ff][Aa][Ll][Ss][Ee])</code></td></tr>
-<tr><td width="20%"><code>string</code></td><td width="80%"><code>\&quot;([^\&quot;\\]|\\.)*\&quot;</code></td></tr>
-<tr><td width="20%"><code>name</code></td><td width="80%"><code>[A-Za-z\*][-A-Za-z0-9_\*]*</code></td></tr>
-<tr><td width="20%"><code>integer</code></td><td width="80%"><code>[-+]?[0-9]+</code></td></tr>
-<tr><td width="20%"><code>integer64</code></td><td width="80%"><code>[-+]?[0-9]+L(L)?</code></td></tr>
-<tr><td width="20%"><code>hex</code></td><td width="80%"><code>0[Xx][0-9A-Fa-f]+</code></td></tr>
-<tr><td width="20%"><code>hex64</code></td><td width="80%"><code>0[Xx][0-9A-Fa-f]+(L(L)?)?</code></td></tr>
-<tr><td width="20%"><code>float</code></td><td width="80%"><code>([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)</code></td></tr>
+<a name="Other-Bindings-and-Implementations-1"></a>
+<h2 class="chapter">6 Other Bindings and Implementations</h2>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="#Bourne-Shell" accesskey="1">Bourne Shell</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#D" accesskey="2">D</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Haskell" accesskey="3">Haskell</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Java" accesskey="4">Java</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Lisp" accesskey="5">Lisp</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Perl" accesskey="6">Perl</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Python" accesskey="7">Python</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Ruby" accesskey="8">Ruby</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
 </table>
 
+<p>Various open-source libraries have been written that provide access to
+<i>libconfig</i>-style configuration files from other programming languages. Some
+of these libraries are wrappers which add new language bindings for
+<i>libconfig</i> while others are syntax-compatible reimplementations in other
+languages.
+</p>
+<p>Here is a list of some of these implementations.
+</p>
+<hr>
+<a name="Bourne-Shell"></a>
+<div class="header">
+<p>
+Next: <a href="#D" accesskey="n" rel="next">D</a>, Up: <a href="#Other-Bindings-and-Implementations" accesskey="u" rel="up">Other Bindings and Implementations</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Bourne-Shell-1"></a>
+<h3 class="section">6.1 Bourne Shell</h3>
+
+<p>&#321;ukasz A. Grabowski&rsquo;s <i>ls-config</i> provides a means to read and write
+values in <i>libconfig</i> configuration files from Bourne shell scripts. The
+implementation is included in the <i>libconfig</i> git repository at
+<a href="https://github.com/hyperrealm/libconfig">https://github.com/hyperrealm/libconfig</a>, in the <samp>contrib/ls-config</samp>
+subdirectory.
+</p>
+<hr>
+<a name="D"></a>
+<div class="header">
+<p>
+Next: <a href="#Haskell" accesskey="n" rel="next">Haskell</a>, Previous: <a href="#Bourne-Shell" accesskey="p" rel="prev">Bourne Shell</a>, Up: <a href="#Other-Bindings-and-Implementations" accesskey="u" rel="up">Other Bindings and Implementations</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="D-1"></a>
+<h3 class="section">6.2 D</h3>
+
+<p>Remi Thebault&rsquo;s <i>libconfig-d</i> is a port of <i>libconfig</i> to the D programming
+language. It may be found at <a href="https://code.dlang.org/packages/libconfig-d">https://code.dlang.org/packages/libconfig-d</a>.
+</p>
+<hr>
+<a name="Haskell"></a>
+<div class="header">
+<p>
+Next: <a href="#Java" accesskey="n" rel="next">Java</a>, Previous: <a href="#D" accesskey="p" rel="prev">D</a>, Up: <a href="#Other-Bindings-and-Implementations" accesskey="u" rel="up">Other Bindings and Implementations</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Haskell-1"></a>
+<h3 class="section">6.3 Haskell</h3>
+
+<p>Matthew Peddie&rsquo;s <i>libconfig</i> provides Haskell bindings to
+<i>libconfig</i>. It may be found at
+<a href="https://hackage.haskell.org/package/libconfig-0.3.0.0">https://hackage.haskell.org/package/libconfig-0.3.0.0</a>.
+</p>
+<hr>
+<a name="Java"></a>
+<div class="header">
+<p>
+Next: <a href="#Lisp" accesskey="n" rel="next">Lisp</a>, Previous: <a href="#Haskell" accesskey="p" rel="prev">Haskell</a>, Up: <a href="#Other-Bindings-and-Implementations" accesskey="u" rel="up">Other Bindings and Implementations</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Java-1"></a>
+<h3 class="section">6.4 Java</h3>
+
+<p>Andrey V. Pleskach has a pure-Java implementation of <i>libconfig</i>. It may be
+found on github at <a href="https://github.com/willyborankin/libconfig">https://github.com/willyborankin/libconfig</a>.
+</p>
+<hr>
+<a name="Lisp"></a>
+<div class="header">
+<p>
+Next: <a href="#Perl" accesskey="n" rel="next">Perl</a>, Previous: <a href="#Java" accesskey="p" rel="prev">Java</a>, Up: <a href="#Other-Bindings-and-Implementations" accesskey="u" rel="up">Other Bindings and Implementations</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Lisp-1"></a>
+<h3 class="section">6.5 Lisp</h3>
+
+<p>Oleg Shalaev&rsquo;s <i>cl-libconfig</i> provides Common Lisp bindings for <i>libconfig</i>.
+It may be found on github at <a href="https://github.com/chalaev/cl-libconfig">https://github.com/chalaev/cl-libconfig</a>.
+</p>
+<hr>
+<a name="Perl"></a>
+<div class="header">
+<p>
+Next: <a href="#Python" accesskey="n" rel="next">Python</a>, Previous: <a href="#Lisp" accesskey="p" rel="prev">Lisp</a>, Up: <a href="#Other-Bindings-and-Implementations" accesskey="u" rel="up">Other Bindings and Implementations</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Perl-1"></a>
+<h3 class="section">6.6 Perl</h3>
+
+<p>The <i>Conf::Libconfig</i> module provides Perl bindings for <i>libconfig</i>. It may
+be found on CPAN at <a href="http://search.cpan.org/~cnangel/Conf-Libconfig-0.05/">http://search.cpan.org/~cnangel/Conf-Libconfig-0.05/</a>
+or on github at <a href="https://github.com/cnangel/Conf-Libconfig">https://github.com/cnangel/Conf-Libconfig</a>.
+</p>
+<hr>
+<a name="Python"></a>
+<div class="header">
+<p>
+Next: <a href="#Ruby" accesskey="n" rel="next">Ruby</a>, Previous: <a href="#Perl" accesskey="p" rel="prev">Perl</a>, Up: <a href="#Other-Bindings-and-Implementations" accesskey="u" rel="up">Other Bindings and Implementations</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Python-1"></a>
+<h3 class="section">6.7 Python</h3>
+
+<p>Heiner Tholen&rsquo;s <i>pylibconfig2</i> is a Python library that is syntax-compatible
+with <i>libconfig</i>. It may be found at
+<a href="https://pypi.python.org/pypi/pylibconfig2/0.1.2">https://pypi.python.org/pypi/pylibconfig2/0.1.2</a>.
+</p>
+<p>Christian Aichinger&rsquo;s <i>libconf</i> is another pure-Python implementation with a
+more permissive license. It may be found at
+<a href="https://pypi.python.org/pypi/libconf">https://pypi.python.org/pypi/libconf</a> or on github at
+<a href="https://github.com/Grk0/python-libconf">https://github.com/Grk0/python-libconf</a>.
+</p>
+<p>The <i>python-libconfig</i> wrapper provides Python bindings to <i>libconfig</i>. It
+may be found on github at <a href="https://github.com/cnangel/python-libconfig/">https://github.com/cnangel/python-libconfig/</a>.
+</p>
+<hr>
+<a name="Ruby"></a>
+<div class="header">
+<p>
+Previous: <a href="#Python" accesskey="p" rel="prev">Python</a>, Up: <a href="#Other-Bindings-and-Implementations" accesskey="u" rel="up">Other Bindings and Implementations</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Ruby-1"></a>
+<h3 class="section">6.8 Ruby</h3>
+
+<p>Christopher Mark Gore&rsquo;s <i>ruby-libconfig</i> is a Ruby library that provides Ruby
+bindings for <i>libconfig</i>. It may be found at
+<a href="https://rubygems.org/gems/libconfig/versions/0.0.1">https://rubygems.org/gems/libconfig/versions/0.0.1</a> or on github at
+<a href="https://github.com/cgore/ruby-libconfig">https://github.com/cgore/ruby-libconfig</a>.
+</p>
+<p>There is also another Ruby wrapper, <i>libconfig-ruby</i>, that is included in
+the <i>libconfig</i> git repository at <a href="https://github.com/hyperrealm/libconfig">https://github.com/hyperrealm/libconfig</a>,
+in the <samp>contrib/libconfig-ruby</samp> subdirectory.
+</p>
 <hr>
 <a name="License"></a>
 <div class="header">
 <p>
-Next: <a href="#Function-Index" accesskey="n" rel="next">Function Index</a>, Previous: <a href="#Configuration-File-Grammar" accesskey="p" rel="prev">Configuration File Grammar</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Configuration-File-Grammar" accesskey="n" rel="next">Configuration File Grammar</a>, Previous: <a href="#Other-Bindings-and-Implementations" accesskey="p" rel="prev">Other Bindings and Implementations</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="License-1"></a>
 <h2 class="appendix">Appendix A License</h2>
@@ -3089,10 +3199,92 @@ Ty Coon, President of Vice
 </p>
 
 <hr>
+<a name="Configuration-File-Grammar"></a>
+<div class="header">
+<p>
+Next: <a href="#Function-Index" accesskey="n" rel="next">Function Index</a>, Previous: <a href="#License" accesskey="p" rel="prev">License</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Configuration-File-Grammar-1"></a>
+<h2 class="appendix">Appendix B Configuration File Grammar</h2>
+
+<p>Below is the BNF grammar for configuration files. Comments and include
+directives are not part of the grammar, so they are not included here.
+</p>
+<br>
+<div class="example">
+<pre class="example">&lt;configuration&gt; ::=
+      &lt;setting-list&gt;
+    | &lt;empty&gt;
+
+&lt;setting-list&gt; ::=
+      &lt;setting&gt;
+    | &lt;setting-list&gt; &lt;setting&gt;
+
+&lt;setting&gt; ::=
+      &lt;name&gt; ( &quot;:&quot; | &quot;=&quot; ) &lt;value&gt; ( &quot;;&quot; | &quot;,&quot; | &lt;empty&gt; )
+
+&lt;value&gt; ::=
+      &lt;scalar-value&gt;
+    | &lt;array&gt;
+    | &lt;list&gt;
+    | &lt;group&gt;
+
+&lt;value-list&gt; ::=
+      &lt;value&gt;
+    | &lt;value-list&gt; &quot;,&quot; &lt;value&gt;
+    | &lt;value-list&gt; &quot;,&quot;
+
+&lt;scalar-value&gt; ::=
+      &lt;boolean&gt;
+    | &lt;integer&gt;
+    | &lt;integer64&gt;
+    | &lt;hex&gt;
+    | &lt;hex64&gt;
+    | &lt;float&gt;
+    | &lt;string&gt;
+
+&lt;scalar-value-list&gt; ::=
+      &lt;scalar-value&gt;
+    | &lt;scalar-value-list&gt; &quot;,&quot; &lt;scalar-value&gt;
+    | &lt;scalar-value-list&gt; &quot;,&quot;
+
+&lt;array&gt; ::=
+      &quot;[&quot; ( &lt;scalar-value-list&gt; | &lt;empty&gt; ) &quot;]&quot;
+
+&lt;list&gt; ::=
+      &quot;(&quot; ( &lt;value-list&gt; | &lt;empty&gt; ) &quot;)&quot;
+
+&lt;group&gt; ::=
+      &quot;{&quot; ( &lt;setting-list&gt; | &lt;empty&gt; ) &quot;}&quot;
+
+&lt;empty&gt; ::=
+</pre></div>
+
+<br>
+<br>
+<p>Terminals are defined below as regular expressions:
+</p><br>
+
+<table>
+<tr><td width="20%"><code>&lt;boolean&gt;</code></td><td width="80%"><code>([Tt][Rr][Uu][Ee])|([Ff][Aa][Ll][Ss][Ee])</code></td></tr>
+<tr><td width="20%"><code>&lt;string&gt;</code></td><td width="80%"><code>\&quot;([^\&quot;\\]|\\.)*\&quot;</code></td></tr>
+<tr><td width="20%"><code>&lt;name&gt;</code></td><td width="80%"><code>[A-Za-z\*][-A-Za-z0-9_\*]*</code></td></tr>
+<tr><td width="20%"><code>&lt;integer&gt;</code></td><td width="80%"><code>[-+]?[0-9]+</code></td></tr>
+<tr><td width="20%"><code>&lt;integer64&gt;</code></td><td width="80%"><code>[-+]?[0-9]+L(L)?</code></td></tr>
+<tr><td width="20%"><code>&lt;hex&gt;</code></td><td width="80%"><code>0[Xx][0-9A-Fa-f]+</code></td></tr>
+<tr><td width="20%"><code>&lt;hex64&gt;</code></td><td width="80%"><code>0[Xx][0-9A-Fa-f]+(L(L)?)?</code></td></tr>
+<tr><td width="20%"><code>&lt;float&gt;</code></td><td width="80%"><code>([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)</code></td></tr>
+</table>
+
+<p>Note that adjacent strings are automatically concatenated. Non-printable
+characters can be represented within strings using a sequence &lsquo;<samp>\xx</samp>&rsquo;,
+representing the ASCII value as two hex digits.
+</p>
+<hr>
 <a name="Function-Index"></a>
 <div class="header">
 <p>
-Next: <a href="#Type-Index" accesskey="n" rel="next">Type Index</a>, Previous: <a href="#License" accesskey="p" rel="prev">License</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Type-Index" accesskey="n" rel="next">Type Index</a>, Previous: <a href="#Configuration-File-Grammar" accesskey="p" rel="prev">Configuration File Grammar</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="Function-Index-1"></a>
 <h2 class="unnumbered">Function Index</h2>
