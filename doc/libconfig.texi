@@ -13,6 +13,8 @@
 
 @comment %**end of header
 
+@firstparagraphindent insert
+
 @dircategory Software libraries
 @direntry
 * libconfig: (libconfig).       A Library For Processing Structured Configuration Files
@@ -249,6 +251,7 @@ the "C" locale before reading or writing a configuration.
 @comment  node-name,  next,  previous,  up
 @section Compiling Using pkg-config
 
+@cindex pkg-config
 On UNIX systems you can use the @i{pkg-config} utility (version 0.20
 or later) to automatically select the appropriate compiler and linker
 switches for @i{libconfig}. Ensure that the environment variable
@@ -384,7 +387,7 @@ application:
     pos = @{ x = 350; y = 250; @};
   @};
 
-  list = ( ( "abc", 123, true ), 1.234, ( /* an empty list */) );
+  list = ( ( "abc", 123, true ), 1.234, ( /* an empty list */ ) );
 
   books = ( @{ title  = "Treasure Island";
               author = "Robert Louis Stevenson";
@@ -1306,6 +1309,7 @@ application-level errors.
 
 @b{Since @i{v1.7}}
 
+@cindex hook
 These functions make it possible to attach arbitrary data to a configuration
 structure, for instance a ``wrapper'' or ``peer'' object written in
 another programming language.
@@ -1315,6 +1319,7 @@ another programming language.
 @deftypefun void config_setting_set_hook (@w{config_setting_t * @var{setting}}, @w{void * @var{hook}})
 @deftypefunx {void *} config_setting_get_hook (@w{const config_setting_t * @var{setting}})
 
+@cindex hook
 These functions make it possible to attach arbitrary data to each
 setting structure, for instance a ``wrapper'' or ``peer'' object written in
 another programming language. The destructor function, if one has been
@@ -1326,6 +1331,7 @@ destroyed. There is no default destructor.
 
 @deftypefun void config_set_destructor (@w{config_t * @var{config}}, @w{void (* @var{destructor})(void *)})
 
+@cindex destructor function
 This function assigns the destructor function @var{destructor} for the
 configuration @var{config}. This function accepts a single @code{void
 *} argument and has no return value. See
@@ -1404,7 +1410,7 @@ exception @code{SettingException}, which provides the following method:
 
 @deftypemethod SettingException {const char *} getPath () const
 
-Returns the path to the setting associated with the exception, or
+This method returns the path to the setting associated with the exception, or
 @code{NULL} if there is no applicable path.
 
 @end deftypemethod
@@ -1477,7 +1483,7 @@ be freed by the caller.
 @deftypemethod Config void setIncludeDir (@w{const char *@var{includeDir}})
 @deftypemethodx Config {const char *} getIncludeDir () const
 
-@code{setIncludeDir()} specifies the include directory,
+The @code{setIncludeDir()} method specifies the include directory,
 @var{includeDir}, relative to which the files specified in
 @samp{@@include} directives will be located for the configuration. By
 default, there is no include directory, and all include files are
@@ -1893,7 +1899,7 @@ configuration.
 @deftypemethod Setting {Setting &} lookup (@w{const char * @var{path}}) const
 @deftypemethodx Setting {Setting &} lookup (@w{const std::string &@var{path}}) const
 
-This function locates a setting by a path @var{path} relative to
+These methods locate a setting by a path @var{path} relative to
 this setting. If requested setting is not found, a
 @code{SettingNotFoundException} is thrown.
 
@@ -2142,7 +2148,7 @@ integer, or floating point), respectively.
 
 @deftypemethod Setting {const char *} getSourceFile () const
 
-This function returns the name of the file from which the setting was
+This method returns the name of the file from which the setting was
 read, or NULL if the setting was not read from a file. This
 information is useful for reporting application-level errors. Storage
 for the returned string is managed by the library and released
@@ -2153,7 +2159,7 @@ not be freed by the caller.
 
 @deftypemethod Setting {unsigned int} getSourceLine () const
 
-This function returns the line number of the configuration file or
+This method returns the line number of the configuration file or
 stream at which the setting @var{setting} was read, or 0 if no line
 number is available. This information is useful for reporting
 application-level errors.
@@ -2276,10 +2282,14 @@ Heiner Tholen's @i{pylibconfig2} is a Python library that is syntax-compatible
 with @i{libconfig}. It may be found at
 @url{https://pypi.python.org/pypi/pylibconfig2/0.1.2}.
 
+@sp 1
+
 Christian Aichinger's @i{libconf} is another pure-Python implementation with a
 more permissive license. It may be found at
 @url{https://pypi.python.org/pypi/libconf} or on github at
 @url{https://github.com/Grk0/python-libconf}.
+
+@sp 1
 
 The @i{python-libconfig} wrapper provides Python bindings to @i{libconfig}. It
 may be found on github at @url{https://github.com/cnangel/python-libconfig/}.
@@ -2290,8 +2300,10 @@ may be found on github at @url{https://github.com/cnangel/python-libconfig/}.
 
 Christopher Mark Gore's @i{ruby-libconfig} is a Ruby library that provides Ruby
 bindings for @i{libconfig}. It may be found at
-@url{https://rubygems.org/gems/libconfig/versions/0.0.1} or on github at
+@url{https://rubygems.org/gems/libconfig} or on github at
 @url{https://github.com/cgore/ruby-libconfig}.
+
+@sp 1
 
 There is also another Ruby wrapper, @i{libconfig-ruby}, that is included in
 the @i{libconfig} git repository at @url{https://github.com/hyperrealm/libconfig},
@@ -2382,6 +2394,8 @@ Terminals are defined below as regular expressions:
 @item @code{<float>} @tab
 @code{([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)}
 @end multitable
+
+@sp 1
 
 Note that adjacent strings are automatically concatenated. Non-printable
 characters can be represented within strings using a sequence @samp{\xx},
