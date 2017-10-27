@@ -11,11 +11,6 @@ intended purpose of this library. I think something like sqlite is better
 suited for that sort of thing.
 
 
-* Add an option for safe type conversions; that is, report an error
-  rather than silently truncating out-of-range values to 0 (namely int64 ->
-  int).
-
-
 * Add support for copying settings from one configuration to another. Need a
   recursive function to copy a setting and call itself on all child settings.
 
@@ -36,7 +31,7 @@ suited for that sort of thing.
   add a lot of complexity to the library.
 
 
-* Add limited support for preserving comments?
+* Add limited support for preserving comments.
 
 
 * Add support for unicode strings? A bit problematic, since flex doesn't
