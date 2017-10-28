@@ -55,6 +55,7 @@ ul.no-bullet {list-style: none}
 
 
 
+
 <hr noshade size=6 color="black">
 <div align=right>A Library For Processing Structured Configuration Files<br>
 Version 1.7<br>
@@ -354,6 +355,7 @@ Next: <a href="#Version-Test-Macros" accesskey="n" rel="next">Version Test Macro
 <a name="Compiling-Using-pkg_002dconfig-1"></a>
 <h3 class="section">1.6 Compiling Using pkg-config</h3>
 
+<a name="index-pkg_002dconfig"></a>
 <p>On UNIX systems you can use the <i>pkg-config</i> utility (version 0.20
 or later) to automatically select the appropriate compiler and linker
 switches for <i>libconfig</i>. Ensure that the environment variable
@@ -512,7 +514,7 @@ application:
     pos = { x = 350; y = 250; };
   };
 
-  list = ( ( &quot;abc&quot;, 123, true ), 1.234, ( /* an empty list */) );
+  list = ( ( &quot;abc&quot;, 123, true ), 1.234, ( /* an empty list */ ) );
 
   books = ( { title  = &quot;Treasure Island&quot;;
               author = &quot;Robert Louis Stevenson&quot;;
@@ -1538,6 +1540,7 @@ application-level errors.
 <dd>
 <p><b>Since <i>v1.7</i></b>
 </p>
+<a name="index-hook"></a>
 <p>These functions make it possible to attach arbitrary data to a configuration
 structure, for instance a &ldquo;wrapper&rdquo; or &ldquo;peer&rdquo; object written in
 another programming language.
@@ -1548,6 +1551,7 @@ another programming language.
 <dt><a name="index-config_005fsetting_005fset_005fhook"></a>Function: <em>void</em> <strong>config_setting_set_hook</strong> <em>(<span class="nolinebreak">config_setting_t</span>&nbsp;*&nbsp;<var>setting</var><!-- /@w -->, void&nbsp;*&nbsp;<var>hook</var><!-- /@w -->)</em></dt>
 <dt><a name="index-config_005fsetting_005fget_005fhook"></a>Function: <em>void *</em> <strong>config_setting_get_hook</strong> <em>(const&nbsp;<span class="nolinebreak">config_setting_t</span>&nbsp;*&nbsp;<var>setting</var><!-- /@w -->)</em></dt>
 <dd>
+<a name="index-hook-1"></a>
 <p>These functions make it possible to attach arbitrary data to each
 setting structure, for instance a &ldquo;wrapper&rdquo; or &ldquo;peer&rdquo; object written in
 another programming language. The destructor function, if one has been
@@ -1560,6 +1564,7 @@ destroyed. There is no default destructor.
 <dl>
 <dt><a name="index-config_005fset_005fdestructor"></a>Function: <em>void</em> <strong>config_set_destructor</strong> <em>(<span class="nolinebreak">config_t</span>&nbsp;*&nbsp;<var>config</var><!-- /@w -->, void&nbsp;(*&nbsp;<var>destructor</var>)(void&nbsp;*)<!-- /@w -->)</em></dt>
 <dd>
+<a name="index-destructor-function"></a>
 <p>This function assigns the destructor function <var>destructor</var> for the
 configuration <var>config</var>. This function accepts a single <code>void
 *</code> argument and has no return value. See
@@ -1648,7 +1653,7 @@ exception <code>SettingException</code>, which provides the following method:
 <dl>
 <dt><a name="index-getPath-on-SettingException"></a>Method on SettingException: <em>const char *</em> <strong>getPath</strong> <em>() const</em></dt>
 <dd>
-<p>Returns the path to the setting associated with the exception, or
+<p>This method returns the path to the setting associated with the exception, or
 <code>NULL</code> if there is no applicable path.
 </p>
 </dd></dl>
@@ -1728,7 +1733,7 @@ be freed by the caller.
 <dt><a name="index-setIncludeDir-on-Config"></a>Method on Config: <em>void</em> <strong>setIncludeDir</strong> <em>(const&nbsp;char&nbsp;*<var>includeDir</var><!-- /@w -->)</em></dt>
 <dt><a name="index-getIncludeDir-on-Config"></a>Method on Config: <em>const char *</em> <strong>getIncludeDir</strong> <em>() const</em></dt>
 <dd>
-<p><code>setIncludeDir()</code> specifies the include directory,
+<p>The <code>setIncludeDir()</code> method specifies the include directory,
 <var>includeDir</var>, relative to which the files specified in
 &lsquo;<samp>@include</samp>&rsquo; directives will be located for the configuration. By
 default, there is no include directory, and all include files are
@@ -2157,7 +2162,7 @@ configuration.
 <dt><a name="index-lookup-on-Setting"></a>Method on Setting: <em>Setting &amp;</em> <strong>lookup</strong> <em>(const&nbsp;char&nbsp;*&nbsp;<var>path</var><!-- /@w -->) const</em></dt>
 <dt><a name="index-lookup-on-Setting-1"></a>Method on Setting: <em>Setting &amp;</em> <strong>lookup</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>path</var><!-- /@w -->) const</em></dt>
 <dd>
-<p>This function locates a setting by a path <var>path</var> relative to
+<p>These methods locate a setting by a path <var>path</var> relative to
 this setting. If requested setting is not found, a
 <code>SettingNotFoundException</code> is thrown.
 </p>
@@ -2415,7 +2420,7 @@ integer, or floating point), respectively.
 <dl>
 <dt><a name="index-getSourceFile-on-Setting"></a>Method on Setting: <em>const char *</em> <strong>getSourceFile</strong> <em>() const</em></dt>
 <dd>
-<p>This function returns the name of the file from which the setting was
+<p>This method returns the name of the file from which the setting was
 read, or NULL if the setting was not read from a file. This
 information is useful for reporting application-level errors. Storage
 for the returned string is managed by the library and released
@@ -2427,7 +2432,7 @@ not be freed by the caller.
 <dl>
 <dt><a name="index-getSourceLine-on-Setting"></a>Method on Setting: <em>unsigned int</em> <strong>getSourceLine</strong> <em>() const</em></dt>
 <dd>
-<p>This function returns the line number of the configuration file or
+<p>This method returns the line number of the configuration file or
 stream at which the setting <var>setting</var> was read, or 0 if no line
 number is available. This information is useful for reporting
 application-level errors.
@@ -2609,11 +2614,15 @@ Next: <a href="#Ruby" accesskey="n" rel="next">Ruby</a>, Previous: <a href="#Per
 with <i>libconfig</i>. It may be found at
 <a href="https://pypi.python.org/pypi/pylibconfig2/0.1.2">https://pypi.python.org/pypi/pylibconfig2/0.1.2</a>.
 </p>
+<br>
+
 <p>Christian Aichinger&rsquo;s <i>libconf</i> is another pure-Python implementation with a
 more permissive license. It may be found at
 <a href="https://pypi.python.org/pypi/libconf">https://pypi.python.org/pypi/libconf</a> or on github at
 <a href="https://github.com/Grk0/python-libconf">https://github.com/Grk0/python-libconf</a>.
 </p>
+<br>
+
 <p>The <i>python-libconfig</i> wrapper provides Python bindings to <i>libconfig</i>. It
 may be found on github at <a href="https://github.com/cnangel/python-libconfig/">https://github.com/cnangel/python-libconfig/</a>.
 </p>
@@ -2628,9 +2637,11 @@ Previous: <a href="#Python" accesskey="p" rel="prev">Python</a>, Up: <a href="#O
 
 <p>Christopher Mark Gore&rsquo;s <i>ruby-libconfig</i> is a Ruby library that provides Ruby
 bindings for <i>libconfig</i>. It may be found at
-<a href="https://rubygems.org/gems/libconfig/versions/0.0.1">https://rubygems.org/gems/libconfig/versions/0.0.1</a> or on github at
+<a href="https://rubygems.org/gems/libconfig">https://rubygems.org/gems/libconfig</a> or on github at
 <a href="https://github.com/cgore/ruby-libconfig">https://github.com/cgore/ruby-libconfig</a>.
 </p>
+<br>
+
 <p>There is also another Ruby wrapper, <i>libconfig-ruby</i>, that is included in
 the <i>libconfig</i> git repository at <a href="https://github.com/hyperrealm/libconfig">https://github.com/hyperrealm/libconfig</a>,
 in the <samp>contrib/libconfig-ruby</samp> subdirectory.
@@ -3276,6 +3287,8 @@ directives are not part of the grammar, so they are not included here.
 <tr><td width="20%"><code>&lt;float&gt;</code></td><td width="80%"><code>([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)</code></td></tr>
 </table>
 
+<br>
+
 <p>Note that adjacent strings are automatically concatenated. Non-printable
 characters can be represented within strings using a sequence &lsquo;<samp>\xx</samp>&rsquo;,
 representing the ASCII value as two hex digits.
@@ -3674,11 +3687,15 @@ Previous: <a href="#Type-Index" accesskey="p" rel="prev">Type Index</a>, Up: <a 
  &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-C"><b>C</b></a>
  &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-D"><b>D</b></a>
+ &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-E"><b>E</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-F"><b>F</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-G"><b>G</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-H"><b>H</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-I"><b>I</b></a>
  &nbsp; 
@@ -3704,6 +3721,9 @@ Previous: <a href="#Type-Index" accesskey="p" rel="prev">Type Index</a>, Up: <a 
 <tr><td></td><td valign="top"><a href="#index-comment">comment</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Comments">Comments</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-configuration">configuration</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Configuration-Files">Configuration Files</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-D">D</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-destructor-function">destructor function</a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Concept-Index_cp_letter-E">E</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-escape-sequence">escape sequence</a>:</td><td>&nbsp;</td><td valign="top"><a href="#String-Values">String Values</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
@@ -3712,6 +3732,10 @@ Previous: <a href="#Type-Index" accesskey="p" rel="prev">Type Index</a>, Up: <a 
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Concept-Index_cp_letter-G">G</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-group">group</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Configuration-Files">Configuration Files</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-H">H</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-hook">hook</a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-hook-1">hook</a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C-API">The C API</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Concept-Index_cp_letter-I">I</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-include-directive">include directive</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Include-Directives">Include Directives</a></td></tr>
@@ -3723,6 +3747,7 @@ Previous: <a href="#Type-Index" accesskey="p" rel="prev">Type Index</a>, Up: <a 
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Concept-Index_cp_letter-P">P</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-path">path</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Configuration-Files">Configuration Files</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-pkg_002dconfig">pkg-config</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Compiling-Using-pkg_002dconfig">Compiling Using pkg-config</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Concept-Index_cp_letter-S">S</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-scalar-value">scalar value</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Configuration-Files">Configuration Files</a></td></tr>
@@ -3740,11 +3765,15 @@ Previous: <a href="#Type-Index" accesskey="p" rel="prev">Type Index</a>, Up: <a 
  &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-C"><b>C</b></a>
  &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-D"><b>D</b></a>
+ &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-E"><b>E</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-F"><b>F</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-G"><b>G</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-H"><b>H</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-I"><b>I</b></a>
  &nbsp; 
