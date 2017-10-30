@@ -17,7 +17,7 @@
     reworked options API; moved some value parsing logic into lib/util.c
     and lib/util.h; added new option
     CONFIG_OPTION_ALLOW_SCIENTIFIC_NOTATION; bugfix to disallow adding a
-    group to a list or array; changed default float precision from 2 to 6;
+    group or a list to an array; changed default float precision from 2 to 6;
     fixed conversion between int and int64 types; added config_clear();
     added support for include functions; added config_set_hook() and
     config_get_hook()
