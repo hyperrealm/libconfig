@@ -119,6 +119,7 @@ static const char *read_file_to_string(const char *file)
 
   size = stbuf.st_size;
   buf = (char *)malloc(size + 1);
+  TT_ASSERT_PTR_NOTNULL(buf);
 
   fp = fopen(file, "rt");
   TT_ASSERT_PTR_NOTNULL(fp);
