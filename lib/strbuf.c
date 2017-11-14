@@ -68,6 +68,7 @@ void strbuf_append_char(strbuf_t *buf, char c)
   strbuf_ensure_capacity(buf, 1);
   *(buf->string + buf->length) = c;
   ++(buf->length);
+  *(buf->string + buf->length) = '\0';
 }
 
 /* ------------------------------------------------------------------------- */
