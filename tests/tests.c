@@ -437,6 +437,37 @@ TT_TEST(RemoveSetting)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(EscapedStrings)
+{
+  config_t cfg;
+  config_setting_t* rc;
+  int ok;
+  const char* str;
+
+  config_init(&cfg);
+  config_set_include_dir(&cfg, "./testdata");
+
+  ok = config_read_file(&cfg, "testdata/strings.cfg");
+  if(!ok)
+  {
+    printf("error: %s:%d\n", config_error_text(&cfg),
+           config_error_line(&cfg));
+  }
+  TT_ASSERT_TRUE(ok);
+
+  ok = config_lookup_string(&cfg, "foo.a", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("hello", str);
+
+  ok = config_lookup_string(&cfg, "foo.b", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("\"goodbye\"", str);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
   int failures;
@@ -453,6 +484,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, BigInt6);
   TT_SUITE_TEST(LibConfigTests, BigInt7);
   TT_SUITE_TEST(LibConfigTests, RemoveSetting);
+  TT_SUITE_TEST(LibConfigTests, EscapedStrings);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);
