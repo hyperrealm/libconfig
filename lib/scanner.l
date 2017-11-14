@@ -82,7 +82,7 @@ include_open ^[ \t]*@include[ \t]+\"
 <STRING>\\t       { scanctx_append_char(yyextra, '\t'); }
 <STRING>\\f       { scanctx_append_char(yyextra, '\f'); }
 <STRING>\\\\      { scanctx_append_char(yyextra, '\\'); }
-<STRING>\\\"      { scanctx_append_char(yyextra, '\"'); }
+<STRING>\\\"      { scanctx_append_string(yyextra, "\""); }
 <STRING>{hexchar} {
                     char c = (char)(strtol(yytext + 2, NULL, 16) & 0xFF);
                     scanctx_append_char(yyextra, c);
