@@ -119,6 +119,7 @@ static const char *read_file_to_string(const char *file)
 
   size = stbuf.st_size;
   buf = (char *)malloc(size + 1);
+  TT_ASSERT_PTR_NOTNULL(buf);
 
   fp = fopen(file, "rt");
   TT_ASSERT_PTR_NOTNULL(fp);
@@ -436,6 +437,57 @@ TT_TEST(RemoveSetting)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(EscapedStrings)
+{
+  config_t cfg;
+  config_setting_t* rc;
+  int ok;
+  const char* str;
+
+  config_init(&cfg);
+  config_set_include_dir(&cfg, "./testdata");
+
+  ok = config_read_file(&cfg, "testdata/strings.cfg");
+  if(!ok)
+  {
+    printf("error: %s:%d\n", config_error_text(&cfg),
+           config_error_line(&cfg));
+  }
+  TT_ASSERT_TRUE(ok);
+
+  ok = config_lookup_string(&cfg, "escape_seqs.str", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("abc", str);
+
+  ok = config_lookup_string(&cfg, "escape_seqs.newline", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("abc\ndef\n", str);
+
+  ok = config_lookup_string(&cfg, "escape_seqs.cr", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("abc\rdef\r", str);
+
+  ok = config_lookup_string(&cfg, "escape_seqs.tab", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("abc\tdef\t", str);
+
+  ok = config_lookup_string(&cfg, "escape_seqs.feed", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("abc\fdef\f", str);
+
+  ok = config_lookup_string(&cfg, "escape_seqs.backslash", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("abc\\def\\", str);
+
+  ok = config_lookup_string(&cfg, "escape_seqs.dquote", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("abc\"def\"", str);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
   int failures;
@@ -452,6 +504,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, BigInt6);
   TT_SUITE_TEST(LibConfigTests, BigInt7);
   TT_SUITE_TEST(LibConfigTests, RemoveSetting);
+  TT_SUITE_TEST(LibConfigTests, EscapedStrings);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);
