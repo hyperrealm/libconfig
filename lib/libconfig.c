@@ -691,6 +691,23 @@ int config_write_file(config_t *config, const char *filename)
   }
 
   config_write(config, stream);
+
+  if(config_get_option(config, CONFIG_OPTION_FSYNC))
+  {
+    int fd = fileno(stream);
+
+    if(fd >= 0)
+    {
+      if(fsync(fd) != 0)
+      {
+        fclose(stream);
+        config->error_text = __io_error;
+        config->error_type = CONFIG_ERR_FILE_IO;
+        return(CONFIG_FALSE);
+      }
+    }
+  }
+
   fclose(stream);
   config->error_type = CONFIG_ERR_NONE;
   return(CONFIG_TRUE);

@@ -101,6 +101,8 @@
 #define IS_RELATIVE_PATH(P) \
   (PathIsRelativeA(P))
 
+extern int fsync(int fd);
+
 #else /* defined(WIN32/WIN64) && ! defined(__MINGW32__) */
 
 #define INT64_CONST(I)  (I ## LL)
@@ -108,6 +110,8 @@
 
 #define IS_RELATIVE_PATH(P) \
   ((P)[0] != '/')
+
+#include <unistd.h> /* for fsync() */
 
 #endif /* defined(WIN32/WIN64) && ! defined(__MINGW32__) */
 

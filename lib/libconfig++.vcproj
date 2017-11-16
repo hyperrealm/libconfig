@@ -198,6 +198,10 @@
 				RelativePath=".\util.c"
 				>
 			</File>
+			<File
+				RelativePath=".\wincompat.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

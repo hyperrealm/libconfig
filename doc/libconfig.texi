@@ -6,8 +6,8 @@
 @setfilename libconfig.info
 @settitle libconfig
 
-@set edition 1.7
-@set update-date 31 Oct 2017
+@set edition 1.7.1
+@set update-date ?? Nov 2017
 @set subtitle-text A Library For Processing Structured Configuration Files
 @set author-text Mark A.@: Lindner
 
@@ -945,6 +945,11 @@ when writing floating point values (corresponding to @code{printf()}
 @samp{%g} format) or should never be used (corresponding to @code{printf()}
 @samp{%f} format). By default this option is turned off.
 
+@item CONFIG_OPTION_FSYNC
+(@b{Since @i{v1.7.1}})
+This option controls whether the @code{config_write_file()} function performs
+an @i{fsync} operation after writing the configuration and before closing the
+file. By default this option is turned off.
 @end table
 
 @end deftypefun
@@ -1579,6 +1584,12 @@ This option controls whether scientific notation may be used as appropriate
 when writing floating point values (corresponding to @code{printf()}
 @samp{%g} format) or should never be used (corresponding to @code{printf()}
 @samp{%f} format). By default this option is turned off.
+
+@item Config::OptionFsync
+(@b{Since @i{v1.7.1}})
+This option controls whether the @code{writeFile()} method performs an @i{fsync}
+operation after writing the configuration and before closing the file. By
+default this option is turned off.
 
 @end table
 

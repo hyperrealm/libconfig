@@ -36,6 +36,11 @@ int main(int argc, char **argv)
   config_setting_t *root, *setting, *movie;
 
   config_init(&cfg);
+  config_set_options(&cfg,
+                     (CONFIG_OPTION_FSYNC
+                      | CONFIG_OPTION_SEMICOLON_SEPARATORS
+                      | CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS
+                      | CONFIG_OPTION_OPEN_BRACE_ON_SEPARATE_LINE));
 
   /* Read the file. If there is an error, report it and exit. */
   if(! config_read_file(&cfg, "example.cfg"))
@@ -73,8 +78,6 @@ int main(int argc, char **argv)
 
   setting = config_setting_add(movie, "qty", CONFIG_TYPE_INT);
   config_setting_set_float(setting, 20);
-
-  config_set_options(&cfg, 0);
 
   /* Write out the updated configuration. */
   if(! config_write_file(&cfg, output_file))

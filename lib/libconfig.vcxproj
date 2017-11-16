@@ -81,6 +81,7 @@
     <ClCompile Include="strbuf.c" />
     <ClCompile Include="strvec.c" />
     <ClCompile Include="util.c" />
+    <ClCompile Include="wincompat.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ac_config.h" />
