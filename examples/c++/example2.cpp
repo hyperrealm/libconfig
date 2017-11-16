@@ -38,6 +38,11 @@ int main(int argc, char **argv)
 
   Config cfg;
 
+  cfg.setOptions(Config::OptionFsync
+                 | Config::OptionSemicolonSeparators
+                 | Config::OptionColonAssignmentForGroups
+                 | Config::OptionOpenBraceOnSeparateLine);
+
   // Read the file. If there is an error, report it and exit.
   try
   {

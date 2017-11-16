@@ -349,6 +349,7 @@
     <ClCompile Include="strbuf.c" />
     <ClCompile Include="strvec.c" />
     <ClCompile Include="util.c" />
+    <ClCompile Include="wincompat.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ac_config.h" />
@@ -367,5 +368,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+<<<<<<< refs/remotes/origin/master
 >>>>>>> Added Visual Studio 2017 solution/project files.
 </Project>
+=======
+</Project>
+>>>>>>> Added new 'fsync' option.

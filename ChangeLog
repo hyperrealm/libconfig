@@ -1,3 +1,10 @@
+2017-11-15  Mark Lindner  <markl@avalon>
+
+  * lib/wincompat.c, lib/wincompat.h - added fsync() implementation for Windows
+  * lib/libconfig.c, lib/libconfig.h - added CONFIG_OPTION_FSYNC
+  * lib/libconfigcpp.c++, lib/libconfig.h++ - added Config::OptionFsync
+  * doc/libconfig.texi - Documentation updates
+
   ----- version 1.7 ------
 
 2017-10-24  Mark Lindner  <markl@avalon>
