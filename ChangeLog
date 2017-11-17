@@ -1,9 +1,16 @@
+
+  ----- version 1.7.1 ------
+
 2017-11-15  Mark Lindner  <markl@avalon>
 
   * lib/wincompat.c, lib/wincompat.h - added fsync() implementation for Windows
   * lib/libconfig.c, lib/libconfig.h - added CONFIG_OPTION_FSYNC
   * lib/libconfigcpp.c++, lib/libconfig.h++ - added Config::OptionFsync
   * doc/libconfig.texi - Documentation updates
+
+2017-11-14  Mark Lindner  <markl@avalon>
+
+  * lib/strbuf.c - bugfix in strbuf_append_char()
 
   ----- version 1.7 ------
 
