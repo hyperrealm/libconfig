@@ -12,5 +12,6 @@ EXTRA_DIST = \
 	example.cfg \
 	example4.cfg \
 	cfg_includes/*.cfg \
+	cfg_includes/cfg_subincludes/*.cfg \
 	*.vcproj \
 	*.vcxproj
