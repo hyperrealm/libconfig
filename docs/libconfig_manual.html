@@ -58,8 +58,8 @@ ul.no-bullet {list-style: none}
 
 <hr noshade size=6 color="black">
 <div align=right>A Library For Processing Structured Configuration Files<br>
-Version 1.7<br>
-31 Oct 2017</div>
+Version 1.7.1<br>
+17 Nov 2017</div>
 <br><br><br><br>
 <font size=+1>Mark A. Lindner</font>
 <hr size=3 noshade color="black">
@@ -1146,6 +1146,12 @@ when writing floating point values (corresponding to <code>printf()</code>
 &lsquo;<samp>%f</samp>&rsquo; format). By default this option is turned off.
 </p>
 </dd>
+<dt><code>CONFIG_OPTION_FSYNC</code></dt>
+<dd><p>(<b>Since <i>v1.7.1</i></b>)
+This option controls whether the <code>config_write_file()</code> function performs
+an <i>fsync</i> operation after writing the configuration and before closing the
+file. By default this option is turned off.
+</p></dd>
 </dl>
 
 </dd></dl>
@@ -1835,6 +1841,13 @@ This option controls whether scientific notation may be used as appropriate
 when writing floating point values (corresponding to <code>printf()</code>
 &lsquo;<samp>%g</samp>&rsquo; format) or should never be used (corresponding to <code>printf()</code>
 &lsquo;<samp>%f</samp>&rsquo; format). By default this option is turned off.
+</p>
+</dd>
+<dt><code>Config::OptionFsync</code></dt>
+<dd><p>(<b>Since <i>v1.7.1</i></b>)
+This option controls whether the <code>writeFile()</code> method performs an <i>fsync</i>
+operation after writing the configuration and before closing the file. By
+default this option is turned off.
 </p>
 </dd>
 </dl>
