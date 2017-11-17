@@ -440,9 +440,8 @@ TT_TEST(RemoveSetting)
 TT_TEST(EscapedStrings)
 {
   config_t cfg;
-  config_setting_t* rc;
   int ok;
-  const char* str;
+  const char *str;
 
   config_init(&cfg);
   config_set_include_dir(&cfg, "./testdata");
