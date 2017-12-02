@@ -717,7 +717,8 @@ int config_write_file(config_t *config, const char *filename)
 
 void config_destroy(config_t *config)
 {
-  config_clear(config);
+  __config_setting_destroy(config->root);
+  __delete_vec(config->filenames);
   __delete(config->include_dir);
   __zero(config);
 }
