@@ -17,7 +17,8 @@ set(libsrc
     scanner.c
     strbuf.c
     strvec.c
-    util.c)
+    util.c
+	wincompat.c)
 	
 set(libinc_cpp
     libconfig.h++
