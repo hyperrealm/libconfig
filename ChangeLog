@@ -1,68 +1,74 @@
+  ----- version 1.7.2 ------
+01-05  Mark Lindner  <markl@avalon>
+
+	* lib/libconfig.c - fixed slow leak in config_destroy()
+	* <multiple> - miscellaenous build file fixes
 
   ----- version 1.7.1 ------
 
 2017-11-15  Mark Lindner  <markl@avalon>
 
-  * lib/wincompat.c, lib/wincompat.h - added fsync() implementation for Windows
-  * lib/libconfig.c, lib/libconfig.h - added CONFIG_OPTION_FSYNC
-  * lib/libconfigcpp.c++, lib/libconfig.h++ - added Config::OptionFsync
-  * doc/libconfig.texi - Documentation updates
+	* lib/wincompat.c, lib/wincompat.h - added fsync() implementation for
+	  Windows
+	* lib/libconfig.c, lib/libconfig.h - added CONFIG_OPTION_FSYNC
+	* lib/libconfigcpp.c++, lib/libconfig.h++ - added Config::OptionFsync
+	* doc/libconfig.texi - Documentation updates
 
 2017-11-14  Mark Lindner  <markl@avalon>
 
-  * lib/strbuf.c - bugfix in strbuf_append_char()
+	* lib/strbuf.c - bugfix in strbuf_append_char()
 
   ----- version 1.7 ------
 
 2017-10-24  Mark Lindner  <markl@avalon>
 
-  * INSTALL - Added information about installing from a git snapshot
-  * configure.ac - Bumped version to 1.7
-  * doc/libconfig.texi - Updated documentation, added new chapter on
-    libconfig bindings/implementations for other languages
-  * examples/c/Makefile.am, examples/c/example4.c, examples/c/example4.cfg,
-    examples/c/cfg_includes/*.cfg - New example program
-  * lib/Makefile.am - bumped library version to 11:0:0; added new source
-    files
-  * lib/grammar.c, lib/grammar.y, lib/scanner.c, lib/scanner.h - regenerated
-  * lib/grammar.y - allow optional trailing comma in lists and arrays
-  * *.vcproj - updated with new source files, library dependency
-  * lib/libconfig.c, lib/libconfig.h - various code cleanup;
-    reworked options API; moved some value parsing logic into lib/util.c
-    and lib/util.h; added new option
-    CONFIG_OPTION_ALLOW_SCIENTIFIC_NOTATION; bugfix to disallow adding a
-    group or a list to an array; changed default float precision from 2 to 6;
-    fixed conversion between int and int64 types; added config_clear();
-    added support for include functions; added config_set_hook() and
-    config_get_hook()
-  * lib/libconfigcpp.c++, lib/libconfig.h++ - moved Option enum from Setting
-    to Config; added OptionAllowScientificNotation; added clear();
-    reworked options API; added evaluateIncludePath(); fixed casting to
-    unsigned int (don't clip negative values to 0)
-  * lib/parsectx.c, lib/parsectx.h - code cleanup
-  * lib/scanctx.c, lib/scanctx.h - added support for include functions;
-    code cleanup; removed non-portable directory reading code;
-  * lib/scanner.l - added support for include functions; moved some parsing
-    code to lib/util.c and lib/util.h; code cleanup
-  * lib/strbuf.c, lib/strbuf.h - added strbuf_append_char(); code cleanup
-  * lib/strvec.c, lib/strvec.h - new functions for managing arrays of
-    string pointers (for filename lists)
-  * lib/util.c, lib/util.h - value parsing and formatting code and memory
-    management macros and functions extracted from other files
-  * lib/wincompat.h - new macros for testing relative paths; replaced
-    INT32_MAX/INT32_MIN with INT_MAX/INT_MIN.
-  * tests/tests.c - fixed test failures and improper testing of int type
-    conversions
+	* INSTALL - Added information about installing from a git snapshot
+	* configure.ac - Bumped version to 1.7
+	* doc/libconfig.texi - Updated documentation, added new chapter on
+	  libconfig bindings/implementations for other languages
+	* examples/c/Makefile.am, examples/c/example4.c, examples/c/example4.cfg,
+	  examples/c/cfg_includes/*.cfg - New example program
+	* lib/Makefile.am - bumped library version to 11:0:0; added new source
+	  files
+	* lib/grammar.c, lib/grammar.y, lib/scanner.c, lib/scanner.h - regenerated
+	* lib/grammar.y - allow optional trailing comma in lists and arrays
+	* *.vcproj - updated with new source files, library dependency
+	* lib/libconfig.c, lib/libconfig.h - various code cleanup;
+	  reworked options API; moved some value parsing logic into lib/util.c
+	  and lib/util.h; added new option
+	  CONFIG_OPTION_ALLOW_SCIENTIFIC_NOTATION; bugfix to disallow adding a
+	  group or a list to an array; changed default float precision from 2 to 6;
+	  fixed conversion between int and int64 types; added config_clear();
+	  added support for include functions; added config_set_hook() and
+	  config_get_hook()
+	* lib/libconfigcpp.c++, lib/libconfig.h++ - moved Option enum from Setting
+	  to Config; added OptionAllowScientificNotation; added clear();
+	  reworked options API; added evaluateIncludePath(); fixed casting to
+	  unsigned int (don't clip negative values to 0)
+	* lib/parsectx.c, lib/parsectx.h - code cleanup
+	* lib/scanctx.c, lib/scanctx.h - added support for include functions;
+	  code cleanup; removed non-portable directory reading code;
+	* lib/scanner.l - added support for include functions; moved some parsing
+	  code to lib/util.c and lib/util.h; code cleanup
+	* lib/strbuf.c, lib/strbuf.h - added strbuf_append_char(); code cleanup
+	* lib/strvec.c, lib/strvec.h - new functions for managing arrays of
+	  string pointers (for filename lists)
+	* lib/util.c, lib/util.h - value parsing and formatting code and memory
+	  management macros and functions extracted from other files
+	* lib/wincompat.h - new macros for testing relative paths; replaced
+	  INT32_MAX/INT32_MIN with INT_MAX/INT_MIN.
+	* tests/tests.c - fixed test failures and improper testing of int type
+	  conversions
 
   ----- version 1.6 ------
 
 2015-12-31  Jose Luis Tallon <jltallon@adv-solutions.net>
 
-  * Added include_dir feature (support for Debian-style conf.d/
-    includes) (pull request #36)
+	* Added include_dir feature (support for Debian-style conf.d/
+	  includes) (pull request #36)
 
-  * Added octal_ints feature (support for integer expressed in octal,
-    useful for permissions and masks in UNIX-like systems (pull req #42)
+	* Added octal_ints feature (support for integer expressed in octal,
+	  useful for permissions and masks in UNIX-like systems (pull req #42)
 
 	* Fixed "Removing a setting removes all siblings" (issue #41)
 	  Props random85
@@ -73,11 +79,11 @@
 	* Make libconfig usable from CMake (pull request/issue #28)
 	  Props thfi
 
-  * Documentation fixes
+	* Documentation fixes
 	  - Copyright and examples
 	  - Included TeX patch from Debian (fixes FTBS with TeXlive)
 
-  * Resync Debian packaging
+	* Resync Debian packaging
 	  includes updated packages for GCC5 transition
 
 2015-10-14  Thomas Fischer <fischer@unix-ag.uni-kl.de>
