@@ -18,7 +18,7 @@
 #
 # For more info see section 6.3 of the GNU Libtool Manual.
 
-VERINFO = -version-info 11:1:0
+VERINFO = -version-info 11:2:0
 
 ## Flex
 PARSER_PREFIX = libconfig_yy

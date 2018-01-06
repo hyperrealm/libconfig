@@ -6,8 +6,8 @@
 @setfilename libconfig.info
 @settitle libconfig
 
-@set edition 1.7.1
-@set update-date 17 Nov 2017
+@set edition 1.7.2
+@set update-date 5 Jan 2018
 @set subtitle-text A Library For Processing Structured Configuration Files
 @set author-text Mark A.@: Lindner
 
