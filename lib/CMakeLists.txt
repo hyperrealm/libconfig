@@ -28,8 +28,8 @@ set(libsrc_cpp
     ${libsrc}
     libconfigcpp.cc)
 
-add_library(libconfig ${LIB_TYPE} ${libsrc} ${libinc})
-add_library(libconfig++ ${LIB_TYPE} ${libsrc_cpp} ${libinc_cpp})
+add_library(libconfig ${libsrc} ${libinc})
+add_library(libconfig++ ${libsrc_cpp} ${libinc_cpp})
 
 set_target_properties(libconfig 
     PROPERTIES LINKER_LANGUAGE C
