@@ -41,14 +41,12 @@ set_target_properties(libconfig++
 target_compile_definitions(libconfig
     PRIVATE
         _CRT_SECURE_NO_DEPRECATE
-        _STDLIB_H
         YY_NO_UNISTD_H
         YY_USE_CONST )
 
 target_compile_definitions(libconfig++ 
     PRIVATE
         _CRT_SECURE_NO_DEPRECATE
-        _STDLIB_H
         YY_NO_UNISTD_H
         YY_USE_CONST )
 
