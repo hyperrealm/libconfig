@@ -28,8 +28,8 @@ set(libsrc_cpp
     ${libsrc}
     libconfigcpp.cc)
 
-add_library(libconfig ${LIB_TYPE} ${libsrc} ${libinc})
-add_library(libconfig++ ${LIB_TYPE} ${libsrc_cpp} ${libinc_cpp})
+add_library(libconfig ${libsrc} ${libinc})
+add_library(libconfig++ ${libsrc_cpp} ${libinc_cpp})
 
 set_target_properties(libconfig 
     PROPERTIES LINKER_LANGUAGE C
@@ -41,14 +41,12 @@ set_target_properties(libconfig++
 target_compile_definitions(libconfig
     PRIVATE
         _CRT_SECURE_NO_DEPRECATE
-        _STDLIB_H
         YY_NO_UNISTD_H
         YY_USE_CONST )
 
 target_compile_definitions(libconfig++ 
     PRIVATE
         _CRT_SECURE_NO_DEPRECATE
-        _STDLIB_H
         YY_NO_UNISTD_H
         YY_USE_CONST )
 
