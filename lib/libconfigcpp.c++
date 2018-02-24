@@ -58,8 +58,55 @@ static void __fatal_error_func(const char *message)
 
 // ---------------------------------------------------------------------------
 
+ConfigException::ConfigException(std::string const &errorMessage)
+  : std::runtime_error(errorMessage)
+{
+}
+
+// ---------------------------------------------------------------------------
+
+ConfigException::ConfigException(ConfigException const &other)
+  : std::runtime_error(other.what())
+{
+}
+
+// ---------------------------------------------------------------------------
+
+ConfigException& ConfigException::operator=(ConfigException const &other)
+{
+  std::runtime_error::operator=(other);
+  return(*this);
+}
+
+// ---------------------------------------------------------------------------
+
+ConfigException::~ConfigException() LIBCONFIGXX_NOEXCEPT
+{
+}
+
+// ---------------------------------------------------------------------------
+
+static std::string __makeParseExceptionErrorString(const char *file,
+                                                   int line,
+                                                   const char *error)
+{
+  std::stringstream sstr;
+
+  sstr << "Failed parsing: ";
+
+  if (file != 0)
+    sstr << file << ", ";
+
+  sstr << "at line " << line << ": " << error;
+
+  return sstr.str();
+}
+
+// ---------------------------------------------------------------------------
+
 ParseException::ParseException(const char *file, int line, const char *error)
-  : _file(file ? ::strdup(file) : NULL), _line(line), _error(error)
+  : ConfigException(__makeParseExceptionErrorString(file, line, error)),
+    _file(file ? ::strdup(file) : NULL), _line(line), _error(error)
 {
 }
 
@@ -78,13 +125,6 @@ ParseException::ParseException(const ParseException &other)
 ParseException::~ParseException() LIBCONFIGXX_NOEXCEPT
 {
   ::free((void *)_file);
-}
-
-// ---------------------------------------------------------------------------
-
-const char *ParseException::what() const LIBCONFIGXX_NOEXCEPT
-{
-  return("ParseException");
 }
 
 // ---------------------------------------------------------------------------
@@ -136,67 +176,100 @@ static int __toTypeCode(Setting::Type type)
 
 // ---------------------------------------------------------------------------
 
-static void __constructPath(const Setting &setting,
-                            std::stringstream &path)
+static void __writeSettingPath(const Setting &setting, std::ostream &o)
 {
   // head recursion to print path from root to target
-
   if(! setting.isRoot())
   {
-    __constructPath(setting.getParent(), path);
-    if(path.tellp() > 0)
-      path << '.';
+    const Setting &parent_setting = setting.getParent();
+    __writeSettingPath(parent_setting, o);
+    if (! parent_setting.isRoot())
+      o << '.';
 
     const char *name = setting.getName();
+
     if(name)
-      path << name;
+        o << name;
     else
-      path << '[' << setting.getIndex() << ']';
+        o << '[' << setting.getIndex() << ']';
   }
 }
 
 // ---------------------------------------------------------------------------
 
-SettingException::SettingException(const Setting &setting)
+static std::string __constructSettingPath(const Setting &setting)
 {
-  std::stringstream sstr;
-  __constructPath(setting, sstr);
-
-  _path = ::strdup(sstr.str().c_str());
+  std::stringstream ss;
+  __writeSettingPath(setting, ss);
+  return ss.str();
 }
 
 // ---------------------------------------------------------------------------
 
-SettingException::SettingException(const Setting &setting, int idx)
+static std::string __constructSettingPath(const Setting &setting, int idx)
 {
-  std::stringstream sstr;
-  __constructPath(setting, sstr);
-  sstr << ".[" << idx << "]";
-
-  _path = ::strdup(sstr.str().c_str());
+  std::stringstream ss;
+  __writeSettingPath(setting, ss);
+  ss << ".[" << idx << ']';
+  return ss.str();
 }
 
 // ---------------------------------------------------------------------------
 
-SettingException::SettingException(const Setting &setting, const char *name)
+static std::string __constructSettingPath(const Setting &setting, const char *name)
 {
-  std::stringstream sstr;
-  __constructPath(setting, sstr);
-  sstr << '.' << name;
-
-  _path = ::strdup(sstr.str().c_str());
+  std::stringstream ss;
+  __writeSettingPath(setting, ss);
+  ss << '.' << name;
+  return ss.str();
 }
 
 // ---------------------------------------------------------------------------
 
-SettingException::SettingException(const char *path)
+static std::string __constructErrorMessage(char const *messagePrefix, std::string const &path)
 {
-  _path = ::strdup(path);
+  std::stringstream ss;
+  ss << messagePrefix << ": " << path;
+  return ss.str();
 }
 
 // ---------------------------------------------------------------------------
 
-const char *SettingException::getPath() const
+SettingException::SettingException(char const *messagePrefix, std::string path)
+  : ConfigException(__constructErrorMessage(messagePrefix, path))
+  , _path(std::move(path))
+{
+}
+
+// ---------------------------------------------------------------------------
+
+SettingException::SettingException(char const *messagePrefix,
+                                   const Setting &setting)
+  : SettingException(messagePrefix, __constructSettingPath(setting))
+{
+}
+
+// ---------------------------------------------------------------------------
+
+SettingException::SettingException(char const *messagePrefix,
+                                   const Setting &setting,
+                                   int idx)
+  : SettingException(messagePrefix, __constructSettingPath(setting, idx))
+{
+}
+
+// ---------------------------------------------------------------------------
+
+SettingException::SettingException(char const *messagePrefix,
+                                   const Setting &setting,
+                                   const char *name)
+  : SettingException(messagePrefix, __constructSettingPath(setting, name))
+{
+}
+
+// ---------------------------------------------------------------------------
+
+std::string const &SettingException::getPath() const
 {
   return(_path);
 }
@@ -205,45 +278,40 @@ const char *SettingException::getPath() const
 
 SettingException::SettingException(const SettingException &other)
   : ConfigException(other)
+  , _path(other._path)
 {
-  _path = ::strdup(other._path);
 }
 
 // ---------------------------------------------------------------------------
 
 SettingException &SettingException::operator=(const SettingException &other)
 {
-  ::free(_path);
-  _path = ::strdup(other._path);
+  ConfigException::operator=(other);
+  _path = other._path;
 
   return(*this);
 }
 
 // ---------------------------------------------------------------------------
 
-const char *SettingException::what() const LIBCONFIGXX_NOEXCEPT
-{
-  return("SettingException");
-}
-
-// ---------------------------------------------------------------------------
-
 SettingException::~SettingException() LIBCONFIGXX_NOEXCEPT
 {
-  ::free(_path);
 }
 
 // ---------------------------------------------------------------------------
 
+const char * const SettingTypeException::ERROR_PREFIX = "Unexpected setting type";
+
+// ---------------------------------------------------------------------------
 SettingTypeException::SettingTypeException(const Setting &setting)
-  : SettingException(setting)
+  : SettingException(ERROR_PREFIX, setting)
 {
 }
 
 // ---------------------------------------------------------------------------
 
 SettingTypeException::SettingTypeException(const Setting &setting, int idx)
-  : SettingException(setting, idx)
+  : SettingException(ERROR_PREFIX, setting, idx)
 {
 }
 
@@ -251,28 +319,25 @@ SettingTypeException::SettingTypeException(const Setting &setting, int idx)
 
 SettingTypeException::SettingTypeException(const Setting &setting,
                                            const char *name)
-  : SettingException(setting, name)
+  : SettingException(ERROR_PREFIX, setting, name)
 {
 }
 
 // ---------------------------------------------------------------------------
 
-const char *SettingTypeException::what() const LIBCONFIGXX_NOEXCEPT
-{
-  return("SettingTypeException");
-}
+const char * const SettingRangeException::ERROR_PREFIX = "Value of setting is out of range";
 
 // ---------------------------------------------------------------------------
 
 SettingRangeException::SettingRangeException(const Setting &setting)
-  : SettingException(setting)
+  : SettingException(ERROR_PREFIX, setting)
 {
 }
 
 // ---------------------------------------------------------------------------
 
 SettingRangeException::SettingRangeException(const Setting &setting, int idx)
-  : SettingException(setting, idx)
+  : SettingException(ERROR_PREFIX, setting, idx)
 {
 }
 
@@ -280,22 +345,19 @@ SettingRangeException::SettingRangeException(const Setting &setting, int idx)
 
 SettingRangeException::SettingRangeException(const Setting &setting,
                                              const char *name)
-  : SettingException(setting, name)
+  : SettingException(ERROR_PREFIX, setting, name)
 {
 }
 
 // ---------------------------------------------------------------------------
 
-const char *SettingRangeException::what() const LIBCONFIGXX_NOEXCEPT
-{
-  return("SettingRangeException");
-}
+const char * const SettingNotFoundException::ERROR_PREFIX = "Setting not found";
 
 // ---------------------------------------------------------------------------
 
 SettingNotFoundException::SettingNotFoundException(const Setting &setting,
                                                    int idx)
-  : SettingException(setting, idx)
+  : SettingException(ERROR_PREFIX, setting, idx)
 {
 }
 
@@ -303,44 +365,30 @@ SettingNotFoundException::SettingNotFoundException(const Setting &setting,
 
 SettingNotFoundException::SettingNotFoundException(const Setting &setting,
                                                    const char *name)
-  : SettingException(setting, name)
+  : SettingException(ERROR_PREFIX, setting, name)
 {
 }
 
 // ---------------------------------------------------------------------------
 
 SettingNotFoundException::SettingNotFoundException(const char *path)
-  : SettingException(path)
+  : SettingException(ERROR_PREFIX, path)
 {
-}
-
-// ---------------------------------------------------------------------------
-
-const char *SettingNotFoundException::what() const LIBCONFIGXX_NOEXCEPT
-{
-  return("SettingNotFoundException");
 }
 
 // ---------------------------------------------------------------------------
 
 SettingNameException::SettingNameException(const Setting &setting,
                                            const char *name)
-  : SettingException(setting, name)
+  : SettingException("Failed adding setting", setting, name)
 {
 }
 
 // ---------------------------------------------------------------------------
 
-const char *SettingNameException::what() const LIBCONFIGXX_NOEXCEPT
+FileIOException::FileIOException()
+  : ConfigException("File input/output error occured.")
 {
-  return("SettingNameException");
-}
-
-// ---------------------------------------------------------------------------
-
-const char *FileIOException::what() const LIBCONFIGXX_NOEXCEPT
-{
-  return("FileIOException");
 }
 
 // ---------------------------------------------------------------------------
@@ -1098,11 +1146,7 @@ const char * Setting::getName() const
 
 std::string Setting::getPath() const
 {
-  std::stringstream path;
-
-  __constructPath(*this, path);
-
-  return(path.str());
+  return __constructSettingPath(*this);
 }
 
 // ---------------------------------------------------------------------------
