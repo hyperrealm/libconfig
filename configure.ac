@@ -99,6 +99,18 @@ docxx=yes
 
 AM_CONDITIONAL(BUILDCXX, test x$docxx = xyes)
 
+dodoc=yes
+
+AC_ARG_ENABLE(doc,
+AS_HELP_STRING([--disable-doc], [Disable building of the documentation]),
+[if test "$enableval" = "no"; then dodoc="no"; fi],
+[
+dodoc=yes
+]
+)
+
+AM_CONDITIONAL(BUILDDOC, test x$dodoc = xyes)
+
 doexamples=yes
 
 AC_ARG_ENABLE(examples,
