@@ -1451,12 +1451,17 @@ The @code{write()} method writes the configuration to the given @var{stream}.
 @end deftypemethod
 
 @deftypemethod Config void readFile (@w{const char * @var{filename}})
-@deftypemethodx Config void writeFile (@w{const char * @var{filename}}) const
+@deftypemethodx Config void readFile (@w{const std::string &@var{filename}})
 
 The @code{readFile()} method reads and parses a configuration from the
 file named @var{filename}. A @code{ParseException} is thrown if a
 parse error occurs. A @code{FileIOException} is thrown if the file
 cannot be read.
+
+@end deftypemethod
+
+@deftypemethod Config void writeFile (@w{const char * @var{filename}})
+@deftypemethodx Config void writeFile (@w{const std::string &@var{filename}})
 
 The @code{writeFile()} method writes the configuration to the file
 named @var{filename}. A @code{FileIOException} is thrown if the file cannot
