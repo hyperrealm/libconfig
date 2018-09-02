@@ -18,8 +18,8 @@ set(libsrc
     strbuf.c
     strvec.c
     util.c
-	wincompat.c)
-	
+    wincompat.c)
+
 set(libinc_cpp
     libconfig.h++
     libconfig.hh)
@@ -31,7 +31,7 @@ set(libsrc_cpp
 add_library(libconfig ${libsrc} ${libinc})
 add_library(libconfig++ ${libsrc_cpp} ${libinc_cpp})
 
-set_target_properties(libconfig 
+set_target_properties(libconfig
     PROPERTIES LINKER_LANGUAGE C
         PUBLIC_HEADER "${libinc}")
 set_target_properties(libconfig++
@@ -44,7 +44,7 @@ target_compile_definitions(libconfig
         YY_NO_UNISTD_H
         YY_USE_CONST )
 
-target_compile_definitions(libconfig++ 
+target_compile_definitions(libconfig++
     PRIVATE
         _CRT_SECURE_NO_DEPRECATE
         YY_NO_UNISTD_H
