@@ -63,17 +63,20 @@ hex               0[Xx][0-9A-Fa-f]+
 hex64             0[Xx][0-9A-Fa-f]+L(L)?
 hexchar           \\[Xx][0-9A-Fa-f]{2}
 float             ([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]?([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)
-comment           (#|\/\/).*$
 include_open ^[ \t]*@include[ \t]+\"
 
-%x COMMENT STRING INCLUDE
+%x SINGLE_LINE_COMMENT MULTI_LINE_COMMENT STRING INCLUDE
 
 %%
 
-\/\*              { BEGIN COMMENT; }
-<COMMENT>\*\/     { BEGIN INITIAL; }
-<COMMENT>.        { /* ignore */ }
-<COMMENT>\n       { /* ignore */ }
+(#|\/\/)                     { BEGIN SINGLE_LINE_COMMENT; }
+<SINGLE_LINE_COMMENT>\n      { BEGIN INITIAL; }
+<SINGLE_LINE_COMMENT>.       { /* ignore */ }
+
+\/\*                         { BEGIN MULTI_LINE_COMMENT; }
+<MULTI_LINE_COMMENT>\*\/     { BEGIN INITIAL; }
+<MULTI_LINE_COMMENT>.        { /* ignore */ }
+<MULTI_LINE_COMMENT>\n       { /* ignore */ }
 
 \"                { BEGIN STRING; }
 <STRING>[^\"\\]+  { scanctx_append_string(yyextra, yytext); }
@@ -160,7 +163,6 @@ include_open ^[ \t]*@include[ \t]+\"
 \(                { return(TOK_LIST_START); }
 \)                { return(TOK_LIST_END); }
 ;                 { return(TOK_SEMICOLON); }
-{comment}         { /* ignore */ }
 .                 { return(TOK_GARBAGE); }
 
 <<EOF>>           {
