@@ -1,9 +1,15 @@
+if(CMAKE_HOST_WIN32)
+    set(libname "libconfig")
+else()
+    set(libname "config")
+endif()
+
 add_executable(libconfig_tests
     tests.c
 )
 
 target_link_libraries(libconfig_tests
-    libconfig
+    ${libname}
     libtinytest
 )
 
