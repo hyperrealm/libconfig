@@ -492,7 +492,12 @@ class LIBCONFIGXX_API Config
   { return(readString(str.c_str())); }
 
   void readFile(const char *filename);
+  inline void readFile(const std::string &filename)
+  { readFile(filename.c_str()); }
+
   void writeFile(const char *filename);
+  inline void writeFile(const std::string &filename)
+  { writeFile(filename.c_str()); }
 
   Setting & lookup(const char *path) const;
   inline Setting & lookup(const std::string &path) const
