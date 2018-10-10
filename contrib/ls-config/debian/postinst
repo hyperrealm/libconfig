@@ -32,7 +32,7 @@ config_path() {
 	CHK="$(echo "$L" | sed -E 's/^([\ \t]+)//g')"
 	CHK="${CHK:0:5}"
 	NF="$NF$IFS$L"
-	if [ "$CHK" == "PATH=" ]; then
+	if [ "$CHK" = "PATH=" ]; then
 	    NF="$NF$IFS#Configuration path for ls scripting"
 	    NF="$NF$IFS"
 	    NF="${NF}PATH=\"\$PATH:/usr/share/ls/lib\"$IFS"
