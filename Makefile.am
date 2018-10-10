@@ -1,7 +1,11 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = lib doc tinytest tests
+SUBDIRS = lib tinytest tests
+
+if BUILDDOC
+SUBDIRS += doc
+endif
 
 if BUILDEXAMPLES
 SUBDIRS += examples
