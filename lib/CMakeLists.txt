@@ -28,41 +28,47 @@ set(libsrc_cpp
     ${libsrc}
     libconfigcpp.cc)
 
-add_library(libconfig ${libsrc} ${libinc})
-add_library(libconfig++ ${libsrc_cpp} ${libinc_cpp})
+if(CMAKE_HOST_WIN32)
+    set(libname "libconfig")
+else()
+    set(libname "config")
+endif()
 
-set_target_properties(libconfig
+add_library(${libname} ${libsrc} ${libinc})
+add_library(${libname}++ ${libsrc_cpp} ${libinc_cpp})
+
+set_target_properties(${libname}
     PROPERTIES LINKER_LANGUAGE C
         PUBLIC_HEADER "${libinc}")
-set_target_properties(libconfig++
+set_target_properties(${libname}++
     PROPERTIES LINKER_LANGUAGE CXX
         PUBLIC_HEADER "${libinc_cpp}")
 
-target_compile_definitions(libconfig
+target_compile_definitions(${libname}
     PRIVATE
         _CRT_SECURE_NO_DEPRECATE
         YY_NO_UNISTD_H
         YY_USE_CONST )
 
-target_compile_definitions(libconfig++
+target_compile_definitions(${libname}++
     PRIVATE
         _CRT_SECURE_NO_DEPRECATE
         YY_NO_UNISTD_H
         YY_USE_CONST )
 
 if(CMAKE_HOST_WIN32)
-    target_link_libraries(libconfig Shlwapi.lib)
-    target_link_libraries(libconfig++ Shlwapi.lib)
+    target_link_libraries(${libname} Shlwapi.lib)
+    target_link_libraries(${libname}++ Shlwapi.lib)
 endif()
 
-install(TARGETS libconfig
+install(TARGETS ${libname}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-install(TARGETS libconfig++
+install(TARGETS ${libname}++
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
