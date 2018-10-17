@@ -66,11 +66,17 @@ class LIBCONFIGXX_API SettingException : public ConfigException
   SettingException(const SettingException &other);
   SettingException& operator=(const SettingException &other);
 
+#if __cplusplus < 201103L
   virtual ~SettingException() throw();
 
-  const char *getPath() const;
-
   virtual const char *what() const throw();
+#else
+  virtual ~SettingException() noexcept;
+
+  virtual const char *what() const noexcept;
+#endif
+
+  const char *getPath() const;
 
   private:
 
@@ -85,7 +91,11 @@ class LIBCONFIGXX_API SettingTypeException : public SettingException
   SettingTypeException(const Setting &setting, int idx);
   SettingTypeException(const Setting &setting, const char *name);
 
+#if __cplusplus < 201103L
   virtual const char *what() const throw();
+#else
+  virtual const char *what() const noexcept;
+#endif
 };
 
 class LIBCONFIGXX_API SettingNotFoundException : public SettingException
@@ -96,7 +106,11 @@ class LIBCONFIGXX_API SettingNotFoundException : public SettingException
   SettingNotFoundException(const Setting &setting, int idx);
   SettingNotFoundException(const Setting &setting, const char *name);
 
+#if __cplusplus < 201103L
   virtual const char *what() const throw();
+#else
+  virtual const char *what() const noexcept;
+#endif
 };
 
 class LIBCONFIGXX_API SettingNameException : public SettingException
@@ -105,14 +119,22 @@ class LIBCONFIGXX_API SettingNameException : public SettingException
 
   SettingNameException(const Setting &setting, const char *name);
 
+#if __cplusplus < 201103L
   virtual const char *what() const throw();
+#else
+  virtual const char *what() const noexcept;
+#endif
 };
 
 class LIBCONFIGXX_API FileIOException : public ConfigException
 {
   public:
 
+#if __cplusplus < 201103L
   virtual const char *what() const throw();
+#else
+  virtual const char *what() const noexcept;
+#endif
 };
 
 class LIBCONFIGXX_API ParseException : public ConfigException
@@ -123,7 +145,11 @@ class LIBCONFIGXX_API ParseException : public ConfigException
 
   ParseException(const ParseException &other);
 
+#if __cplusplus < 201103L
   virtual ~ParseException() throw();
+#else
+  virtual ~ParseException() noexcept;
+#endif
 
   inline const char *getFile() const
   { return(_file); }
@@ -133,8 +159,12 @@ class LIBCONFIGXX_API ParseException : public ConfigException
 
   inline const char *getError() const
   { return(_error); }
-
+ 
+#if __cplusplus < 201103L
   virtual const char *what() const throw();
+#else
+  virtual const char *what() const noexcept;
+#endif
 
   private:
 

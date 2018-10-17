@@ -72,7 +72,11 @@ ParseException::~ParseException() throw()
 
 // ---------------------------------------------------------------------------
 
+#if __cplusplus < 201103L
 const char *ParseException::what() const throw()
+#else
+const char *ParseException::what() const noexcept
+#endif
 {
   return("ParseException");
 }
@@ -211,7 +215,11 @@ SettingException &SettingException::operator=(const SettingException &other)
 
 // ---------------------------------------------------------------------------
 
+#if __cplusplus < 201103L
 const char *SettingException::what() const throw()
+#else
+const char *SettingException::what() const noexcept
+#endif
 {
   return("SettingException");
 }
@@ -247,7 +255,11 @@ SettingTypeException::SettingTypeException(const Setting &setting,
 
 // ---------------------------------------------------------------------------
 
+#if __cplusplus < 201103L
 const char *SettingTypeException::what() const throw()
+#else
+const char *SettingTypeException::what() const noexcept
+#endif
 {
   return("SettingTypeException");
 }
@@ -277,7 +289,11 @@ SettingNotFoundException::SettingNotFoundException(const char *path)
 
 // ---------------------------------------------------------------------------
 
+#if __cplusplus < 201103L
 const char *SettingNotFoundException::what() const throw()
+#else
+const char *SettingNotFoundException::what() const noexcept
+#endif
 {
   return("SettingNotFoundException");
 }
@@ -292,14 +308,22 @@ SettingNameException::SettingNameException(const Setting &setting,
 
 // ---------------------------------------------------------------------------
 
+#if __cplusplus < 201103L
 const char *SettingNameException::what() const throw()
+#else
+const char *SettingNameException::what() const noexcept
+#endif
 {
   return("SettingNameException");
 }
 
 // ---------------------------------------------------------------------------
 
+#if __cplusplus < 201103L
 const char *FileIOException::what() const throw()
+#else
+const char *FileIOException::what() const noexcept
+#endif
 {
   return("FileIOException");
 }
