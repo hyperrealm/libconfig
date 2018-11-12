@@ -44,6 +44,25 @@ set_target_properties(${libname}++
     PROPERTIES LINKER_LANGUAGE CXX
         PUBLIC_HEADER "${libinc_cpp}")
 
+check_symbol_exists(uselocale "locale.h" HAVE_USELOCALE)
+check_symbol_exists(newlocale "locale.h" HAVE_NEWLOCALE)
+check_symbol_exists(freelocale "locale.h" HAVE_FREELOCALE)
+
+if(HAVE_USELOCALE)
+target_compile_definitions(${libname}
+    PRIVATE "HAVE_USELOCALE")
+endif()
+
+if(HAVE_NEWLOCALE)
+target_compile_definitions(${libname}
+    PRIVATE "HAVE_NEWLOCALE")
+endif()
+
+if(HAVE_FREELOCALE)
+target_compile_definitions(${libname}
+    PRIVATE "HAVE_FREELOCALE")
+endif()
+
 target_compile_definitions(${libname}
     PRIVATE
         _CRT_SECURE_NO_DEPRECATE
