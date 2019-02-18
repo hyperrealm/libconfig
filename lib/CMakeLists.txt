@@ -44,9 +44,9 @@ set_target_properties(${libname}++
     PROPERTIES LINKER_LANGUAGE CXX
         PUBLIC_HEADER "${libinc_cpp}")
 
-check_symbol_exists(uselocale "locale.h" HAVE_USELOCALE)
-check_symbol_exists(newlocale "locale.h" HAVE_NEWLOCALE)
-check_symbol_exists(freelocale "locale.h" HAVE_FREELOCALE)
+#check_symbol_exists(uselocale "locale.h" HAVE_USELOCALE)
+#check_symbol_exists(newlocale "locale.h" HAVE_NEWLOCALE)
+#check_symbol_exists(freelocale "locale.h" HAVE_FREELOCALE)
 
 if(HAVE_USELOCALE)
 target_compile_definitions(${libname}
