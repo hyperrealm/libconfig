@@ -23,6 +23,7 @@ else()
 endif()
 
 include(GNUInstallDirs)
+include(CheckSymbolExists)
 add_subdirectory(lib)
 
 if(BUILD_EXAMPLES)
