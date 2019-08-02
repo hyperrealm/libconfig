@@ -80,7 +80,16 @@ if(CMAKE_HOST_WIN32)
     target_link_libraries(${libname}++ Shlwapi.lib)
 endif()
 
+target_include_directories(${libname}
+  PUBLIC "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+  )
+
+target_include_directories(${libname}++
+  PUBLIC "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+  )
+
 install(TARGETS ${libname}
+    EXPORT libconfigTargets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -88,8 +97,29 @@ install(TARGETS ${libname}
 )
 
 install(TARGETS ${libname}++
+    EXPORT libconfig++Targets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
+
+
+include(CMakePackageConfigHelpers)
+foreach(target_name libconfig libconfig++)
+  write_basic_package_version_file("${target_name}ConfigVersion.cmake"
+    VERSION ${PACKAGE_VERSION}
+    COMPATIBILITY SameMajorVersion
+    )
+
+  install(EXPORT ${target_name}Targets
+    FILE "${target_name}Config.cmake"
+    NAMESPACE libconfig::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libconfig
+    )
+
+  install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/${target_name}ConfigVersion.cmake"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libconfig"
+    )
+endforeach()
