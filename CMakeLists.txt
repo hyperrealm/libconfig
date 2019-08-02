@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(libconfig LANGUAGES C CXX)
+# Extract version from configure.ac.
+set(VERSION_REGEX "^AC_INIT\\(libconfig,[ \t]+([0-9\.]+),.*")
+file(STRINGS "configure.ac"
+  VERSION_STRING REGEX ${VERSION_REGEX})
+string(REGEX REPLACE ${VERSION_REGEX} "\\1" VERSION_STRING "${VERSION_STRING}")
+
+project(libconfig LANGUAGES C CXX VERSION ${VERSION_STRING})
 option(BUILD_EXAMPLES "Enable examples" ON)
 option(BUILD_SHARED_LIBS  "Enable shared library" ON)
 option(BUILD_TESTS "Enable tests" ON)
