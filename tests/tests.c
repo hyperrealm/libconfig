@@ -487,6 +487,64 @@ TT_TEST(EscapedStrings)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(OverrideSetting)
+{
+  config_t cfg;
+  int ok;
+  int ival;
+  const char *str;
+
+  config_init(&cfg);
+  config_set_options(&cfg, CONFIG_OPTION_ALLOW_OVERRIDES);
+  config_set_include_dir(&cfg, "./testdata");
+
+  ok = config_read_file(&cfg, "testdata/override_setting.cfg");
+  if(!ok)
+  {
+    printf("error: %s:%d\n", config_error_text(&cfg),
+           config_error_line(&cfg));
+  }
+  TT_ASSERT_TRUE(ok);
+
+  ok = config_lookup_string(&cfg, "group.message", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("overridden", str);
+
+  ok = config_lookup_string(&cfg, "group.inner.name", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("overridden", str);
+
+  ok = config_lookup_string(&cfg, "group.inner.other", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("other", str);
+
+  ok = config_lookup_string(&cfg, "group.inner.none", &str);
+  TT_ASSERT_FALSE(ok);
+
+  ok = config_lookup_string(&cfg, "group.inner.other", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("other", str);
+
+  ok = config_lookup_string(&cfg, "string", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("overridden", str);
+
+  ok = config_lookup_int(&cfg, "int", &ival);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_INT_EQ(ival, 2);
+
+  ok = config_lookup_int(&cfg, "group.array.[0]", &ival);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_INT_EQ(ival, 3);
+
+  ok = config_lookup_int(&cfg, "group.array.[1]", &ival);
+  TT_ASSERT_FALSE(ok);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
   int failures;
@@ -504,6 +562,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, BigInt7);
   TT_SUITE_TEST(LibConfigTests, RemoveSetting);
   TT_SUITE_TEST(LibConfigTests, EscapedStrings);
+  TT_SUITE_TEST(LibConfigTests, OverrideSetting);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);
