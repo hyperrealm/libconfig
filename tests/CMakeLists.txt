@@ -4,6 +4,8 @@ else()
     set(libname "config")
 endif()
 
+include_directories(${CMAKE_SOURCE_DIR}/lib)
+
 add_executable(libconfig_tests
     tests.c
 )
