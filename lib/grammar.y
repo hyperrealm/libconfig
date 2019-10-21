@@ -85,6 +85,7 @@ void libconfig_yyerror(void *scanner, struct parse_context *ctx,
 %token <fval> TOK_FLOAT
 %token <sval> TOK_STRING TOK_NAME
 %token TOK_EQUALS TOK_NEWLINE TOK_ARRAY_START TOK_ARRAY_END TOK_LIST_START TOK_LIST_END TOK_COMMA TOK_GROUP_START TOK_GROUP_END TOK_SEMICOLON TOK_GARBAGE TOK_ERROR
+%destructor { free($$); } TOK_STRING
 
 %%
 
