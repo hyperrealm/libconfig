@@ -517,11 +517,11 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    91,    91,    93,    97,    98,   101,   103,   106,   108,
-     109,   114,   113,   133,   132,   156,   155,   178,   179,   180,
-     181,   185,   186,   190,   210,   232,   254,   276,   298,   316,
-     344,   345,   346,   349,   351,   355,   356,   357,   360,   362,
-     367,   366
+       0,    92,    92,    94,    98,    99,   102,   104,   107,   109,
+     110,   115,   114,   134,   133,   157,   156,   179,   180,   181,
+     182,   186,   187,   191,   211,   233,   255,   277,   299,   317,
+     345,   346,   347,   350,   352,   356,   357,   358,   361,   363,
+     368,   367
 };
 #endif
 
@@ -1074,7 +1074,18 @@ yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, void *scanner, str
   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
 
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  YYUSE (yytype);
+  switch (yytype)
+    {
+          case 9: /* TOK_STRING  */
+#line 88 "grammar.y" /* yacc.c:1257  */
+      { free(((*yyvaluep).sval)); }
+#line 1083 "grammar.c" /* yacc.c:1257  */
+        break;
+
+
+      default:
+        break;
+    }
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
@@ -1334,7 +1345,7 @@ yyreduce:
   switch (yyn)
     {
         case 11:
-#line 114 "grammar.y" /* yacc.c:1646  */
+#line 115 "grammar.y" /* yacc.c:1646  */
     {
     ctx->setting = config_setting_add(ctx->parent, (yyvsp[0].sval), CONFIG_TYPE_NONE);
 
@@ -1348,11 +1359,11 @@ yyreduce:
       CAPTURE_PARSE_POS(ctx->setting);
     }
   }
-#line 1352 "grammar.c" /* yacc.c:1646  */
+#line 1363 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 133 "grammar.y" /* yacc.c:1646  */
+#line 134 "grammar.y" /* yacc.c:1646  */
     {
     if(IN_LIST())
     {
@@ -1366,20 +1377,20 @@ yyreduce:
       ctx->setting = NULL;
     }
   }
-#line 1370 "grammar.c" /* yacc.c:1646  */
+#line 1381 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 148 "grammar.y" /* yacc.c:1646  */
+#line 149 "grammar.y" /* yacc.c:1646  */
     {
     if(ctx->parent)
       ctx->parent = ctx->parent->parent;
   }
-#line 1379 "grammar.c" /* yacc.c:1646  */
+#line 1390 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 156 "grammar.y" /* yacc.c:1646  */
+#line 157 "grammar.y" /* yacc.c:1646  */
     {
     if(IN_LIST())
     {
@@ -1393,32 +1404,32 @@ yyreduce:
       ctx->setting = NULL;
     }
   }
-#line 1397 "grammar.c" /* yacc.c:1646  */
+#line 1408 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 171 "grammar.y" /* yacc.c:1646  */
+#line 172 "grammar.y" /* yacc.c:1646  */
     {
     if(ctx->parent)
       ctx->parent = ctx->parent->parent;
   }
-#line 1406 "grammar.c" /* yacc.c:1646  */
+#line 1417 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 185 "grammar.y" /* yacc.c:1646  */
+#line 186 "grammar.y" /* yacc.c:1646  */
     { parsectx_append_string(ctx, (yyvsp[0].sval)); free((yyvsp[0].sval)); }
-#line 1412 "grammar.c" /* yacc.c:1646  */
+#line 1423 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 186 "grammar.y" /* yacc.c:1646  */
+#line 187 "grammar.y" /* yacc.c:1646  */
     { parsectx_append_string(ctx, (yyvsp[0].sval)); free((yyvsp[0].sval)); }
-#line 1418 "grammar.c" /* yacc.c:1646  */
+#line 1429 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 191 "grammar.y" /* yacc.c:1646  */
+#line 192 "grammar.y" /* yacc.c:1646  */
     {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1438,11 +1449,11 @@ yyreduce:
     else
       config_setting_set_bool(ctx->setting, (int)(yyvsp[0].ival));
   }
-#line 1442 "grammar.c" /* yacc.c:1646  */
+#line 1453 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 211 "grammar.y" /* yacc.c:1646  */
+#line 212 "grammar.y" /* yacc.c:1646  */
     {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1464,11 +1475,11 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_DEFAULT);
     }
   }
-#line 1468 "grammar.c" /* yacc.c:1646  */
+#line 1479 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 233 "grammar.y" /* yacc.c:1646  */
+#line 234 "grammar.y" /* yacc.c:1646  */
     {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1490,11 +1501,11 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_DEFAULT);
     }
   }
-#line 1494 "grammar.c" /* yacc.c:1646  */
+#line 1505 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 255 "grammar.y" /* yacc.c:1646  */
+#line 256 "grammar.y" /* yacc.c:1646  */
     {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1516,11 +1527,11 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_HEX);
     }
   }
-#line 1520 "grammar.c" /* yacc.c:1646  */
+#line 1531 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 277 "grammar.y" /* yacc.c:1646  */
+#line 278 "grammar.y" /* yacc.c:1646  */
     {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1542,11 +1553,11 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_HEX);
     }
   }
-#line 1546 "grammar.c" /* yacc.c:1646  */
+#line 1557 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 299 "grammar.y" /* yacc.c:1646  */
+#line 300 "grammar.y" /* yacc.c:1646  */
     {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1564,11 +1575,11 @@ yyreduce:
     else
       config_setting_set_float(ctx->setting, (yyvsp[0].fval));
   }
-#line 1568 "grammar.c" /* yacc.c:1646  */
+#line 1579 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 317 "grammar.y" /* yacc.c:1646  */
+#line 318 "grammar.y" /* yacc.c:1646  */
     {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1593,11 +1604,11 @@ yyreduce:
       __delete(s);
     }
   }
-#line 1597 "grammar.c" /* yacc.c:1646  */
+#line 1608 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 367 "grammar.y" /* yacc.c:1646  */
+#line 368 "grammar.y" /* yacc.c:1646  */
     {
     if(IN_LIST())
     {
@@ -1611,20 +1622,20 @@ yyreduce:
       ctx->setting = NULL;
     }
   }
-#line 1615 "grammar.c" /* yacc.c:1646  */
+#line 1626 "grammar.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 382 "grammar.y" /* yacc.c:1646  */
+#line 383 "grammar.y" /* yacc.c:1646  */
     {
     if(ctx->parent)
       ctx->parent = ctx->parent->parent;
   }
-#line 1624 "grammar.c" /* yacc.c:1646  */
+#line 1635 "grammar.c" /* yacc.c:1646  */
     break;
 
 
-#line 1628 "grammar.c" /* yacc.c:1646  */
+#line 1639 "grammar.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1852,5 +1863,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 388 "grammar.y" /* yacc.c:1906  */
+#line 389 "grammar.y" /* yacc.c:1906  */
 
