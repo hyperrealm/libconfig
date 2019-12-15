@@ -43,6 +43,12 @@
 #define LIBCONFIGXX_VER_MINOR    7
 #define LIBCONFIGXX_VER_REVISION 0
 
+#if __cplusplus < 201103L
+#define LIBCONFIGXX_NOEXCEPT throw()
+#else
+#define LIBCONFIGXX_NOEXCEPT noexcept
+#endif
+
 struct config_t; // fwd decl
 struct config_setting_t; // fwd decl
 
@@ -66,11 +72,11 @@ class LIBCONFIGXX_API SettingException : public ConfigException
   SettingException(const SettingException &other);
   SettingException& operator=(const SettingException &other);
 
-  virtual ~SettingException() throw();
+  virtual ~SettingException() LIBCONFIGXX_NOEXCEPT;
 
   const char *getPath() const;
 
-  virtual const char *what() const throw();
+  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
 
   private:
 
@@ -85,7 +91,7 @@ class LIBCONFIGXX_API SettingTypeException : public SettingException
   SettingTypeException(const Setting &setting, int idx);
   SettingTypeException(const Setting &setting, const char *name);
 
-  virtual const char *what() const throw();
+  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
 };
 
 class LIBCONFIGXX_API SettingNotFoundException : public SettingException
@@ -96,7 +102,7 @@ class LIBCONFIGXX_API SettingNotFoundException : public SettingException
   SettingNotFoundException(const Setting &setting, int idx);
   SettingNotFoundException(const Setting &setting, const char *name);
 
-  virtual const char *what() const throw();
+  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
 };
 
 class LIBCONFIGXX_API SettingNameException : public SettingException
@@ -105,14 +111,14 @@ class LIBCONFIGXX_API SettingNameException : public SettingException
 
   SettingNameException(const Setting &setting, const char *name);
 
-  virtual const char *what() const throw();
+  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
 };
 
 class LIBCONFIGXX_API FileIOException : public ConfigException
 {
   public:
 
-  virtual const char *what() const throw();
+  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
 };
 
 class LIBCONFIGXX_API ParseException : public ConfigException
@@ -123,7 +129,7 @@ class LIBCONFIGXX_API ParseException : public ConfigException
 
   ParseException(const ParseException &other);
 
-  virtual ~ParseException() throw();
+  virtual ~ParseException() LIBCONFIGXX_NOEXCEPT;
 
   inline const char *getFile() const
   { return(_file); }
@@ -134,7 +140,7 @@ class LIBCONFIGXX_API ParseException : public ConfigException
   inline const char *getError() const
   { return(_error); }
 
-  virtual const char *what() const throw();
+  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
 
   private:
 
