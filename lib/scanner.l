@@ -1,7 +1,7 @@
 /* -*- mode: C -*- */
 /* --------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2018  Mark A Lindner
+   Copyright (C) 2005-2020  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -79,33 +79,33 @@ include_open ^[ \t]*@include[ \t]+\"
 <MULTI_LINE_COMMENT>\n       { /* ignore */ }
 
 \"                { BEGIN STRING; }
-<STRING>[^\"\\]+  { scanctx_append_string(yyextra, yytext); }
-<STRING>\\n       { scanctx_append_char(yyextra, '\n'); }
-<STRING>\\r       { scanctx_append_char(yyextra, '\r'); }
-<STRING>\\t       { scanctx_append_char(yyextra, '\t'); }
-<STRING>\\f       { scanctx_append_char(yyextra, '\f'); }
-<STRING>\\\\      { scanctx_append_char(yyextra, '\\'); }
-<STRING>\\\"      { scanctx_append_char(yyextra, '\"'); }
+<STRING>[^\"\\]+  { libconfig_scanctx_append_string(yyextra, yytext); }
+<STRING>\\n       { libconfig_scanctx_append_char(yyextra, '\n'); }
+<STRING>\\r       { libconfig_scanctx_append_char(yyextra, '\r'); }
+<STRING>\\t       { libconfig_scanctx_append_char(yyextra, '\t'); }
+<STRING>\\f       { libconfig_scanctx_append_char(yyextra, '\f'); }
+<STRING>\\\\      { libconfig_scanctx_append_char(yyextra, '\\'); }
+<STRING>\\\"      { libconfig_scanctx_append_char(yyextra, '\"'); }
 <STRING>{hexchar} {
                     char c = (char)(strtol(yytext + 2, NULL, 16) & 0xFF);
-                    scanctx_append_char(yyextra, c);
+                    libconfig_scanctx_append_char(yyextra, c);
                   }
-<STRING>\\        { scanctx_append_char(yyextra, '\\'); }
+<STRING>\\        { libconfig_scanctx_append_char(yyextra, '\\'); }
 <STRING>\"        {
-                    yylval->sval = scanctx_take_string(yyextra);
+                    yylval->sval = libconfig_scanctx_take_string(yyextra);
                     BEGIN INITIAL;
                     return(TOK_STRING);
                   }
 
 {include_open}    { BEGIN INCLUDE; }
-<INCLUDE>[^\"\\]+ { scanctx_append_string(yyextra, yytext); }
-<INCLUDE>\\\\     { scanctx_append_char(yyextra, '\\'); }
-<INCLUDE>\\\"     { scanctx_append_char(yyextra, '\"'); }
+<INCLUDE>[^\"\\]+ { libconfig_scanctx_append_string(yyextra, yytext); }
+<INCLUDE>\\\\     { libconfig_scanctx_append_char(yyextra, '\\'); }
+<INCLUDE>\\\"     { libconfig_scanctx_append_char(yyextra, '\"'); }
 <INCLUDE>\"       {
   const char *error = NULL;
-  const char *path = scanctx_take_string(yyextra);
-  FILE *fp = scanctx_push_include(yyextra, (void *)YY_CURRENT_BUFFER, path,
-                                  &error);
+  const char *path = libconfig_scanctx_take_string(yyextra);
+  FILE *fp = libconfig_scanctx_push_include(yyextra, (void *)YY_CURRENT_BUFFER,
+                                            path, &error);
   __delete(path);
 
   if(fp)
@@ -117,7 +117,7 @@ include_open ^[ \t]*@include[ \t]+\"
   else if(error)
   {
     yyextra->config->error_text = error;
-    yyextra->config->error_file = scanctx_current_filename(yyextra);
+    yyextra->config->error_file = libconfig_scanctx_current_filename(yyextra);
     yyextra->config->error_line = libconfig_yyget_lineno(yyscanner);
     return TOK_ERROR;
   }
@@ -169,7 +169,7 @@ include_open ^[ \t]*@include[ \t]+\"
   const char *error = NULL;
   FILE *fp;
 
-  fp = scanctx_next_include_file(yyextra, &error);
+  fp = libconfig_scanctx_next_include_file(yyextra, &error);
   if(fp)
   {
     yyin = fp;
@@ -180,14 +180,14 @@ include_open ^[ \t]*@include[ \t]+\"
   else if(error)
   {
     yyextra->config->error_text = error;
-    yyextra->config->error_file = scanctx_current_filename(yyextra);
+    yyextra->config->error_file = libconfig_scanctx_current_filename(yyextra);
     yyextra->config->error_line = libconfig_yyget_lineno(yyscanner);
     return TOK_ERROR;
   }
   else
   {
     /* No more files in the current include list. */
-    YY_BUFFER_STATE buf = (YY_BUFFER_STATE)scanctx_pop_include(yyextra);
+    YY_BUFFER_STATE buf = (YY_BUFFER_STATE)libconfig_scanctx_pop_include(yyextra);
     if(buf)
     {
       yy_delete_buffer(YY_CURRENT_BUFFER, yyscanner);

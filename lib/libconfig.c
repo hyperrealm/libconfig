@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2018  Mark A Lindner
+   Copyright (C) 2005-2020  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -539,15 +539,15 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
 
   config_clear(config);
 
-  parsectx_init(&parse_ctx);
+  libconfig_parsectx_init(&parse_ctx);
   parse_ctx.config = config;
   parse_ctx.parent = config->root;
   parse_ctx.setting = config->root;
 
   __config_locale_override();
 
-  scanctx_init(&scan_ctx, filename);
-  config->root->file = scanctx_current_filename(&scan_ctx);
+  libconfig_scanctx_init(&scan_ctx, filename);
+  config->root->file = libconfig_scanctx_current_filename(&scan_ctx);
   scan_ctx.config = config;
   libconfig_yylex_init_extra(&scan_ctx, &scanner);
 
@@ -563,17 +563,18 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
   {
     YY_BUFFER_STATE buf;
 
-    config->error_file = scanctx_current_filename(&scan_ctx);
+    config->error_file = libconfig_scanctx_current_filename(&scan_ctx);
     config->error_type = CONFIG_ERR_PARSE;
 
     /* Unwind the include stack, freeing the buffers and closing the files. */
-    while((buf = (YY_BUFFER_STATE)scanctx_pop_include(&scan_ctx)) != NULL)
+    while((buf = (YY_BUFFER_STATE)libconfig_scanctx_pop_include(&scan_ctx))
+          != NULL)
       libconfig_yy_delete_buffer(buf, scanner);
   }
 
   libconfig_yylex_destroy(scanner);
-  config->filenames = scanctx_cleanup(&scan_ctx);
-  parsectx_cleanup(&parse_ctx);
+  config->filenames = libconfig_scanctx_cleanup(&scan_ctx);
+  libconfig_parsectx_cleanup(&parse_ctx);
 
   __config_locale_restore();
 

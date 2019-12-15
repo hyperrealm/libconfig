@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2018  Mark A Lindner
+   Copyright (C) 2005-2020  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -30,7 +30,7 @@
 
 /* ------------------------------------------------------------------------- */
 
-void strbuf_ensure_capacity(strbuf_t *buf, size_t len)
+void libconfig_strbuf_ensure_capacity(strbuf_t *buf, size_t len)
 {
   static const size_t mask = ~(STRING_BLOCK_SIZE - 1);
 
@@ -44,7 +44,7 @@ void strbuf_ensure_capacity(strbuf_t *buf, size_t len)
 
 /* ------------------------------------------------------------------------- */
 
-char *strbuf_release(strbuf_t *buf)
+char *libconfig_strbuf_release(strbuf_t *buf)
 {
   char *r = buf->string;
   __zero(buf);
@@ -53,19 +53,19 @@ char *strbuf_release(strbuf_t *buf)
 
 /* ------------------------------------------------------------------------- */
 
-void strbuf_append_string(strbuf_t *buf, const char *s)
+void libconfig_strbuf_append_string(strbuf_t *buf, const char *s)
 {
   size_t len = strlen(s);
-  strbuf_ensure_capacity(buf, len);
+  libconfig_strbuf_ensure_capacity(buf, len);
   strcpy(buf->string + buf->length, s);
   buf->length += len;
 }
 
 /* ------------------------------------------------------------------------- */
 
-void strbuf_append_char(strbuf_t *buf, char c)
+void libconfig_strbuf_append_char(strbuf_t *buf, char c)
 {
-  strbuf_ensure_capacity(buf, 1);
+  libconfig_strbuf_ensure_capacity(buf, 1);
   *(buf->string + buf->length) = c;
   ++(buf->length);
   *(buf->string + buf->length) = '\0';

@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2018  Mark A Lindner
+   Copyright (C) 2005-2020  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -36,14 +36,14 @@ struct parse_context
   strbuf_t string;
 };
 
-#define parsectx_init(C) \
+#define libconfig_parsectx_init(C) \
   __zero(C)
-#define parsectx_cleanup(C) \
-  __delete(strbuf_release(&((C)->string)))
+#define libconfig_parsectx_cleanup(C) \
+  __delete(libconfig_strbuf_release(&((C)->string)))
 
-#define parsectx_append_string(C, S) \
-  strbuf_append_string(&((C)->string), (S))
-#define parsectx_take_string(C) \
-  strbuf_release(&((C)->string))
+#define libconfig_parsectx_append_string(C, S) \
+  libconfig_strbuf_append_string(&((C)->string), (S))
+#define libconfig_parsectx_take_string(C) \
+  libconfig_strbuf_release(&((C)->string))
 
 #endif /* __libconfig_parsectx_h */

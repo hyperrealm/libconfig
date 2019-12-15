@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2018  Mark A Lindner
+   Copyright (C) 2005-2020  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -33,10 +33,10 @@ typedef struct
   size_t capacity;
 } strbuf_t;
 
-void strbuf_append_string(strbuf_t *buf, const char *s);
+void libconfig_strbuf_append_string(strbuf_t *buf, const char *s);
 
-void strbuf_append_char(strbuf_t *buf, char c);
+void libconfig_strbuf_append_char(strbuf_t *buf, char c);
 
-char *strbuf_release(strbuf_t *buf);
+char *libconfig_strbuf_release(strbuf_t *buf);
 
 #endif /* __libconfig_strbuf_h */

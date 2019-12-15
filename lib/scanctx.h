@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2018  Mark A Lindner
+   Copyright (C) 2005-2020  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -55,8 +55,9 @@ struct scan_context
   strvec_t filenames;
 };
 
-extern void scanctx_init(struct scan_context *ctx, const char *top_filename);
-extern const char **scanctx_cleanup(struct scan_context *ctx);
+extern void libconfig_scanctx_init(struct scan_context *ctx,
+                                   const char *top_filename);
+extern const char **libconfig_scanctx_cleanup(struct scan_context *ctx);
 
 /*
  * Pushes a new frame onto the include stack, and returns an open stream to the
@@ -76,8 +77,10 @@ extern const char **scanctx_cleanup(struct scan_context *ctx);
  * *error is NULL, it means there are no files in the list. Otherwise, it
  * points to an error and parsing should be aborted.
  */
-extern FILE *scanctx_push_include(struct scan_context *ctx, void *prev_buffer,
-                                  const char *path, const char **error);
+extern FILE *libconfig_scanctx_push_include(struct scan_context *ctx,
+                                            void *prev_buffer,
+                                            const char *path,
+                                            const char **error);
 
 /*
  * Returns the next include file in the current include stack frame.
@@ -85,22 +88,22 @@ extern FILE *scanctx_push_include(struct scan_context *ctx, void *prev_buffer,
  * Returns NULL on failure or if there are no more files left in the current
  * frame. If there was an error, sets *error.
  */
-extern FILE *scanctx_next_include_file(struct scan_context *ctx,
-                                       const char **error);
+extern FILE *libconfig_scanctx_next_include_file(struct scan_context *ctx,
+                                                 const char **error);
 
 /*
  * Pops a frame off the include stack.
  */
-extern void *scanctx_pop_include(struct scan_context *ctx);
+extern void *libconfig_scanctx_pop_include(struct scan_context *ctx);
 
-#define scanctx_append_string(C, S) \
-  strbuf_append_string(&((C)->string), (S))
+#define libconfig_scanctx_append_string(C, S) \
+  libconfig_strbuf_append_string(&((C)->string), (S))
 
-#define scanctx_append_char(C, X) \
-  strbuf_append_char(&((C)->string), (X))
+#define libconfig_scanctx_append_char(C, X) \
+  libconfig_strbuf_append_char(&((C)->string), (X))
 
-extern char *scanctx_take_string(struct scan_context *ctx);
+extern char *libconfig_scanctx_take_string(struct scan_context *ctx);
 
-extern const char *scanctx_current_filename(struct scan_context *ctx);
+extern const char *libconfig_scanctx_current_filename(struct scan_context *ctx);
 
 #endif /* __libconfig_scanctx_h */
