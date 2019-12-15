@@ -44,7 +44,7 @@
 
 #define fileno _fileno
 
-#if _MSC_VER < 1800
+#if _MSC_VER <= 1800
 #define snprintf  _snprintf
 #endif
 
