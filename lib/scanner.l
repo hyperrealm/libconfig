@@ -137,7 +137,7 @@ include_open ^[ \t]*@include[ \t]+\"
 {float}           { yylval->fval = atof(yytext); return(TOK_FLOAT); }
 {integer}         {
                     int ok;
-                    long long llval = parse_integer(yytext, &ok);
+                    long long llval = __libconfig_parse_integer(yytext, &ok);
                     if(!ok)
                       return(TOK_ERROR);
 
@@ -157,7 +157,10 @@ include_open ^[ \t]*@include[ \t]+\"
                     yylval->ival = strtoul(yytext, NULL, 16);
                     return(TOK_HEX);
                   }
-{hex64}           { yylval->llval = parse_hex64(yytext); return(TOK_HEX64); }
+{hex64}           {
+                    yylval->llval = __libconfig_parse_hex64(yytext);
+                    return(TOK_HEX64);
+                  }
 \[                { return(TOK_ARRAY_START); }
 \]                { return(TOK_ARRAY_END); }
 \(                { return(TOK_LIST_START); }

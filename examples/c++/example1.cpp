@@ -52,10 +52,6 @@ int main(int argc, char **argv)
     return(EXIT_FAILURE);
   }
 
-  string tmp;
-  cfg.lookupValue("name", tmp);
-  std::cout << "name: " << tmp << std::endl;
-
   // Get the store name.
   try
   {

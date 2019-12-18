@@ -89,13 +89,13 @@ FILE *libconfig_scanctx_push_include(struct scan_context *ctx, void *prev_buffer
 
   if(*error || !files)
   {
-    __delete_vec(files);
+    __libconfig_delete_vec(files);
     return(NULL);
   }
 
   if(!*files)
   {
-    __delete_vec(files);
+    __libconfig_delete_vec(files);
     return(NULL);
   }
 

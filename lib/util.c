@@ -30,7 +30,7 @@
 
 /* ------------------------------------------------------------------------- */
 
-void __delete_vec(const char *const *v)
+void __libconfig_delete_vec(const char *const *v)
 {
   const char *const *p;
 
@@ -44,7 +44,7 @@ void __delete_vec(const char *const *v)
 
 /* ------------------------------------------------------------------------- */
 
-long long parse_integer(const char *s, int *ok)
+long long __libconfig_parse_integer(const char *s, int *ok)
 {
   long long llval;
   char *endptr;
@@ -65,7 +65,7 @@ long long parse_integer(const char *s, int *ok)
 
 /* ------------------------------------------------------------------------- */
 
-unsigned long long parse_hex64(const char *s)
+unsigned long long __libconfig_parse_hex64(const char *s)
 {
 #ifdef __MINGW32__
 
@@ -101,8 +101,8 @@ unsigned long long parse_hex64(const char *s)
 
 /* ------------------------------------------------------------------------- */
 
-void format_double(double val, int precision, int sci_ok, char *buf,
-                   size_t buflen)
+void __libconfig_format_double(double val, int precision, int sci_ok, char *buf,
+                               size_t buflen)
 {
   const char *fmt = sci_ok ? "%.*g" : "%.*f";
   char *p, *q;

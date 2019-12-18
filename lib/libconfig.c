@@ -212,8 +212,8 @@ static void __config_write_value(const config_t *config,
     {
       const int sci_ok = config_get_option(
             config, CONFIG_OPTION_ALLOW_SCIENTIFIC_NOTATION);
-      format_double(value->fval, config->float_precision, sci_ok, fbuf,
-                    sizeof(fbuf));
+      __libconfig_format_double(value->fval, config->float_precision, sci_ok,
+                                fbuf, sizeof(fbuf));
       fputs(fbuf, stream);
       break;
     }
@@ -719,7 +719,7 @@ int config_write_file(config_t *config, const char *filename)
 void config_destroy(config_t *config)
 {
   __config_setting_destroy(config->root);
-  __delete_vec(config->filenames);
+  __libconfig_delete_vec(config->filenames);
   __delete(config->include_dir);
   __zero(config);
 }
@@ -730,7 +730,7 @@ void config_clear(config_t *config)
 {
   /* Destroy the root setting (recursively) and then create a new one. */
   __config_setting_destroy(config->root);
-  __delete_vec(config->filenames);
+  __libconfig_delete_vec(config->filenames);
 
   config->root = __new(config_setting_t);
   config->root->type = CONFIG_TYPE_GROUP;

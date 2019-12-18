@@ -712,7 +712,7 @@ extern int yylex \
 #undef yyTABLES_NAME
 #endif
 
-#line 200 "scanner.l"
+#line 203 "scanner.l"
 
 #line 717 "scanner.h"
 #undef libconfig_yyIN_HEADER

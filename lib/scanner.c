@@ -1351,7 +1351,7 @@ YY_RULE_SETUP
 #line 138 "scanner.l"
 {
                     int ok;
-                    long long llval = parse_integer(yytext, &ok);
+                    long long llval = __libconfig_parse_integer(yytext, &ok);
                     if(!ok)
                       return(TOK_ERROR);
 
@@ -1383,36 +1383,39 @@ YY_RULE_SETUP
 case 37:
 YY_RULE_SETUP
 #line 160 "scanner.l"
-{ yylval->llval = parse_hex64(yytext); return(TOK_HEX64); }
+{
+                    yylval->llval = __libconfig_parse_hex64(yytext);
+                    return(TOK_HEX64);
+                  }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 161 "scanner.l"
+#line 164 "scanner.l"
 { return(TOK_ARRAY_START); }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 162 "scanner.l"
+#line 165 "scanner.l"
 { return(TOK_ARRAY_END); }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 163 "scanner.l"
+#line 166 "scanner.l"
 { return(TOK_LIST_START); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 164 "scanner.l"
+#line 167 "scanner.l"
 { return(TOK_LIST_END); }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 165 "scanner.l"
+#line 168 "scanner.l"
 { return(TOK_SEMICOLON); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 166 "scanner.l"
+#line 169 "scanner.l"
 { return(TOK_GARBAGE); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
@@ -1420,7 +1423,7 @@ case YY_STATE_EOF(SINGLE_LINE_COMMENT):
 case YY_STATE_EOF(MULTI_LINE_COMMENT):
 case YY_STATE_EOF(STRING):
 case YY_STATE_EOF(INCLUDE):
-#line 168 "scanner.l"
+#line 171 "scanner.l"
 {
   const char *error = NULL;
   FILE *fp;
@@ -1456,10 +1459,10 @@ case YY_STATE_EOF(INCLUDE):
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 200 "scanner.l"
+#line 203 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1462 "scanner.c"
+#line 1465 "scanner.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2610,4 +2613,4 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 200 "scanner.l"
+#line 203 "scanner.l"
