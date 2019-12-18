@@ -950,6 +950,13 @@ when writing floating point values (corresponding to @code{printf()}
 This option controls whether the @code{config_write_file()} function performs
 an @i{fsync} operation after writing the configuration and before closing the
 file. By default this option is turned off.
+
+@item CONFIG_OPTION_ALLOW_OVERRIDES
+(@b{Since @i{v1.7.3}})
+This option controls whether duplicate settings override previous settings
+with the same name. If this option is turned off, duplicate settings are
+rejected. By default this option is turned off.
+
 @end table
 
 @end deftypefun
@@ -1595,6 +1602,12 @@ when writing floating point values (corresponding to @code{printf()}
 This option controls whether the @code{writeFile()} method performs an @i{fsync}
 operation after writing the configuration and before closing the file. By
 default this option is turned off.
+
+@item Config::OptionAllowOverrides
+(@b{Since @i{v1.7.3}})
+This option controls whether duplicate settings override previous settings
+with the same name. If this option is turned off, duplicate settings are
+rejected. By default this option is turned off.
 
 @end table
 
