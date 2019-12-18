@@ -1351,7 +1351,7 @@ YY_RULE_SETUP
 #line 138 "scanner.l"
 {
                     int ok;
-                    long long llval = __libconfig_parse_integer(yytext, &ok);
+                    long long llval = libconfig_parse_integer(yytext, &ok);
                     if(!ok)
                       return(TOK_ERROR);
 
@@ -1384,7 +1384,7 @@ case 37:
 YY_RULE_SETUP
 #line 160 "scanner.l"
 {
-                    yylval->llval = __libconfig_parse_hex64(yytext);
+                    yylval->llval = libconfig_parse_hex64(yytext);
                     return(TOK_HEX64);
                   }
 	YY_BREAK

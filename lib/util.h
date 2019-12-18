@@ -27,11 +27,9 @@
 #define __delete(P) free((void *)(P))
 #define __zero(P) memset((void *)(P), 0, sizeof(*P))
 
-extern void __libconfig_delete_vec(const char * const *v);
+extern long long libconfig_parse_integer(const char *s, int *ok);
+extern unsigned long long libconfig_parse_hex64(const char *s);
 
-extern long long __libconfig_parse_integer(const char *s, int *ok);
-extern unsigned long long __libconfig_parse_hex64(const char *s);
-
-extern void __libconfig_format_double(double val, int precision, int sci_ok,
-                                      char *buf, size_t buflen);
+extern void libconfig_format_double(double val, int precision, int sci_ok,
+                                    char *buf, size_t buflen);
 

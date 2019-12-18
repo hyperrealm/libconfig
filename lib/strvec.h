@@ -34,8 +34,10 @@ typedef struct
   size_t capacity;
 } strvec_t;
 
-void libconfig_strvec_append(strvec_t *vec, const char *s);
+extern void libconfig_strvec_append(strvec_t *vec, const char *s);
 
-const char **libconfig_strvec_release(strvec_t *vec);
+extern const char **libconfig_strvec_release(strvec_t *vec);
+
+extern void libconfig_strvec_delete(const char * const *vec);
 
 #endif /* __libconfig_strvec_h */

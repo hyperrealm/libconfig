@@ -58,3 +58,17 @@ const char **libconfig_strvec_release(strvec_t *vec)
 }
 
 /* ------------------------------------------------------------------------- */
+
+void libconfig_strvec_delete(const char *const *vec)
+{
+  const char *const *p;
+
+  if(!vec) return;
+
+  for(p = vec; *p; ++p)
+    __delete(*p);
+
+  __delete(vec);
+}
+
+/* ------------------------------------------------------------------------- */

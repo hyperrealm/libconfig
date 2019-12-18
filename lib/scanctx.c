@@ -21,6 +21,7 @@
 */
 
 #include "scanctx.h"
+#include "strvec.h"
 #include "wincompat.h"
 #include "util.h"
 
@@ -89,13 +90,13 @@ FILE *libconfig_scanctx_push_include(struct scan_context *ctx, void *prev_buffer
 
   if(*error || !files)
   {
-    __libconfig_delete_vec(files);
+    libconfig_strvec_delete(files);
     return(NULL);
   }
 
   if(!*files)
   {
-    __libconfig_delete_vec(files);
+    libconfig_strvec_delete(files);
     return(NULL);
   }
 
