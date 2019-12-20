@@ -65,6 +65,7 @@ extern "C" {
 #define CONFIG_OPTION_OPEN_BRACE_ON_SEPARATE_LINE     0x10
 #define CONFIG_OPTION_ALLOW_SCIENTIFIC_NOTATION       0x20
 #define CONFIG_OPTION_FSYNC                           0x40
+#define CONFIG_OPTION_ALLOW_OVERRIDES                 0x80
 
 #define CONFIG_TRUE  (1)
 #define CONFIG_FALSE (0)

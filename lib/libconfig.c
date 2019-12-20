@@ -1628,7 +1628,12 @@ config_setting_t *config_setting_add(config_setting_t *parent,
   }
 
   if(config_setting_get_member(parent, name) != NULL)
-    return(NULL); /* already exists */
+  {
+    if(config_get_option(parent->config, CONFIG_OPTION_ALLOW_OVERRIDES))
+      config_setting_remove(parent, name);
+    else
+      return(NULL); /* already exists */
+  }
 
   return(config_setting_create(parent, name, type));
 }

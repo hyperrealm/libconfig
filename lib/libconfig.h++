@@ -455,7 +455,8 @@ class LIBCONFIGXX_API Config
     OptionColonAssignmentForNonGroups = 0x08,
     OptionOpenBraceOnSeparateLine = 0x10,
     OptionAllowScientificNotation = 0x20,
-    OptionFsync = 0x40
+    OptionFsync = 0x40,
+    OptionAllowOverrides = 0x80
   };
 
   Config();
