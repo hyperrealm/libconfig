@@ -1360,11 +1360,8 @@ YY_RULE_SETUP
                       yylval->llval = llval;
                       return(TOK_INTEGER64);
                     }
-                    else
-                    {
-                      yylval->ival = (int)llval;
-                      return(TOK_INTEGER);
-                    }
+                    yylval->ival = (int)llval;
+                    return(TOK_INTEGER);
                   }
 	YY_BREAK
 case 35:
@@ -1624,13 +1621,10 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 			return EOB_ACT_END_OF_FILE;
 			}
 
-		else
-			{
-			/* We matched some text prior to the EOB, first
-			 * process it.
-			 */
-			return EOB_ACT_LAST_MATCH;
-			}
+		/* We matched some text prior to the EOB, first
+		 * process it.
+		 */
+		return EOB_ACT_LAST_MATCH;
 		}
 
 	/* Try to read more data. */

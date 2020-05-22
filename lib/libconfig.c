@@ -136,13 +136,13 @@ static int __config_name_compare(const char *a, const char *b)
 
     if(pd && qd)
       break;
-    else if(pd)
+    if(pd)
       return(-1);
-    else if(qd)
+    if(qd)
       return(1);
-    else if(*p < *q)
+    if(*p < *q)
       return(-1);
-    else if(*p > *q)
+    if(*p > *q)
       return(1);
   }
 
