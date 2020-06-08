@@ -270,9 +270,7 @@ typedef short int yytype_int16;
 #   define YY_(Msgid) dgettext ("bison-runtime", Msgid)
 #  endif
 # endif
-# ifndef YY_
-#  define YY_(Msgid) Msgid
-# endif
+# define YY_(Msgid) Msgid
 #endif
 
 #ifndef YY_ATTRIBUTE
