@@ -1432,7 +1432,7 @@ yyreduce:
     if(IN_ARRAY() || IN_LIST())
     {
       config_setting_t *e = config_setting_set_bool_elem(ctx->parent, -1,
-                                                         (int)(yyvsp[0].ival));
+                                                         (yyvsp[0].ival));
 
       if(! e)
       {
@@ -1445,7 +1445,7 @@ yyreduce:
       }
     }
     else
-      config_setting_set_bool(ctx->setting, (int)(yyvsp[0].ival));
+      config_setting_set_bool(ctx->setting, (yyvsp[0].ival));
   }
 #line 1453 "grammar.c" /* yacc.c:1646  */
     break;
