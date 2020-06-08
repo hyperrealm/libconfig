@@ -362,7 +362,7 @@ typedef void* yyscan_t;
 #define YY_START ((yyg->yy_start - 1) / 2)
 #define YYSTATE YY_START
 /* Action number for EOF rule of a given start state. */
-#define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
+#define YY_STATE_EOF(state) (YY_END_OF_BUFFER + (state) + 1)
 /* Special action meaning "start processing a new file". */
 #define YY_NEW_FILE yyrestart( yyin , yyscanner )
 #define YY_END_OF_BUFFER_CHAR 0
@@ -963,19 +963,19 @@ static int input ( yyscan_t yyscanner );
 		{ \
 		int c = '*'; \
 		int n; \
-		for ( n = 0; n < max_size && \
+		for ( n = 0; n < (max_size) && \
 			     (c = getc( yyin )) != EOF && c != '\n'; ++n ) \
-			buf[n] = (char) c; \
+			(buf)[n] = (char) c; \
 		if ( c == '\n' ) \
-			buf[n++] = (char) c; \
+			(buf)[n++] = (char) c; \
 		if ( c == EOF && ferror( yyin ) ) \
 			YY_FATAL_ERROR( "input in flex scanner failed" ); \
-		result = n; \
+		(result) = n; \
 		} \
 	else \
 		{ \
 		errno=0; \
-		while ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyin)) == 0 && ferror(yyin)) \
+		while ( ((result) = (int) fread(buf, 1, (yy_size_t) (max_size), yyin)) == 0 && ferror(yyin)) \
 			{ \
 			if( errno != EINTR) \
 				{ \
@@ -1721,7 +1721,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 		if ( ! YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
 			YY_FATAL_ERROR( "out of dynamic memory in yy_get_next_buffer()" );
 		/* "- 2" to take care of EOB's */
-		YY_CURRENT_BUFFER_LVALUE->yy_buf_size = (int) (new_size - 2);
+		YY_CURRENT_BUFFER_LVALUE->yy_buf_size = (new_size - 2);
 	}
 
 	yyg->yy_n_chars += number_to_move;
