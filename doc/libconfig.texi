@@ -2167,11 +2167,12 @@ These convenience methods test if a setting is of a given type.
 @deftypemethod Setting bool isAggregate () const
 @deftypemethodx Setting bool isScalar () const
 @deftypemethodx Setting bool isNumber () const
+@deftypemethodx Setting bool isString () const
 
 These convenience methods test if a setting is of an aggregate type (a
 group, array, or list), of a scalar type (integer, 64-bit integer,
-floating point, boolean, or string), and of a number (integer, 64-bit
-integer, or floating point), respectively.
+floating point, boolean, or string), of a number (integer, 64-bit
+integer, or floating point), and of a string respectively.
 
 @end deftypemethod
 
