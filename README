@@ -16,7 +16,7 @@ from C and C++.
 				 -*-
 
 Flex and Bison are not required in order to build this
-package. However, you will need them if you modify the .l or .y files. See
+package. However, you will need them, if you modify the .l or .y files. See
 the list of required build tool versions below.
 
 				 -*-
