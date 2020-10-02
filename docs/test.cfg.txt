@@ -69,7 +69,7 @@ books = ( "inventory",
 
 misc:
 {
-  pi = 3.14159265;
+  pi = 3.141592653589793238;
   bitmask = 0xAABBCCDD;
   bigint = 9223372036854775807L;
   unicode = "STARGΛ̊TE SG-1"; // UTF-8 string
