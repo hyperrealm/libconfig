@@ -309,6 +309,9 @@ class LIBCONFIGXX_API Setting
   {
     return((_type == TypeInt) || (_type == TypeInt64) || (_type == TypeFloat));
   }
+  
+  inline bool isString() const
+  { return(_type == TypeString); }
 
   unsigned int getSourceLine() const;
   const char *getSourceFile() const;
