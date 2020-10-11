@@ -32,11 +32,13 @@ class HelloConan(ConanFile):
 
     def package(self):
         self.copy("*.h", dst="include", src="lib")
+        self.copy("*.hpp", dst="include", src="lib")
+        self.copy("*.h++", dst="include", src="lib")
         self.copy("*.dll", dst="bin", keep_path=False)
         self.copy("*.so", dst="lib", keep_path=False)
         self.copy("*.dylib", dst="lib", keep_path=False)
         self.copy("*.a", dst="lib", keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = ["libconfig"]
+        self.cpp_info.libs = ["config", "config++"]
 
