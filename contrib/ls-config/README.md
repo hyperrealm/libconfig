@@ -3,19 +3,19 @@ ls-config
 
 Simple program to use libconfig9 configuration files in bash scripts
 
-You can use libcongig9 files directly invoking ls-config, or in bash script
-by sourcing lslib-core and then usinig simpe cfg_* functions. In this case 
+You can use libconfig9 files directly by invoking ls-config, or in bash scripts
+by sourcing lslib-core and then using simple cfg_* functions. In this case 
 You must set LS_EXEC to 1 before sourcing lslib-core
 
-Existing error codes available in doc/ folder.
+Existing error codes available in: doc/ folder.
 
-Samplne usage place in: sample/ folder.
+Sample usage available in: sample/ folder.
 
 Languages:
 - english
 - polish
 
-We need some help to build packaging for direff systems, and with transtalions 
-tu other languates.
+We need some help to build packaging for different systems, and with translations 
+to other languages.
 
 Full changelog available in doc/changelog.txt
