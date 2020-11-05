@@ -268,7 +268,7 @@ class LIBCONFIGXX_API Setting
 
   void remove(unsigned int idx);
 
-  Setting & add(const char *name, Type type);
+  Setting & add(const char *name, Type type, const char *comment = NULL);
 
   inline Setting & add(const std::string &name, Type type)
   { return(add(name.c_str(), type)); }

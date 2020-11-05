@@ -39,7 +39,8 @@ int main(int argc, char **argv)
   Setting &root = cfg.getRoot();
 
   // Add some settings to the configuration.
-  Setting &address = root.add("address", Setting::TypeGroup);
+  Setting &address = root.add("address", Setting::TypeGroup,
+                                "Address for parcel delivery");
 
   address.add("street", Setting::TypeString) = "1 Woz Way";
   address.add("city", Setting::TypeString) = "San Jose";

@@ -1106,7 +1106,7 @@ void Setting::remove(unsigned int idx)
 
 // ---------------------------------------------------------------------------
 
-Setting & Setting::add(const char *name, Setting::Type type)
+Setting & Setting::add(const char *name, Setting::Type type, const char *comment)
 {
   assertType(TypeGroup);
 
@@ -1115,7 +1115,8 @@ Setting & Setting::add(const char *name, Setting::Type type)
   if(typecode == CONFIG_TYPE_NONE)
     throw SettingTypeException(*this, name);
 
-  config_setting_t *setting = config_setting_add(_setting, name, typecode);
+  config_setting_t *setting = config_setting_add_with_comment(
+                                _setting, name, typecode, comment);
 
   if(! setting)
     throw SettingNameException(*this, name);

@@ -608,6 +608,13 @@ static void __config_write_setting(const config_t *config,
   char nongroup_assign_char = config_get_option(
     config, CONFIG_OPTION_COLON_ASSIGNMENT_FOR_NON_GROUPS) ? ':' : '=';
 
+  if(setting->comment)
+  {
+    if(depth > 1)
+      __config_indent(stream, depth, config->tab_width);
+    fprintf(stream, "// %s\n", setting->comment);
+  }
+
   if(depth > 1)
     __config_indent(stream, depth, config->tab_width);
 
@@ -824,7 +831,8 @@ void config_set_hook(config_t *config, void *hook)
 /* ------------------------------------------------------------------------- */
 
 static config_setting_t *config_setting_create(config_setting_t *parent,
-                                               const char *name, int type)
+                                               const char *name,
+                                               int type, const char *comment)
 {
   config_setting_t *setting;
   config_list_t *list;
@@ -839,6 +847,7 @@ static config_setting_t *config_setting_create(config_setting_t *parent,
   setting->config = parent->config;
   setting->hook = NULL;
   setting->line = 0;
+  setting->comment = (comment == NULL) ? NULL : strdup(comment);
 
   list = parent->value.list;
 
@@ -1343,7 +1352,7 @@ config_setting_t *config_setting_set_int_elem(config_setting_t *setting,
     if(! __config_list_checktype(setting, CONFIG_TYPE_INT))
       return(NULL);
 
-    element = config_setting_create(setting, NULL, CONFIG_TYPE_INT);
+    element = config_setting_create(setting, NULL, CONFIG_TYPE_INT, NULL);
   }
   else
   {
@@ -1385,7 +1394,7 @@ config_setting_t *config_setting_set_int64_elem(config_setting_t *setting,
     if(! __config_list_checktype(setting, CONFIG_TYPE_INT64))
       return(NULL);
 
-    element = config_setting_create(setting, NULL, CONFIG_TYPE_INT64);
+    element = config_setting_create(setting, NULL, CONFIG_TYPE_INT64, NULL);
   }
   else
   {
@@ -1426,7 +1435,7 @@ config_setting_t *config_setting_set_float_elem(config_setting_t *setting,
     if(! __config_list_checktype(setting, CONFIG_TYPE_FLOAT))
       return(NULL);
 
-    element = config_setting_create(setting, NULL, CONFIG_TYPE_FLOAT);
+    element = config_setting_create(setting, NULL, CONFIG_TYPE_FLOAT, NULL);
   }
   else
     element = config_setting_get_elem(setting, idx);
@@ -1471,7 +1480,7 @@ config_setting_t *config_setting_set_bool_elem(config_setting_t *setting,
     if(! __config_list_checktype(setting, CONFIG_TYPE_BOOL))
       return(NULL);
 
-    element = config_setting_create(setting, NULL, CONFIG_TYPE_BOOL);
+    element = config_setting_create(setting, NULL, CONFIG_TYPE_BOOL, NULL);
   }
   else
     element = config_setting_get_elem(setting, idx);
@@ -1517,7 +1526,7 @@ config_setting_t *config_setting_set_string_elem(config_setting_t *setting,
     if(! __config_list_checktype(setting, CONFIG_TYPE_STRING))
       return(NULL);
 
-    element = config_setting_create(setting, NULL, CONFIG_TYPE_STRING);
+    element = config_setting_create(setting, NULL, CONFIG_TYPE_STRING, NULL);
   }
   else
     element = config_setting_get_elem(setting, idx);
@@ -1535,7 +1544,7 @@ config_setting_t *config_setting_set_string_elem(config_setting_t *setting,
 
 config_setting_t *config_setting_get_elem(const config_setting_t *setting,
                                           unsigned int idx)
-{  
+{
   config_list_t *list;
 
   if(! config_setting_is_aggregate(setting))
@@ -1606,8 +1615,8 @@ void config_setting_set_hook(config_setting_t *setting, void *hook)
 
 /* ------------------------------------------------------------------------- */
 
-config_setting_t *config_setting_add(config_setting_t *parent,
-                                     const char *name, int type)
+config_setting_t *config_setting_add_with_comment(config_setting_t *parent,
+                            const char *name, int type, const char *comment)
 {
   if((type < CONFIG_TYPE_NONE) || (type > CONFIG_TYPE_LIST))
     return(NULL);
@@ -1635,7 +1644,15 @@ config_setting_t *config_setting_add(config_setting_t *parent,
       return(NULL); /* already exists */
   }
 
-  return(config_setting_create(parent, name, type));
+  return(config_setting_create(parent, name, type, comment));
+}
+
+/* ------------------------------------------------------------------------- */
+
+config_setting_t *config_setting_add(config_setting_t *parent,
+                                     const char *name, int type)
+{
+  config_setting_add_with_comment(parent, name, type, NULL);
 }
 
 /* ------------------------------------------------------------------------- */
