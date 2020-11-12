@@ -12,3 +12,10 @@ Makefile.in
 stamp-h1
 *.la
 ac_config.h
+build
+temp
+.vs
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
