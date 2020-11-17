@@ -8,7 +8,7 @@ class HelloConan(ConanFile):
     author = """Mark Lindner - Lead developer & maintainer.
                 Daniel Marjamäki - Enhancements & bugfixes.
                 Andrew Tytula - Windows port.
-                Glenn Herteg - Enhancements, bugfixes, documentation corrections.
+                Glenn Herteg - Enhancements, bugfixes, documentation corrections.s
                 Matt Renaud - Enhancements & bugfixes.
                 JoseLuis Tallon - Enhancements & bugfixes"""
     url = "hyperrealm.github.io/libconfig/"
@@ -24,11 +24,6 @@ class HelloConan(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
-
-        # Explicit way:
-        # self.run('cmake %s/hello %s'
-        #          % (self.source_folder, cmake.command_line))
-        # self.run("cmake --build . %s" % cmake.build_config)
 
     def package(self):
         self.copy("*.h", dst="include", src="lib")
