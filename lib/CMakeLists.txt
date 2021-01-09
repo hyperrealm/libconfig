@@ -39,9 +39,13 @@ add_library(${libname}++ ${libsrc_cpp} ${libinc_cpp})
 
 set_target_properties(${libname}
     PROPERTIES LINKER_LANGUAGE C
+        SOVERSION "${libconfig_VERSION_MAJOR}"
+        VERSION "${libconfig_VERSION}"
         PUBLIC_HEADER "${libinc}")
 set_target_properties(${libname}++
     PROPERTIES LINKER_LANGUAGE CXX
+        SOVERSION "${libconfig_VERSION_MAJOR}"
+        VERSION "${libconfig_VERSION}"
         PUBLIC_HEADER "${libinc_cpp}")
 
 #check_symbol_exists(uselocale "locale.h" HAVE_USELOCALE)
