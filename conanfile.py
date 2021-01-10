@@ -1,9 +1,11 @@
 from conans import ConanFile, CMake, tools
+import os
+import re
+import textwrap
 
 
-class HelloConan(ConanFile):
-    name = "LibConfig"
-    version = "1.7.2"
+class LibconfigConan(ConanFile):
+    name = "libconfig"
     license = "GNU LESSER GENERAL PUBLIC LICENSE"
     author = """Mark Lindner - Lead developer & maintainer.
                 Daniel Marjamäki - Enhancements & bugfixes.
@@ -12,13 +14,19 @@ class HelloConan(ConanFile):
                 Matt Renaud - Enhancements & bugfixes.
                 JoseLuis Tallon - Enhancements & bugfixes"""
     url = "hyperrealm.github.io/libconfig/"
-    description = "Libconfig is a simple library for processing structured configuration files, like this one. This file format is more compact and more readable than XML. And unlike XML, it is type-aware, so it is not necessary to do string parsing in application code."
-    topics = ("config")
+    description = "Libconfig is a simple library for processing structured configuration files. " \
+                  "This file format is more compact and more readable than XML. And unlike XML, it is type-aware, " \
+                  "so it is not necessary to do string parsing in application code."
+    topics = ("libconfig", "structured", "configuration", "xml", "type")
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": False}
     generators = "cmake"
-    exports_sources="*"
+    exports_sources = "*"
+
+    def set_version(self):
+        configure_ac = tools.load(os.path.join(self.recipe_folder, "configure.ac"))
+        self.version = next(re.finditer(r"AC_INIT\(libconfig,[ \t]+([0-9.]+),.*", configure_ac)).group(1)
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -29,12 +37,20 @@ class HelloConan(ConanFile):
             del self.options.fPIC
 
     def build(self):
-        self.cmake = CMake(self)
-        self.cmake.configure(source_folder=self.build_folder)
-        self.cmake.build()
+        tools.save(os.path.join(self.build_folder, "CMakeLists.txt"), textwrap.dedent("""\
+            cmake_minimum_required(VERSION 2.8.12)
+            project(cmake_wrapper)
+            include("{}/conanbuildinfo.cmake")
+            conan_basic_setup()
+            add_subdirectory("{}" libconfig)
+            """).format(self.install_folder.replace("\\","/"), self.source_folder.replace("\\","/")))
+        cmake = CMake(self)
+        cmake.configure(source_folder=self.build_folder)
+        cmake.build()
 
     def package(self):
-        self.cmake.install()
+        cmake = CMake(self)
+        cmake.install()
 
     def package_info(self):
         # FIXME: `libconfig` is `libconfig::libconfig` in `libconfigConfig.cmake`
