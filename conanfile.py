@@ -23,6 +23,7 @@ class LibconfigConan(ConanFile):
     default_options = {"shared": False, "fPIC": False}
     generators = "cmake"
     exports_sources = "*"
+    no_copy_source = True
 
     def set_version(self):
         configure_ac = tools.load(os.path.join(self.recipe_folder, "configure.ac"))
