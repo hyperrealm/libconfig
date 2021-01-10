@@ -56,13 +56,13 @@ class LibconfigConan(ConanFile):
     def package_info(self):
         # FIXME: `libconfig` is `libconfig::libconfig` in `libconfigConfig.cmake`
         # FIXME: `libconfig++` is `libconfig::libconfig++` in `libconfig++Config.cmake`
-        self.cpp_info.components["libconfig_c"].libs = ["libconfig"]
+        self.cpp_info.components["libconfig_c"].libs = ["libconfig" if self.settings.compiler == "Visual Studio" else "config"]
         if not self.options.shared:
             self.cpp_info.components["libconfig_c"].defines = ["LIBCONFIG_STATIC"]
         self.cpp_info.components["libconfig_c"].names["cmake_find_package"] = ["libconfig"]
         self.cpp_info.components["libconfig_c"].names["cmake_find_package_multi"] = ["libconfig"]
         self.cpp_info.components["libconfig_c"].names["pkg_config"] = "libconfig"
-        self.cpp_info.components["libconfig_cpp"].libs = ["libconfig++"]
+        self.cpp_info.components["libconfig_cpp"].libs = ["libconfig++" if self.settings.compiler == "Visual Studio" else "config++"]
         if not self.options.shared:
             self.cpp_info.components["libconfig_cpp"].defines = ["LIBCONFIGXX_STATIC"]
         self.cpp_info.components["libconfig_cpp"].names["cmake_find_package"] = ["libconfig++"]

@@ -1,0 +1,16 @@
+name: build conan package
+on: push
+jobs:
+  build_conan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # install dependencies
+      - name: dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -yq python3 python3-pip python3-setuptools build-essential cmake make
+          sudo pip3 install conan
+      # build project
+      - name: build conan package
+        run: conan create .
