@@ -255,7 +255,7 @@ char* path_name(char *dataPath) {
 //set configuration path
 //@return int success
 //@param configFile - name (with path) of configuration fille
-//@param dataPath - path of configuation variable (in config file)
+//@param dataPath - path of configuration variable (in config file)
 //@param optflags - global options flags
 //@param dataString - data to store in configuration variable in string format
 //@param dataType - type of variable to save
@@ -765,7 +765,7 @@ int set_config(char *configFile, char *dataPath, struct flags optflags, char *da
 //unset configuration path
 //(remove variable from configuration file)
 //@return int success
-//@param char* configFile - the name (with path) of configuation file
+//@param char* configFile - the name (with path) of configuration file
 //@param char* configPath - path to configuration valriable to remove (unset)
 //@param struct flags optflags - global flags
 int unset_config(char *configFile, char *dataPath, struct flags optflags) {
