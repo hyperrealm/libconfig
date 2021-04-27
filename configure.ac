@@ -123,6 +123,18 @@ doexamples=yes
 
 AM_CONDITIONAL(BUILDEXAMPLES, test x$doexamples = xyes)
 
+dotests=yes
+
+AC_ARG_ENABLE(tests,
+AS_HELP_STRING([--disable-tests], [Disable building of the tests]),
+[if test "$enableval" = "no"; then dotests="no"; fi],
+[
+dotests=yes
+]
+)
+
+AM_CONDITIONAL(BUILDTESTS, test x$dotests = xyes)
+
 dnl Check for MinGW. Workaround for libtool's DLL_EXPORT stupidity.
 
 case "$target" in
