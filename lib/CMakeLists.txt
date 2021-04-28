@@ -28,7 +28,7 @@ set(libsrc_cpp
     ${libsrc}
     libconfigcpp.cc)
 
-if(CMAKE_HOST_WIN32)
+if(MSVC)
     set(libname "libconfig")
 else()
     set(libname "config")
@@ -41,16 +41,25 @@ set_target_properties(${libname}
     PROPERTIES LINKER_LANGUAGE C
         SOVERSION "${libconfig_VERSION_MAJOR}"
         VERSION "${libconfig_VERSION}"
+        DEFINE_SYMBOL LIBCONFIG_EXPORTS
         PUBLIC_HEADER "${libinc}")
 set_target_properties(${libname}++
     PROPERTIES LINKER_LANGUAGE CXX
         SOVERSION "${libconfig_VERSION_MAJOR}"
+        DEFINE_SYMBOL LIBCONFIGXX_EXPORTS
         VERSION "${libconfig_VERSION}"
         PUBLIC_HEADER "${libinc_cpp}")
 
 #check_symbol_exists(uselocale "locale.h" HAVE_USELOCALE)
 #check_symbol_exists(newlocale "locale.h" HAVE_NEWLOCALE)
 #check_symbol_exists(freelocale "locale.h" HAVE_FREELOCALE)
+
+if(BUILD_SHARED_LIBS)
+    target_compile_definitions(${libname}++ PRIVATE LIBCONFIG_STATIC)
+else()
+    target_compile_definitions(${libname} PUBLIC LIBCONFIG_STATIC)
+    target_compile_definitions(${libname}++ PUBLIC LIBCONFIGXX_STATIC)
+endif()
 
 if(HAVE_USELOCALE)
 target_compile_definitions(${libname}
@@ -67,21 +76,23 @@ target_compile_definitions(${libname}
     PRIVATE "HAVE_FREELOCALE")
 endif()
 
-target_compile_definitions(${libname}
-    PRIVATE
-        _CRT_SECURE_NO_DEPRECATE
-        YY_NO_UNISTD_H
-        YY_USE_CONST )
+if(MSVC)
+    target_compile_definitions(${libname}
+        PRIVATE
+            _CRT_SECURE_NO_DEPRECATE
+            YY_NO_UNISTD_H
+            YY_USE_CONST )
 
-target_compile_definitions(${libname}++
-    PRIVATE
-        _CRT_SECURE_NO_DEPRECATE
-        YY_NO_UNISTD_H
-        YY_USE_CONST )
+    target_compile_definitions(${libname}++
+        PRIVATE
+            _CRT_SECURE_NO_DEPRECATE
+            YY_NO_UNISTD_H
+            YY_USE_CONST )
+endif()
 
-if(CMAKE_HOST_WIN32)
-    target_link_libraries(${libname} Shlwapi.lib)
-    target_link_libraries(${libname}++ Shlwapi.lib)
+if(WIN32)
+    target_link_libraries(${libname} shlwapi)
+    target_link_libraries(${libname}++ shlwapi)
 endif()
 
 target_include_directories(${libname}
