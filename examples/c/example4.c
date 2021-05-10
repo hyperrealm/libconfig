@@ -132,6 +132,8 @@ int main(int argc, char **argv)
   }
 
   config_write(&cfg, stdout);
+   
+  config_destroy(&cfg);
 
   return(EXIT_SUCCESS);
 }
