@@ -731,7 +731,9 @@ void config_clear(config_t *config)
 {
   /* Destroy the root setting (recursively) and then create a new one. */
   __config_setting_destroy(config->root);
+
   libconfig_strvec_delete(config->filenames);
+  config->filenames = NULL;
 
   config->root = __new(config_setting_t);
   config->root->type = CONFIG_TYPE_GROUP;
