@@ -1,5 +1,63 @@
-  ----- version 1.7.2 ------
-01-05  Mark Lindner  <markl@avalon>
+
+----- version 1.7.3 ------
+
+2021-06-19  Mark Lindner  <markl@avalon>
+
+	* lib/libconfig.c - Fixed double-free of config->filenames
+	* configure.ac, lib/Makefile.am - bump version numbers
+
+2021-04-28  Mark Lindner  <markl@avalon>
+
+	* lib/CMakeLists.txt - misc. fixes
+
+2021-04-22  Mark Lindner  <markl@avalon>
+
+	* Makefile.am, configure.ac - Added --disable-tests configure option
+
+2021-01-09  Mark Lindner  <markl@avalon>
+
+	* lib/CMakeLists.txt - misc. fixes
+
+2020-11-12  Mark Lindner  <markl@avalon>
+
+	* contrib/ls-config/README.md - typo corrections
+
+2020-10-03  Mark Lindner  <markl@avalon>
+
+	* *.vcxproj, *.sln - Updated for building x64 configuration.
+
+2020-07-02  Mark Lindner  <markl@avalon>
+
+	* lib/libconfig.h++, doc/libconfig.texi - added isString() convenience
+	  method
+
+2019-12-18  Mark Lindner  <markl@avalon>
+
+	* lib/libconfig.c, lib/libconfig.h, lib/libconfig.h++,
+	  tests/testdata/override_setting.cfg, tests/tests.c,
+	  doc/libconfig.texi - Added new ALLOW_OVERRIDES option.
+
+2019-12-17  Mark Lindner  <markl@avalon>
+
+	* CMakeLists.txt, tests/CMakeList.txt - various fixes
+	* lib/libconfig.c, lib/scanctx.c, lib/scanner.h, lib/scanner.l,
+	  lib/strvec.c, lib/strvec.h, lib/util.c, lib/util.h - prefix more
+	  internal functions with 'libconfig_'
+	* lib/scanner.c, lib/scanner.h - regenerated
+
+2019-12-14  Mark Lindner  <markl@avalon>
+
+	* lib/grammar.y, lib/scanner.l, lib/libconfig.c, lib/parsectx.h,
+	  lib/scanctx.h, lib/scanctx.c, lib/strbuf.c, lib/strbuf.h,
+	  lib/strvec.c, lib/strvec.h - prefix all internal functions with
+	  'libconfig_'
+	* lib/grammar.c, lib/grammar.h, lib/scanner.c, lib/scanner.h - regenerated
+	* lib/wincompat.h - Fix #define for snprintf for Visual Studio 2013
+	* lib/libconfig.h++, lib/libconfigcpp.c++ - Use noexcept in C++17
+
+----- version 1.7.2 ------
+
+2019-01-05  Mark Lindner  <markl@avalon>
 
 	* lib/libconfig.c - fixed slow leak in config_destroy()
 	* <multiple> - miscellaenous build file fixes
