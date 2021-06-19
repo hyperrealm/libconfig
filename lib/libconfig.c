@@ -1218,7 +1218,7 @@ config_setting_t *config_setting_lookup(config_setting_t *setting,
                                         const char *path)
 {
   const char *p = path;
-  config_setting_t *found;
+  config_setting_t *found = setting;
 
   for(;;)
   {
@@ -1229,20 +1229,18 @@ config_setting_t *config_setting_lookup(config_setting_t *setting,
       break;
 
     if(*p == '[')
-      found = config_setting_get_elem(setting, atoi(++p));
+      found = config_setting_get_elem(found, atoi(++p));
     else
-      found = config_setting_get_member(setting, p);
+      found = config_setting_get_member(found, p);
 
     if(! found)
       break;
-
-    setting = found;
 
     while(! strchr(PATH_TOKENS, *p))
       p++;
   }
 
-  return(*p ? NULL : setting);
+  return(*p || (found == setting) ? NULL : found);
 }
 
 /* ------------------------------------------------------------------------- */

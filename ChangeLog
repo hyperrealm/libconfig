@@ -3,7 +3,10 @@
 
 2021-06-19  Mark Lindner  <markl@avalon>
 
-	* lib/libconfig.c - Fixed double-free of config->filenames
+	* lib/libconfig.c - Fixed double-free of config->filenames;
+	  fixed implementation of config_setting_lookup() to correctly return
+	  NULL instead of the passed-in setting if the specified path was not
+	  found
 	* configure.ac, lib/Makefile.am - bump version numbers
 
 2021-04-28  Mark Lindner  <markl@avalon>
