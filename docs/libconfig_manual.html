@@ -58,8 +58,8 @@ ul.no-bullet {list-style: none}
 
 <hr noshade size=6 color="black">
 <div align=right>A Library For Processing Structured Configuration Files<br>
-Version 1.7.2<br>
-5 Jan 2018</div>
+Version 1.7.3<br>
+20 Jun 2021</div>
 <br><br><br><br>
 <font size=+1>Mark A. Lindner</font>
 <hr size=3 noshade color="black">
@@ -1151,7 +1151,15 @@ when writing floating point values (corresponding to <code>printf()</code>
 This option controls whether the <code>config_write_file()</code> function performs
 an <i>fsync</i> operation after writing the configuration and before closing the
 file. By default this option is turned off.
-</p></dd>
+</p>
+</dd>
+<dt><code>CONFIG_OPTION_ALLOW_OVERRIDES</code></dt>
+<dd><p>(<b>Since <i>v1.7.3</i></b>)
+This option controls whether duplicate settings override previous settings
+with the same name. If this option is turned off, duplicate settings are
+rejected. By default this option is turned off.
+</p>
+</dd>
 </dl>
 
 </dd></dl>
@@ -1699,13 +1707,19 @@ configuration are left unchanged.
 
 <dl>
 <dt><a name="index-readFile-on-Config"></a>Method on Config: <em>void</em> <strong>readFile</strong> <em>(const&nbsp;char&nbsp;*&nbsp;<var>filename</var><!-- /@w -->)</em></dt>
-<dt><a name="index-writeFile-on-Config"></a>Method on Config: <em>void</em> <strong>writeFile</strong> <em>(const&nbsp;char&nbsp;*&nbsp;<var>filename</var><!-- /@w -->) const</em></dt>
+<dt><a name="index-readFile-on-Config-1"></a>Method on Config: <em>void</em> <strong>readFile</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>filename</var><!-- /@w -->)</em></dt>
 <dd>
 <p>The <code>readFile()</code> method reads and parses a configuration from the
 file named <var>filename</var>. A <code>ParseException</code> is thrown if a
 parse error occurs. A <code>FileIOException</code> is thrown if the file
 cannot be read.
 </p>
+</dd></dl>
+
+<dl>
+<dt><a name="index-writeFile-on-Config"></a>Method on Config: <em>void</em> <strong>writeFile</strong> <em>(const&nbsp;char&nbsp;*&nbsp;<var>filename</var><!-- /@w -->)</em></dt>
+<dt><a name="index-writeFile-on-Config-1"></a>Method on Config: <em>void</em> <strong>writeFile</strong> <em>(const&nbsp;std::string&nbsp;&amp;<var>filename</var><!-- /@w -->)</em></dt>
+<dd>
 <p>The <code>writeFile()</code> method writes the configuration to the file
 named <var>filename</var>. A <code>FileIOException</code> is thrown if the file cannot
 be written.
@@ -1848,6 +1862,13 @@ when writing floating point values (corresponding to <code>printf()</code>
 This option controls whether the <code>writeFile()</code> method performs an <i>fsync</i>
 operation after writing the configuration and before closing the file. By
 default this option is turned off.
+</p>
+</dd>
+<dt><code>Config::OptionAllowOverrides</code></dt>
+<dd><p>(<b>Since <i>v1.7.3</i></b>)
+This option controls whether duplicate settings override previous settings
+with the same name. If this option is turned off, duplicate settings are
+rejected. By default this option is turned off.
 </p>
 </dd>
 </dl>
@@ -2422,11 +2443,12 @@ elements in a list or array. For other types of settings, it returns
 <dt><a name="index-isAggregate-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isAggregate</strong> <em>() const</em></dt>
 <dt><a name="index-isScalar-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isScalar</strong> <em>() const</em></dt>
 <dt><a name="index-isNumber-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isNumber</strong> <em>() const</em></dt>
+<dt><a name="index-isString-on-Setting"></a>Method on Setting: <em>bool</em> <strong>isString</strong> <em>() const</em></dt>
 <dd>
 <p>These convenience methods test if a setting is of an aggregate type (a
 group, array, or list), of a scalar type (integer, 64-bit integer,
-floating point, boolean, or string), and of a number (integer, 64-bit
-integer, or floating point), respectively.
+floating point, boolean, or string), of a number (integer, 64-bit
+integer, or floating point), and of a string respectively.
 </p>
 </dd></dl>
 
@@ -3494,6 +3516,7 @@ Next: <a href="#Type-Index" accesskey="n" rel="next">Type Index</a>, Previous: <
 <tr><td></td><td valign="top"><a href="#index-isNumber-on-Setting"><code>isNumber on Setting</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-isRoot-on-Setting"><code>isRoot on Setting</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-isScalar-on-Setting"><code>isScalar on Setting</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-isString-on-Setting"><code>isString on Setting</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Function-Index_fn_letter-L">L</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-LIBCONFIGXX_005fVER_005fMAJOR"><code>LIBCONFIGXX_VER_MAJOR</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Version-Test-Macros">Version Test Macros</a></td></tr>
@@ -3571,6 +3594,7 @@ Next: <a href="#Type-Index" accesskey="n" rel="next">Type Index</a>, Previous: <
 <tr><th><a name="Function-Index_fn_letter-R">R</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-read-on-Config"><code>read on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-readFile-on-Config"><code>readFile on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-readFile-on-Config-1"><code>readFile on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-readString-on-Config"><code>readString on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-readString-on-Config-1"><code>readString on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-remove-on-Setting"><code>remove on Setting</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
@@ -3597,6 +3621,7 @@ Next: <a href="#Type-Index" accesskey="n" rel="next">Type Index</a>, Previous: <
 <tr><th><a name="Function-Index_fn_letter-W">W</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-write-on-Config"><code>write on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-writeFile-on-Config"><code>writeFile on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-writeFile-on-Config-1"><code>writeFile on Config</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-C_002b_002b-API">The C++ API</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 </table>
 <table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-Index_fn_symbol-1"><b>~</b></a>
