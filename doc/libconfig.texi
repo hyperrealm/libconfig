@@ -6,8 +6,8 @@
 @setfilename libconfig.info
 @settitle libconfig
 
-@set edition 1.7.2
-@set update-date 5 Jan 2018
+@set edition 1.7.3
+@set update-date 20 Jun 2021
 @set subtitle-text A Library For Processing Structured Configuration Files
 @set author-text Mark A.@: Lindner
 
@@ -38,7 +38,7 @@
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2004-2018  Mark A Lindner
+Copyright @copyright{} 2004-2021  Mark A Lindner
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
