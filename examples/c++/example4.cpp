@@ -33,6 +33,9 @@ using namespace libconfig;
 
 int main(int argc, char **argv)
 {
+  (void)argc;
+  (void)argv;
+
   Config cfg;
 
   try

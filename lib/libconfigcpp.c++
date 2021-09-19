@@ -42,6 +42,7 @@ static const char **__include_func(config_t *config,
                                    const char *path,
                                    const char **error)
 {
+  (void)include_dir;
   Config *self = reinterpret_cast<Config *>(config_get_hook(config));
   return(self->evaluateIncludePath(path, error));
 }
