@@ -25,9 +25,11 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <io.h>
+#ifndef F_OK
 #define F_OK 4  // Windows doesn't have F_OK
+#endif
 #else
 #include <unistd.h>
 #endif
