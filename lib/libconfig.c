@@ -83,8 +83,7 @@ static void __config_write_setting(const config_t *config,
 
 static void __config_locale_override(void)
 {
-#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)) \
-  && ! defined(__MINGW32__)
+#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
 
   _configthreadlocale(_ENABLE_PER_THREAD_LOCALE);
   setlocale(LC_NUMERIC, "C");
@@ -110,8 +109,7 @@ static void __config_locale_override(void)
 
 static void __config_locale_restore(void)
 {
-#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)) \
-  && ! defined(__MINGW32__)
+#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
 
     _configthreadlocale(_DISABLE_PER_THREAD_LOCALE);
 
