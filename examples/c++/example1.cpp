@@ -33,6 +33,9 @@ using namespace libconfig;
 
 int main(int argc, char **argv)
 {
+  (void)argc;
+  (void)argv;
+
   Config cfg;
 
   // Read the file. If there is an error, report it and exit.
