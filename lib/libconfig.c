@@ -47,6 +47,10 @@
 #include "scanner.h"
 #include "util.h"
 
+#if defined(_WIN32)
+#include <io.h>
+#endif
+
 #define PATH_TOKENS ":./"
 #define CHUNK_SIZE 16
 #define DEFAULT_TAB_WIDTH 2
@@ -700,7 +704,12 @@ int config_write_file(config_t *config, const char *filename)
 
     if(fd >= 0)
     {
-      if(fsync(fd) != 0)
+#if defined(_WIN32)
+      int fsync_res = _commit(fd);
+#else
+      int fsync_res = fsync(fd);
+#endif
+      if(fsync_res != 0)
       {
         fclose(stream);
         config->error_text = __io_error;
