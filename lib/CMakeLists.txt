@@ -58,10 +58,6 @@ set_target_properties(${libname}++
         VERSION "${libconfig_VERSION}"
         PUBLIC_HEADER "${libinc_cpp}")
 
-#check_symbol_exists(uselocale "locale.h" HAVE_USELOCALE)
-#check_symbol_exists(newlocale "locale.h" HAVE_NEWLOCALE)
-#check_symbol_exists(freelocale "locale.h" HAVE_FREELOCALE)
-
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(${libname}++ PRIVATE LIBCONFIG_STATIC)
 else()
@@ -69,19 +65,35 @@ else()
     target_compile_definitions(${libname}++ PUBLIC LIBCONFIGXX_STATIC)
 endif()
 
+if(APPLE)
+    check_symbol_exists(uselocale "xlocale.h" HAVE_USELOCALE)
+    check_symbol_exists(newlocale "xlocale.h" HAVE_NEWLOCALE)
+    check_symbol_exists(freelocale "xlocale.h" HAVE_FREELOCALE)
+else()
+    check_symbol_exists(uselocale "locale.h" HAVE_USELOCALE)
+    check_symbol_exists(newlocale "locale.h" HAVE_NEWLOCALE)
+    check_symbol_exists(freelocale "locale.h" HAVE_FREELOCALE)
+endif()
+
 if(HAVE_USELOCALE)
-target_compile_definitions(${libname}
-    PRIVATE "HAVE_USELOCALE")
+    target_compile_definitions(${libname}
+        PRIVATE "HAVE_USELOCALE")
+    target_compile_definitions(${libname}++
+        PRIVATE "HAVE_USELOCALE")
 endif()
 
 if(HAVE_NEWLOCALE)
-target_compile_definitions(${libname}
-    PRIVATE "HAVE_NEWLOCALE")
+    target_compile_definitions(${libname}
+        PRIVATE "HAVE_NEWLOCALE")
+    target_compile_definitions(${libname}++
+        PRIVATE "HAVE_NEWLOCALE")
 endif()
 
 if(HAVE_FREELOCALE)
-target_compile_definitions(${libname}
-    PRIVATE "HAVE_FREELOCALE")
+    target_compile_definitions(${libname}
+        PRIVATE "HAVE_FREELOCALE")
+    target_compile_definitions(${libname}++
+        PRIVATE "HAVE_FREELOCALE")
 endif()
 
 if(MSVC)
