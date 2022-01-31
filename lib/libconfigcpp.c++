@@ -1188,7 +1188,7 @@ Setting & Setting::add(Setting::Type type)
 
 void Setting::assertType(Setting::Type type) const
 {
-  if(type != _type)
+  if(type != _type && !(type == TypeInt64 && _type == TypeInt))
   {
     if(!(isNumber() && config_get_auto_convert(_setting->config)
          && ((type == TypeInt) || (type == TypeInt64) || (type == TypeFloat))))
