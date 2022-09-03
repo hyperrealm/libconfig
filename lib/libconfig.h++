@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2023  Mark A Lindner
+   Copyright (C) 2005-2025  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -40,8 +40,8 @@
 #endif /* WIN32 */
 
 #define LIBCONFIGXX_VER_MAJOR    1
-#define LIBCONFIGXX_VER_MINOR    7
-#define LIBCONFIGXX_VER_REVISION 4
+#define LIBCONFIGXX_VER_MINOR    8
+#define LIBCONFIGXX_VER_REVISION 0
 
 #if __cplusplus < 201103L
 #define LIBCONFIGXX_NOEXCEPT throw()
@@ -184,7 +184,8 @@ class LIBCONFIGXX_API Setting
   enum Format
   {
     FormatDefault = 0,
-    FormatHex = 1
+    FormatHex = 1,
+    FormatBin = 2
   };
 
   typedef SettingIterator iterator;

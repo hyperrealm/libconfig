@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2023  Mark A Lindner
+   Copyright (C) 2005-2025  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -40,8 +40,8 @@ extern "C" {
 #endif /* WIN32 */
 
 #define LIBCONFIG_VER_MAJOR    1
-#define LIBCONFIG_VER_MINOR    7
-#define LIBCONFIG_VER_REVISION 4
+#define LIBCONFIG_VER_MINOR    8
+#define LIBCONFIG_VER_REVISION 0
 
 #include <stdio.h>
 
@@ -57,6 +57,7 @@ extern "C" {
 
 #define CONFIG_FORMAT_DEFAULT  0
 #define CONFIG_FORMAT_HEX      1
+#define CONFIG_FORMAT_BIN      2
 
 #define CONFIG_OPTION_AUTOCONVERT                     0x01
 #define CONFIG_OPTION_SEMICOLON_SEPARATORS            0x02

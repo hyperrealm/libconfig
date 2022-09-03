@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2023  Mark A Lindner
+   Copyright (C) 2005-2025  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -668,6 +668,49 @@ TT_TEST(ReadStream)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(BinaryAndHex)
+{
+  char *buf;
+  config_t cfg;
+  int rc;
+  int ival;
+  long long llval;
+
+
+  config_init(&cfg);
+
+  buf = "somebin=0b1010101;\n"
+        "somehex=0xbeef;\n"
+        "someautobighex=0x100000000;\n"
+        "someautobigbin=0b111111111111111111111111111111111;"
+        "somebighex=0x100000000L;\n"
+        "somebigbin=0b111111111111111111111111111111111L;";
+  rc = config_read_string(&cfg, buf);
+  TT_ASSERT_TRUE(rc);
+  rc = config_lookup_int(&cfg,"somebin",&ival);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT_EQ(ival, 85);
+  rc = config_lookup_int(&cfg,"somehex",&ival);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT_EQ(ival, 48879);
+  rc = config_lookup_int64(&cfg,"someautobighex",&llval);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT64_EQ(llval, 0x100000000LL);
+  rc = config_lookup_int64(&cfg,"someautobigbin",&llval);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT64_EQ(llval, 0x1ffffffffLL);
+  rc = config_lookup_int64(&cfg,"somebighex",&llval);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT64_EQ(llval, 0x100000000LL);
+  rc = config_lookup_int64(&cfg,"somebigbin",&llval);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT64_EQ(llval, 0x1ffffffffLL);
+
+  parse_and_compare("./testdata/binhex.cfg", "./testdata/binhex.cfg");
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
   int failures;
@@ -688,6 +731,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, OverrideSetting);
   TT_SUITE_TEST(LibConfigTests, SettingLookups);
   TT_SUITE_TEST(LibConfigTests, ReadStream);
+  TT_SUITE_TEST(LibConfigTests, BinaryAndHex);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);

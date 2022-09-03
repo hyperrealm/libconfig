@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    tinytest - A tiny C unit-testing library
-   Copyright (C) 2010-2018  Mark A Lindner
+   Copyright (C) 2010-2025  Mark A Lindner
 
    This file is part of tinytest.
 

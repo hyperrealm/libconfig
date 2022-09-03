@@ -2,9 +2,9 @@
 #define libconfig_yyHEADER_H 1
 #define libconfig_yyIN_HEADER 1
 
-#line 5 "scanner.h"
+#line 6 "scanner.h"
 
-#line 7 "scanner.h"
+#line 8 "scanner.h"
 
 #define  YY_INT_ALIGNED short int
 
@@ -714,9 +714,9 @@ extern int yylex \
 #undef yyTABLES_NAME
 #endif
 
-#line 205 "scanner.l"
+#line 262 "scanner.l"
 
 
-#line 720 "scanner.h"
+#line 721 "scanner.h"
 #undef libconfig_yyIN_HEADER
 #endif /* libconfig_yyHEADER_H */

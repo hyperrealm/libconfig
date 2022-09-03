@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2023  Mark A Lindner
+   Copyright (C) 2005-2025  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -412,6 +412,8 @@ void Config::setDefaultFormat(Setting::Format format)
 {
   if(format == Setting::FormatHex)
     _defaultFormat = Setting::FormatHex;
+  else if(format == Setting::FormatBin)
+    _defaultFormat = Setting::FormatBin;
   else
     _defaultFormat = Setting::FormatDefault;
 
@@ -682,6 +684,10 @@ Setting::Setting(config_setting_t *setting)
       _format = FormatHex;
       break;
 
+   case CONFIG_FORMAT_BIN:
+     _format = FormatBin;
+     break;
+
     case CONFIG_FORMAT_DEFAULT:
     default:
       _format = FormatDefault;
@@ -704,6 +710,8 @@ void Setting::setFormat(Format format)
   {
     if(format == FormatHex)
       _format = FormatHex;
+    else if(format == FormatBin)
+      _format = FormatBin;
     else
       _format = FormatDefault;
   }

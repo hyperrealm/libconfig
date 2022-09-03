@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2023  Mark A Lindner
+   Copyright (C) 2005-2025  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -35,9 +35,12 @@ extern void *libconfig_realloc(void *ptr, size_t size);
 #define __delete(P) free((void *)(P))
 #define __zero(P) memset((void *)(P), 0, sizeof(*P))
 
-extern long long libconfig_parse_integer(const char *s, int *ok);
-extern unsigned long long libconfig_parse_hex64(const char *s);
+extern long long libconfig_parse_integer(const char *s, int long_ok, int *ok);
+extern unsigned long long libconfig_parse_hex64(const char *s, int long_ok,
+                                                int *ok);
+extern unsigned long long libconfig_parse_bin64(const char *s, int long_ok,
+                                                int *ok);
 
 extern void libconfig_format_double(double val, int precision, int sci_ok,
                                     char *buf, size_t buflen);
-
+extern void libconfig_format_bin(int64_t val, char *buf, size_t buflen);
