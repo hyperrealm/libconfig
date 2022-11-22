@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2018  Mark A Lindner
+   Copyright (C) 2005-2023  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -27,6 +27,70 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+/* ------------------------------------------------------------------------- */
+
+void libconfig_fatal_error_handler(const char *message)
+{
+  if(posix_write(STDERR_FILENO, (const void *)message, strlen(message))) {}
+  abort();
+}
+
+/* ------------------------------------------------------------------------- */
+
+static void (*__libconfig_fatal_error_func)(const char *) =
+  libconfig_fatal_error_handler;
+
+static const char *__libconfig_malloc_failure_message =
+  "\alibconfig: memory allocation failure\n";
+
+/* ------------------------------------------------------------------------- */
+
+void libconfig_set_fatal_error_func(void (*func)(const char *))
+{
+  __libconfig_fatal_error_func = (func ? func
+                                  : libconfig_fatal_error_handler);
+}
+
+/* ------------------------------------------------------------------------- */
+
+void libconfig_fatal_error(const char *message)
+{
+  __libconfig_fatal_error_func(message);
+}
+
+/* ------------------------------------------------------------------------- */
+
+void *libconfig_malloc(size_t size)
+{
+  void *ptr = malloc(size);
+  if(!ptr)
+    libconfig_fatal_error(__libconfig_malloc_failure_message);
+
+  return(ptr);
+}
+
+/* ------------------------------------------------------------------------- */
+
+void *libconfig_calloc(size_t nmemb, size_t size)
+{
+  void *ptr = calloc(nmemb, size);
+  if(!ptr)
+    libconfig_fatal_error(__libconfig_malloc_failure_message);
+
+  return(ptr);
+}
+
+/* ------------------------------------------------------------------------- */
+
+void *libconfig_realloc(void *ptr, size_t size)
+{
+  ptr = realloc(ptr, size);
+  if(!ptr)
+    libconfig_fatal_error(__libconfig_malloc_failure_message);
+
+  return(ptr);
+}
 
 /* ------------------------------------------------------------------------- */
 

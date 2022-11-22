@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2018  Mark A Lindner
+   Copyright (C) 2005-2023  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -41,7 +41,7 @@
 
 #define LIBCONFIGXX_VER_MAJOR    1
 #define LIBCONFIGXX_VER_MINOR    7
-#define LIBCONFIGXX_VER_REVISION 0
+#define LIBCONFIGXX_VER_REVISION 4
 
 #if __cplusplus < 201103L
 #define LIBCONFIGXX_NOEXCEPT throw()

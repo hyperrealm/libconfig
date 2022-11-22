@@ -6,8 +6,8 @@
 @setfilename libconfig.info
 @settitle libconfig
 
-@set edition 1.7.3
-@set update-date 20 Jun 2021
+@set edition 1.7.4
+@set update-date 22 Nov 2022
 @set subtitle-text A Library For Processing Structured Configuration Files
 @set author-text Mark A.@: Lindner
 
@@ -38,7 +38,7 @@
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2004-2021  Mark A Lindner
+Copyright @copyright{} 2004-2023  Mark A Lindner
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -800,6 +800,42 @@ and a parsing error, respectively.
 
 @end deftypefun
 
+@deftypefun void config_set_fatal_error_func (@w{config_fatal_error_fn_t @var{func}})
+
+@b{Since @i{v1.7.4}}
+
+@cindex fatal error
+Specifies the function @var{func} to call when a fatal error is encountered.
+If @var{func} is @code{NULL}, the default fatal error handler function will
+be reinstated.
+
+@tindex config_fatal_error_fn_t
+The type @i{config_fatal_error_fn_t} is a type alias
+for a function whose signature is:
+
+@deftypefun @w{void} func (@w{const char *@var{message}})
+
+The function receives an error message @var{message}. The function is
+not expected to return to the caller; if it does, the resulting
+behavior is undefined.
+
+@end deftypefun
+
+Fatal errors are unrecoverable, and the only reasonable course of
+action is to abort the calling process. The default fatal error
+handler function writes a message to standard error and then calls
+@code{abort()}. One potential alternate implementation would be to
+call @code{exit()} with an exit status that indicates to the parent
+process (such as a watchdog process) that the current process has
+encountered an unrecoverable condition and should be respawned.
+
+In the current implementation, the only condition that will produce a
+fatal error is a memory allocation failure---that is, a @code{NULL}
+return value from @code{malloc()}, @code{calloc()}, or
+@code{realloc()}.
+
+@end deftypefun
+
 @deftypefun void config_set_include_dir (@w{config_t *@var{config}}, @w{const char *@var{include_dir}})
 @deftypefunx {const char *} config_get_include_dir (@w{const config_t *@var{config}})
 
@@ -879,8 +915,8 @@ implementations of such include functions are not included.
 
 @end deftypefun
 
-@deftypefun {unsigned short} config_get_float_precision(@w{config_t *@var{config}})
-@deftypefunx void config_set_float_precision(@w{config_t *@var{config}}, @w{unsigned short @var{digits}})
+@deftypefun {unsigned short} config_get_float_precision (@w{config_t *@var{config}})
+@deftypefunx void config_set_float_precision (@w{config_t *@var{config}}, @w{unsigned short @var{digits}})
 
 @b{Since @i{v1.6}}
 

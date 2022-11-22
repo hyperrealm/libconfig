@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2020  Mark A Lindner
+   Copyright (C) 2005-2023  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -34,7 +34,7 @@ void libconfig_strvec_append(strvec_t *vec, const char *s)
   if(vec->length == vec->capacity)
   {
     vec->capacity += CHUNK_SIZE;
-    vec->strings = (const char **)realloc(
+    vec->strings = (const char **)libconfig_realloc(
         (void *)vec->strings,
         (vec->capacity + 1) * sizeof(const char *));
     vec->end = vec->strings + vec->length;

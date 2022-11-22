@@ -1,7 +1,7 @@
 /* -*- mode: C -*- */
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2018  Mark A Lindner
+   Copyright (C) 2005-2023  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -42,6 +42,8 @@
 /* These declarations are provided to suppress compiler warnings. */
 extern int libconfig_yylex();
 extern int libconfig_yyget_lineno();
+
+#define YYMALLOC libconfig_malloc
 
 static const char *err_array_elem_type = "mismatched element type in array";
 static const char *err_duplicate_setting = "duplicate setting name";

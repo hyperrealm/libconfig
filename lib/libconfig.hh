@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A structured configuration file parsing library
-   Copyright (C) 2005-2018  Mark A Lindner
+   Copyright (C) 2005-2023  Mark A Lindner
 
    This file is part of libconfig.
 

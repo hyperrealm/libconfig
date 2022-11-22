@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2020  Mark A Lindner
+   Copyright (C) 2005-2023  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -38,7 +38,7 @@ void libconfig_strbuf_ensure_capacity(strbuf_t *buf, size_t len)
   if(newlen > buf->capacity)
   {
     buf->capacity = (newlen + (STRING_BLOCK_SIZE - 1)) & mask;
-    buf->string = (char *)realloc(buf->string, buf->capacity);
+    buf->string = (char *)libconfig_realloc(buf->string, buf->capacity);
   }
 }
 
