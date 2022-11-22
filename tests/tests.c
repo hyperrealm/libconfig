@@ -638,6 +638,32 @@ TT_TEST(SettingLookups)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(ReadStream)
+{
+  config_t cfg;
+  int ok;
+  FILE *stream;
+
+  config_init(&cfg);
+  config_set_include_dir(&cfg, "./testdata");
+
+  stream = fopen("testdata/nesting.cfg", "rt");
+  TT_ASSERT_PTR_NOTNULL(stream);
+
+  ok = config_read(&cfg, stream);
+
+  fclose(stream);
+  
+  if(!ok)
+  {
+    printf("error: %s:%d\n", config_error_text(&cfg),
+           config_error_line(&cfg));
+  }
+  TT_ASSERT_TRUE(ok);
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
   int failures;
@@ -657,6 +683,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, EscapedStrings);
   TT_SUITE_TEST(LibConfigTests, OverrideSetting);
   TT_SUITE_TEST(LibConfigTests, SettingLookups);
+  TT_SUITE_TEST(LibConfigTests, ReadStream);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);
