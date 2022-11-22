@@ -102,11 +102,6 @@
 #ifndef _HPUX_ALT_XOPEN_SOCKET_API
 # undef _HPUX_ALT_XOPEN_SOCKET_API
 #endif
-/* Identify the host operating system as Minix.
-   This macro does not affect the system headers' behavior.
-   A future release of Autoconf may stop defining this macro.  */
-#ifndef _MINIX
-# undef _MINIX
 #endif
 /* Enable general extensions on NetBSD.
    Enable NetBSD compatibility extensions on Minix.  */
@@ -175,6 +170,9 @@
 /* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
    `char[]'. */
 #undef YYTEXT_POINTER
+
+/* Define to 1 if on MINIX. */
+#undef _MINIX
 
 /* Define to empty if `const' does not conform to ANSI C. */
 #undef const
