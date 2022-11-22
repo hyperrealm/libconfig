@@ -43,6 +43,7 @@
 #include <windows.h>
 
 #define fileno _fileno
+#define write _write
 
 #if _MSC_VER <= 1800
 #define snprintf  _snprintf
@@ -112,6 +113,10 @@ extern int fsync(int fd);
   ((P)[0] != '/')
 
 #include <unistd.h> /* for fsync() */
+
+#ifndef STDERR_FILENO
+#define STDERR_FILENO 2
+#endif
 
 #endif /* defined(WIN32/WIN64) && ! defined(__MINGW32__) */
 
