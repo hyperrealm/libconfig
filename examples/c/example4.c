@@ -89,7 +89,10 @@ static const char **include_func(config_t *config,
   {
     while((dir_entry = readdir(dp)) != NULL)
     {
-      snprintf(file_path, PATH_MAX, "%s/%s", include_path, dir_entry->d_name);
+      int r = snprintf(file_path, PATH_MAX, "%s/%s", include_path,
+                       dir_entry->d_name);
+      if(r < 0) abort(); // Handle possible truncation of very long path
+      
       if(lstat(file_path, &stat_buf) != 0) continue;
       if(!S_ISREG(stat_buf.st_mode)) continue;
       if(fnmatch(path, file_path, FNM_PATHNAME) != 0) continue;

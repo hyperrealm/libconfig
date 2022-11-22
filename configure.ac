@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(libconfig, 1.7.4, hyperrealm@gmail.com, libconfig,
-	[https://hyperrealm.github.io/libconfig/])
+AC_INIT([libconfig],[1.7.4],[hyperrealm@gmail.com],[libconfig],
+        [https://hyperrealm.github.io/libconfig/])
 AC_CONFIG_AUX_DIR([aux-build])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_TARGET
@@ -16,18 +16,16 @@ sleep 3
 AC_DEFINE_UNQUOTED(TARGET, "${target}", [Configured target name.])
 
 # Enable GNU extensions.
-AC_GNU_SOURCE
+AC_USE_SYSTEM_EXTENSIONS
 
-LT_INIT()
+LT_INIT(win32-dll)
 
 dnl Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_PROG_CXX
-AC_LIBTOOL_WIN32_DLL
-AC_PROG_LIBTOOL
 
-AM_PROG_LEX
+AM_PROG_LEX(noyywrap)
 if test Z"$LEX" != Zflex; then
 cat <<EOF
 *******************************************************************
@@ -38,7 +36,7 @@ the scanner.l file.
 EOF
 fi
 
-AC_PROG_YACC
+AC_PROG_YACC(noyywrap)
 if test Z"$YACC" != "Zbison -y"; then
 cat <<EOF
 *******************************************************************
@@ -75,7 +73,8 @@ fi;
 
 
 dnl Checks for header files.
-AC_HEADER_STDC
+AC_CHECK_INCLUDES_DEFAULT
+
 AC_CHECK_HEADERS(unistd.h stdint.h xlocale.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
@@ -146,8 +145,7 @@ AM_CONDITIONAL(GNU_WIN, test x$gnuwin = xyes)
 
 dnl Checks for library functions.
 
-AC_OUTPUT(
-	Makefile
+AC_CONFIG_FILES([Makefile
 	lib/Makefile
 	lib/libconfig.pc
 	lib/libconfig++.pc
@@ -160,4 +158,5 @@ AC_OUTPUT(
 	tinytest/Makefile
 	tests/Makefile
 	libconfig.spec
-	)
+	])
+AC_OUTPUT

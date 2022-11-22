@@ -653,7 +653,7 @@ int config_read_file(config_t *config, const char *filename)
   if(stream != NULL)
   {
     // On some operating systems, fopen() succeeds on a directory.
-    int fd = fileno(stream);
+    int fd = posix_fileno(stream);
     struct stat statbuf;
 
     if(fstat(fd, &statbuf) == 0)
@@ -696,11 +696,11 @@ int config_write_file(config_t *config, const char *filename)
 
   if(config_get_option(config, CONFIG_OPTION_FSYNC))
   {
-    int fd = fileno(stream);
+    int fd = posix_fileno(stream);
 
     if(fd >= 0)
     {
-      if(fsync(fd) != 0)
+      if(posix_fsync(fd) != 0)
       {
         fclose(stream);
         config->error_text = __io_error;

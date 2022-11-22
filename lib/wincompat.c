@@ -28,7 +28,7 @@
 #include <errno.h>
 #include <io.h>
 
-int fsync(int fd)
+int posix_fsync(int fd)
 {
   HANDLE h = (HANDLE)_get_osfhandle(fd);
   if(h == INVALID_HANDLE_VALUE)
