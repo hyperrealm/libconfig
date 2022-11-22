@@ -563,7 +563,7 @@ Boolean values may have one of the following values: @samp{true},
 String values consist of arbitrary text delimited by double
 quotes. Literal double quotes can be escaped by preceding them with a
 backslash: @samp{\"}. The escape sequences @samp{\\}, @samp{\f},
-@samp{\n}, @samp{\r}, and @samp{\t} are also recognized, and have the
+@samp{\n}, @samp{\r}, @samp{\a}, @samp{\b}, @samp{\v} and @samp{\t} are also recognized, and have the
 usual meaning.
 
 In addition, the @samp{\x} escape sequence is supported; this sequence
