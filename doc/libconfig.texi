@@ -1075,12 +1075,30 @@ setting was not found.
 
 @end deftypefun
 
+@deftypefun {const config_setting_t *} config_lookup_const (@w{const config_t * @var{config}}, @w{const char * @var{path}})
+
+@b{Since @i{v1.7.4}}
+
+This function is identical to @code{config_lookup()}, except that the
+setting is returned as a @code{const} structure.
+
+@end deftypefun
+
 @deftypefun {config_setting_t *} config_setting_lookup (@w{const config_setting_t * @var{setting}}, @w{const char * @var{path}})
 
 This function locates a setting by a path @var{path} relative to
 the setting @var{setting}. It returns a pointer to the
 @code{config_setting_t} structure on success, or @code{NULL} if the
 setting was not found.
+
+@end deftypefun
+
+@deftypefun {const config_setting_t *} config_setting_lookup_const (@w{const config_setting_t * @var{setting}}, @w{const char * @var{path}})
+
+@b{Since @i{v1.7.4}}
+
+This function is identical to @code{config_setting_lookup()}, except that the
+setting is returned as a @code{const} structure.
 
 @end deftypefun
 

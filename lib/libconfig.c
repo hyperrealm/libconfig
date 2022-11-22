@@ -1199,11 +1199,11 @@ unsigned short config_setting_get_format(const config_setting_t *setting)
 
 /* ------------------------------------------------------------------------- */
 
-config_setting_t *config_setting_lookup(config_setting_t *setting,
-                                        const char *path)
+const config_setting_t *config_setting_lookup_const(
+  const config_setting_t *setting, const char *path)
 {
   const char *p = path;
-  config_setting_t *found = setting;
+  const config_setting_t *found = setting;
 
   while(*p && found)
   {
@@ -1240,7 +1240,23 @@ config_setting_t *config_setting_lookup(config_setting_t *setting,
 
 /* ------------------------------------------------------------------------- */
 
+config_setting_t *config_setting_lookup(const config_setting_t *setting,
+                                        const char *path)
+{
+  return((config_setting_t *)config_setting_lookup_const(setting, path));
+}
+
+/* ------------------------------------------------------------------------- */
+
 config_setting_t *config_lookup(const config_t *config, const char *path)
+{
+  return(config_setting_lookup(config->root, path));
+}
+
+/* ------------------------------------------------------------------------- */
+
+const config_setting_t *config_lookup_const(const config_t *config,
+                                            const char *path)
 {
   return(config_setting_lookup(config->root, path));
 }
@@ -1554,6 +1570,9 @@ config_setting_t *config_setting_get_member(const config_setting_t *setting,
   if(setting->type != CONFIG_TYPE_GROUP)
     return(NULL);
 
+  if(!name)
+    return(NULL);
+
   return(__config_list_search(setting->value.list, name, strlen(name), NULL));
 }
 
@@ -1642,7 +1661,7 @@ int config_setting_remove(config_setting_t *parent, const char *name)
   const char *settingName;
   const char *lastFound;
 
-  if(! parent)
+  if(! parent || !name)
     return(CONFIG_FALSE);
 
   if(parent->type != CONFIG_TYPE_GROUP)

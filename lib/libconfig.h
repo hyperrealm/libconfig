@@ -306,8 +306,13 @@ extern LIBCONFIG_API void config_setting_set_hook(config_setting_t *setting,
 
 extern LIBCONFIG_API config_setting_t *config_lookup(const config_t *config,
                                                      const char *path);
+extern LIBCONFIG_API const config_setting_t *config_lookup_const(
+  const config_t *config, const char *path);
+  
 extern LIBCONFIG_API config_setting_t *config_setting_lookup(
-  config_setting_t *setting, const char *path);
+  const config_setting_t *setting, const char *path);
+extern LIBCONFIG_API const config_setting_t *config_setting_lookup_const(
+  const config_setting_t *setting, const char *path);
 
 extern LIBCONFIG_API int config_lookup_int(const config_t *config,
                                            const char *path, int *value);
