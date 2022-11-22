@@ -33,6 +33,7 @@
 #define _STDLIB_H
 #endif
 
+#include <io.h>
 #include <malloc.h>
 
 #ifdef _MSC_VER
@@ -64,6 +65,10 @@
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__) \
   || defined(WIN64) || defined(_WIN64) || defined(__WIN64__) \
   || defined(__MINGW32__))
+
+#ifndef STDERR_FILENO
+#define STDERR_FILENO 2
+#endif
 
 #define INT64_FMT "%I64d"
 #define UINT64_FMT "%I64u"
@@ -104,7 +109,7 @@
 
 extern int fsync(int fd);
 
-#else /* defined(WIN32/WIN64) && ! defined(__MINGW32__) */
+#else /* !( defined(WIN32/WIN64) && ! defined(__MINGW32__) ) */
 
 #define INT64_CONST(I)  (I ## LL)
 #define UINT64_CONST(I) (I ## ULL)
@@ -113,10 +118,6 @@ extern int fsync(int fd);
   ((P)[0] != '/')
 
 #include <unistd.h> /* for fsync() */
-
-#ifndef STDERR_FILENO
-#define STDERR_FILENO 2
-#endif
 
 #endif /* defined(WIN32/WIN64) && ! defined(__MINGW32__) */
 
