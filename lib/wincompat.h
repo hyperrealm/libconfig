@@ -44,7 +44,7 @@
 #include <windows.h>
 
 #define fileno _fileno
-#define write _write
+#define posix_write _write
 
 #if _MSC_VER <= 1800
 #define snprintf  _snprintf
@@ -110,6 +110,8 @@
 extern int fsync(int fd);
 
 #else /* !( defined(WIN32/WIN64) && ! defined(__MINGW32__) ) */
+
+#define posix_write write
 
 #define INT64_CONST(I)  (I ## LL)
 #define UINT64_CONST(I) (I ## ULL)

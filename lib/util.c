@@ -32,7 +32,7 @@
 
 void libconfig_fatal_error_handler(const char *message)
 {
-  if(write(STDERR_FILENO, (const void *)message, strlen(message))) {}
+  if(posix_write(STDERR_FILENO, (const void *)message, strlen(message))) {}
   abort();
 }
 
