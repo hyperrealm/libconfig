@@ -125,32 +125,6 @@ static void __config_locale_restore(void)
 
 /* ------------------------------------------------------------------------- */
 
-static int __config_name_compare(const char *a, const char *b)
-{
-  const char *p, *q;
-
-  for(p = a, q = b; ; p++, q++)
-  {
-    int pd = ((! *p) || strchr(PATH_TOKENS, *p));
-    int qd = ((! *q) || strchr(PATH_TOKENS, *q));
-
-    if(pd && qd)
-      break;
-    else if(pd)
-      return(-1);
-    else if(qd)
-      return(1);
-    else if(*p < *q)
-      return(-1);
-    else if(*p > *q)
-      return(1);
-  }
-
-  return(0);
-}
-
-/* ------------------------------------------------------------------------- */
-
 static void __config_indent(FILE *stream, int depth, unsigned short w)
 {
   if(w)
@@ -385,8 +359,12 @@ static void __config_list_add(config_list_t *list, config_setting_t *setting)
 
 /* ------------------------------------------------------------------------- */
 
+/* This function takes the length of the name to be searched for, so that one
+ * component of a longer path can be passed in.
+ */
 static config_setting_t *__config_list_search(config_list_t *list,
                                               const char *name,
+                                              size_t namelen,
                                               unsigned int *idx)
 {
   config_setting_t **found = NULL;
@@ -400,7 +378,8 @@ static config_setting_t *__config_list_search(config_list_t *list,
     if(! (*found)->name)
       continue;
 
-    if(! __config_name_compare(name, (*found)->name))
+    if((strlen((*found)->name) == namelen)
+        && !strncmp(name, (*found)->name, namelen))
     {
       if(idx)
         *idx = i;
@@ -1226,27 +1205,37 @@ config_setting_t *config_setting_lookup(config_setting_t *setting,
   const char *p = path;
   config_setting_t *found = setting;
 
-  for(;;)
+  while(*p && found)
   {
-    while(*p && strchr(PATH_TOKENS, *p))
-      p++;
-
-    if(! *p)
-      break;
+    if(strchr(PATH_TOKENS, *p))
+      ++p;
 
     if(*p == '[')
-      found = config_setting_get_elem(found, atoi(++p));
+    {
+      char *q;
+      long index = strtol(++p, &q, 10);
+      if(*q != ']')
+        return NULL;
+
+      p = ++q;
+      found = config_setting_get_elem(found, index);
+    }
+    else if(found->type == CONFIG_TYPE_GROUP)
+    {
+      const char *q = p;
+
+      while(*q && !strchr(PATH_TOKENS, *q))
+        ++q;
+
+      found = __config_list_search(found->value.list, p, (size_t)(q - p),
+                                   NULL);
+      p = q;
+    }
     else
-      found = config_setting_get_member(found, p);
-
-    if(! found)
       break;
-
-    while(! strchr(PATH_TOKENS, *p))
-      p++;
   }
 
-  return(*p || (found == setting) ? NULL : found);
+  return((*p || (found == setting)) ? NULL : found);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1565,7 +1554,7 @@ config_setting_t *config_setting_get_member(const config_setting_t *setting,
   if(setting->type != CONFIG_TYPE_GROUP)
     return(NULL);
 
-  return(__config_list_search(setting->value.list, name, NULL));
+  return(__config_list_search(setting->value.list, name, strlen(name), NULL));
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1676,9 +1665,11 @@ int config_setting_remove(config_setting_t *parent, const char *name)
       break;
     }
 
-  }while(*++settingName);
+  }
+  while(*++settingName);
 
-  if(!(setting = __config_list_search(setting->parent->value.list, settingName, &idx)))
+  if(!(setting = __config_list_search(setting->parent->value.list, settingName,
+                                      strlen(settingName), &idx)))
     return(CONFIG_FALSE);
 
   __config_list_remove(setting->parent->value.list, idx);

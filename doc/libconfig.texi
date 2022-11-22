@@ -1419,7 +1419,7 @@ These methods construct @code{SettingTypeException} objects for the given @var{s
 @tindex SettingRangeException
 A @code{SettingRangeException} is thrown when an attempt is made to
 read a 64-bit integer configuration setting into an integer variable,
-and that value of the setting is outside the range of an integer.
+and the value of that setting is outside the range of an integer.
 
 @deftypemethod SettingRangeException {} SettingRangeException (@w{const Setting &@var{setting}})
 @deftypemethodx SettingRangeException {} SettingRangeException (@w{const Setting &@var{setting}}, @w{int @var{index}})

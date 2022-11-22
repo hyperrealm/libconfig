@@ -482,6 +482,15 @@ TT_TEST(EscapedStrings)
   TT_ASSERT_TRUE(ok);
   TT_ASSERT_STR_EQ("abc\"def\"", str);
 
+  ok = config_lookup_string(&cfg, "escape_seqs.dquote.[0]", &str);
+  TT_ASSERT_FALSE(ok);
+
+  ok = config_lookup_string(&cfg, "escape_seqs.dquote.extrajunk", &str);
+  TT_ASSERT_FALSE(ok);
+
+  ok = config_lookup_string(&cfg, "escape_seqs.dquote.", &str);
+  TT_ASSERT_TRUE(ok);
+
   config_destroy(&cfg);
 }
 
@@ -545,6 +554,90 @@ TT_TEST(OverrideSetting)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(SettingLookups)
+{
+  config_t cfg;
+  int ok;
+  int ival;
+  const char *str;
+  config_setting_t *setting, *parent;
+
+  config_init(&cfg);
+  config_set_options(&cfg, CONFIG_OPTION_ALLOW_OVERRIDES);
+  config_set_include_dir(&cfg, "./testdata");
+
+  ok = config_read_file(&cfg, "testdata/nesting.cfg");
+  if(!ok)
+  {
+    printf("error: %s:%d\n", config_error_text(&cfg),
+           config_error_line(&cfg));
+  }
+  TT_ASSERT_TRUE(ok);
+
+  ok = config_lookup_string(&cfg, "foo.[0].string", &str);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_STR_EQ("orange", str);
+
+  ok = config_lookup_int(&cfg, "foo.[1].array.[3]", &ival);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_INT_EQ(4, ival);
+
+  ok = config_lookup_bool(&cfg, "foo.[1].flag", &ival);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_INT_EQ(CONFIG_TRUE, ival);
+
+  ok = config_lookup_int(&cfg, "foo.[2].number", &ival);
+  TT_ASSERT_TRUE(ok);
+  TT_ASSERT_INT_EQ(7, ival);
+
+  ok = config_lookup_string(&cfg, "foo.[0].string.blah", &str);
+  TT_ASSERT_FALSE(ok);
+
+  ok = config_lookup_string(&cfg, "foo.[0].string.[0]", &str);
+  TT_ASSERT_FALSE(ok);
+
+  ok = config_lookup_string(&cfg, "foo.[0].[1]", &str);
+  TT_ASSERT_FALSE(ok);
+  
+  ok = config_lookup_string(&cfg, "foo.[0].array.[0].blah", &str);
+  TT_ASSERT_FALSE(ok);
+
+  ok = config_lookup_string(&cfg, "[0]", &str);
+  TT_ASSERT_FALSE(ok);
+
+  setting = config_lookup(&cfg, "foo.[0].array.[0]");
+  TT_ASSERT_PTR_NOTNULL(setting);
+
+  setting = config_lookup(&cfg, "foo.[0].array.[0");
+  TT_ASSERT_PTR_NULL(setting);
+  
+  setting = config_lookup(&cfg, "/foo.[0].array.[0]");
+  TT_ASSERT_PTR_NOTNULL(setting);
+
+  setting = config_lookup(&cfg, "/foo/[0]/array/[0]");
+  TT_ASSERT_PTR_NOTNULL(setting);
+
+  parent = config_lookup(&cfg, ".foo");
+  TT_ASSERT_PTR_NOTNULL(parent);
+
+  setting = config_setting_lookup(parent, ".[0]");
+  TT_ASSERT_PTR_NOTNULL(setting);
+  
+  setting = config_setting_lookup(parent, ".[0].array");
+  TT_ASSERT_PTR_NOTNULL(setting);
+
+  setting = config_setting_lookup(parent, ".[0].array.[1]");
+  TT_ASSERT_PTR_NOTNULL(setting);
+
+  setting = config_setting_lookup(parent, "[0].array.[1000]");
+  TT_ASSERT_PTR_NULL(setting);
+
+  setting = config_setting_lookup(parent, "[0].array.[0].blah");
+  TT_ASSERT_PTR_NULL(setting);
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
   int failures;
@@ -563,6 +656,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, RemoveSetting);
   TT_SUITE_TEST(LibConfigTests, EscapedStrings);
   TT_SUITE_TEST(LibConfigTests, OverrideSetting);
+  TT_SUITE_TEST(LibConfigTests, SettingLookups);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);
