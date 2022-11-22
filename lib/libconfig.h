@@ -171,9 +171,9 @@ extern LIBCONFIG_API void config_set_hook(config_t *config, void *hook);
 
 #define config_get_hook(C) ((C)->hook)
 
-extern LIBCONFIG_API void config_init(config_t *config);
+extern LIBCONFIG_API int config_init(config_t *config);
 extern LIBCONFIG_API void config_destroy(config_t *config);
-extern LIBCONFIG_API void config_clear(config_t *config);
+extern LIBCONFIG_API int config_clear(config_t *config);
 
 extern LIBCONFIG_API void config_set_fatal_error_func(
   config_fatal_error_fn_t func);

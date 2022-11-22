@@ -538,7 +538,9 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
   struct parse_context parse_ctx;
   int r;
 
-  config_clear(config);
+  int status = config_clear(config);
+  if (status == -1)
+	  return CONFIG_FALSE; 
 
   libconfig_parsectx_init(&parse_ctx);
   parse_ctx.config = config;
@@ -727,7 +729,7 @@ void config_destroy(config_t *config)
 
 /* ------------------------------------------------------------------------- */
 
-void config_clear(config_t *config)
+int config_clear(config_t *config)
 {
   /* Destroy the root setting (recursively) and then create a new one. */
   __config_setting_destroy(config->root);
@@ -736,8 +738,11 @@ void config_clear(config_t *config)
   config->filenames = NULL;
 
   config->root = __new(config_setting_t);
+  if (config->root == NULL)
+	  return -1;
   config->root->type = CONFIG_TYPE_GROUP;
   config->root->config = config;
+  return 0;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -771,10 +776,12 @@ unsigned short config_get_float_precision(const config_t *config)
 
 /* ------------------------------------------------------------------------- */
 
-void config_init(config_t *config)
+int config_init(config_t *config)
 {
   __zero(config);
-  config_clear(config);
+  int status = config_clear(config);
+  if (status < 0)
+	  return status;
 
   /* Set default options. */
   config->options = (CONFIG_OPTION_SEMICOLON_SEPARATORS
@@ -783,6 +790,7 @@ void config_init(config_t *config)
   config->tab_width = DEFAULT_TAB_WIDTH;
   config->float_precision = DEFAULT_FLOAT_PRECISION;
   config->include_fn = config_default_include_func;
+  return 0;
 }
 
 /* ------------------------------------------------------------------------- */
