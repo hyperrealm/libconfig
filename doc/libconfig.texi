@@ -1014,7 +1014,7 @@ See @code{config_set_options()} above for the list of available options.
 @deftypefun int config_get_auto_convert (@w{const config_t *@var{config}})
 @deftypefunx void config_set_auto_convert (@w{config_t *@var{config}}, @w{int @var{flag}})
 
-These functions get and set the @code{CONFIG_OPTION_AUTO_CONVERT}
+These functions get and set the @code{CONFIG_OPTION_AUTOCONVERT}
 option. They are obsoleted by the @code{config_set_option()} and
 @code{config_get_option()} functions described above.
 
@@ -1413,6 +1413,20 @@ value does not match the type requested.
 @deftypemethodx SettingTypeException {} SettingTypeException (@w{const Setting &@var{setting}}, @w{const char *@var{name}})
 
 These methods construct @code{SettingTypeException} objects for the given @var{setting} and/or member @var{index} or @var{name}.
+
+@end deftypemethod
+
+@tindex SettingRangeException
+A @code{SettingRangeException} is thrown when an attempt is made to
+read a 64-bit integer configuration setting into an integer variable,
+and that value of the setting is outside the range of an integer.
+
+@deftypemethod SettingRangeException {} SettingRangeException (@w{const Setting &@var{setting}})
+@deftypemethodx SettingRangeException {} SettingRangeException (@w{const Setting &@var{setting}}, @w{int @var{index}})
+@deftypemethodx SettingRangeException {} SettingRangeException (@w{const Setting &@var{setting}}, @w{const char *@var{name}})
+@b{Since @i{v1.7.4}}
+
+These methods construct @code{SettingRangeException} objects for the given @var{setting} and/or member @var{index} or @var{name}.
 
 @end deftypemethod
 
@@ -1896,6 +1910,12 @@ std::string title;
 title = config.lookup("application.window.title").c_str();
 @end smallexample
 @end cartouche
+
+If the setting value is a 64-bit integer, and is being assigned to a
+smaller integer type such as @code{int} or @code{unsigned long}, but
+the value is outside the range of that type, a
+@code{SettingRangeException} is thrown; otherwise the value is
+silently cast to that type.
 
 If the assignment is invalid due to a type mismatch, a
 @code{SettingTypeException} is thrown.

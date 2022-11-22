@@ -264,6 +264,35 @@ const char *SettingTypeException::what() const LIBCONFIGXX_NOEXCEPT
 
 // ---------------------------------------------------------------------------
 
+SettingRangeException::SettingRangeException(const Setting &setting)
+  : SettingException(setting)
+{
+}
+
+// ---------------------------------------------------------------------------
+
+SettingRangeException::SettingRangeException(const Setting &setting, int idx)
+  : SettingException(setting, idx)
+{
+}
+
+// ---------------------------------------------------------------------------
+
+SettingRangeException::SettingRangeException(const Setting &setting,
+                                             const char *name)
+  : SettingException(setting, name)
+{
+}
+
+// ---------------------------------------------------------------------------
+
+const char *SettingRangeException::what() const LIBCONFIGXX_NOEXCEPT
+{
+  return("SettingRangeException");
+}
+
+// ---------------------------------------------------------------------------
+
 SettingNotFoundException::SettingNotFoundException(const Setting &setting,
                                                    int idx)
   : SettingException(setting, idx)
@@ -697,6 +726,15 @@ Setting::operator bool() const
 
 Setting::operator int() const
 {
+  if(_type == TypeInt64)
+  {
+    long long val = config_setting_get_int64(_setting);
+    if((val < INT_MIN) || (val > INT_MAX))
+      throw SettingRangeException(*this);
+
+    return((int)val);
+  }
+
   assertType(TypeInt);
 
   return(config_setting_get_int(_setting));
@@ -706,6 +744,15 @@ Setting::operator int() const
 
 Setting::operator unsigned int() const
 {
+  if(_type == TypeInt64)
+  {
+    long long val = config_setting_get_int64(_setting);
+    if((val < 0) || (val > UINT_MAX))
+      throw SettingRangeException(*this);
+
+    return((unsigned int)val);
+  }
+
   assertType(TypeInt);
 
   int v = config_setting_get_int(_setting);
@@ -737,6 +784,9 @@ Setting::operator unsigned long() const
 
 Setting::operator long long() const
 {
+  if(_type == TypeInt)
+    return((long long)config_setting_get_int(_setting));
+
   assertType(TypeInt64);
 
   return(config_setting_get_int64(_setting));
@@ -746,6 +796,9 @@ Setting::operator long long() const
 
 Setting::operator unsigned long long() const
 {
+  if(_type == TypeInt)
+    return((unsigned long long)config_setting_get_int(_setting));
+
   assertType(TypeInt64);
 
   long long v = config_setting_get_int64(_setting);

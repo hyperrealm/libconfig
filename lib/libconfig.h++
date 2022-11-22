@@ -94,6 +94,17 @@ class LIBCONFIGXX_API SettingTypeException : public SettingException
   virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
 };
 
+class LIBCONFIGXX_API SettingRangeException : public SettingException
+{
+  public:
+
+  SettingRangeException(const Setting &setting);
+  SettingRangeException(const Setting &setting, int idx);
+  SettingRangeException(const Setting &setting, const char *name);
+
+  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
+};
+
 class LIBCONFIGXX_API SettingNotFoundException : public SettingException
 {
   public:
