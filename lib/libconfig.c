@@ -1198,7 +1198,7 @@ int config_setting_set_string(config_setting_t *setting, const char *value)
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_set_format(config_setting_t *setting, short format)
+int config_setting_set_format(config_setting_t *setting, unsigned short format)
 {
   if(((setting->type != CONFIG_TYPE_INT)
       && (setting->type != CONFIG_TYPE_INT64))
@@ -1212,7 +1212,7 @@ int config_setting_set_format(config_setting_t *setting, short format)
 
 /* ------------------------------------------------------------------------- */
 
-short config_setting_get_format(const config_setting_t *setting)
+unsigned short config_setting_get_format(const config_setting_t *setting)
 {
   return(setting->format != 0 ? setting->format
          : setting->config->default_format);

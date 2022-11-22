@@ -1020,8 +1020,8 @@ option. They are obsoleted by the @code{config_set_option()} and
 
 @end deftypefun
 
-@deftypefun short config_get_default_format (@w{config_t * @var{config}})
-@deftypefunx void config_set_default_format (@w{config_t * @var{config}}, @w{short @var{format}})
+@deftypefun {unsigned short} config_get_default_format (@w{config_t * @var{config}})
+@deftypefunx void config_set_default_format (@w{config_t * @var{config}}, @w{unsigned short @var{format}})
 
 These functions, which are implemented as macros, get and set the
 default external format for settings in the configuration
@@ -1134,8 +1134,8 @@ be freed by the caller.
 
 @end deftypefun
 
-@deftypefun short config_setting_get_format (@w{config_setting_t * @var{setting}})
-@deftypefunx int config_setting_set_format (@w{config_setting_t * @var{setting}}, @w{short @var{format}})
+@deftypefun {unsigned short} config_setting_get_format (@w{config_setting_t * @var{setting}})
+@deftypefunx int config_setting_set_format (@w{config_setting_t * @var{setting}}, @w{unsigned short @var{format}})
 
 These functions get and set the external format for the setting @var{setting}.
 

@@ -82,8 +82,8 @@ typedef union config_value_t
 typedef struct config_setting_t
 {
   char *name;
-  short type;
-  short format;
+  unsigned short type;
+  unsigned short format;
   config_value_t value;
   struct config_setting_t *parent;
   struct config_t *config;
@@ -134,7 +134,7 @@ extern LIBCONFIG_API int config_read(config_t *config, FILE *stream);
 extern LIBCONFIG_API void config_write(const config_t *config, FILE *stream);
 
 extern LIBCONFIG_API void config_set_default_format(config_t *config,
-                                                    short format);
+                                                    unsigned short format);
 
 extern LIBCONFIG_API void config_set_options(config_t *config, int options);
 extern LIBCONFIG_API int config_get_options(const config_t *config);
@@ -212,8 +212,8 @@ extern LIBCONFIG_API int config_setting_set_string(config_setting_t *setting,
                                                    const char *value);
 
 extern LIBCONFIG_API int config_setting_set_format(config_setting_t *setting,
-                                                   short format);
-extern LIBCONFIG_API short config_setting_get_format(
+                                                   unsigned short format);
+extern LIBCONFIG_API unsigned short config_setting_get_format(
   const config_setting_t *setting);
 
 extern LIBCONFIG_API int config_setting_get_int_elem(
@@ -327,10 +327,10 @@ extern LIBCONFIG_API int config_lookup_string(const config_t *config,
   ((C)->root)
 
 #define  /* void */ config_set_default_format(/* config_t * */ C,       \
-                                              /* short */ F)            \
+                                              /* unsigned short */ F)   \
   (C)->default_format = (F)
 
-#define /* short */ config_get_default_format(/* config_t * */ C)       \
+#define /* unsigned short */ config_get_default_format(/* config_t * */ C) \
   ((C)->default_format)
 
 #define /* unsigned short */ config_setting_source_line(   \
