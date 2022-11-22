@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2018  Mark A Lindner
+   Copyright (C) 2005-2023  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -23,7 +23,15 @@
 #include <string.h>
 #include <sys/types.h>
 
-#define __new(T) (T *)calloc(1, sizeof(T)) /* zeroed */
+extern void libconfig_set_fatal_error_func(void (*func)(const char *));
+
+extern void libconfig_fatal_error(const char *message);
+
+extern void *libconfig_malloc(size_t size);
+extern void *libconfig_calloc(size_t nmemb, size_t size);
+extern void *libconfig_realloc(void *ptr, size_t size);
+
+#define __new(T) (T *)libconfig_calloc(1, sizeof(T)) /* zeroed */
 #define __delete(P) free((void *)(P))
 #define __zero(P) memset((void *)(P), 0, sizeof(*P))
 

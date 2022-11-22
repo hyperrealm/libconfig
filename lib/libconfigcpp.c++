@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2018  Mark A Lindner
+   Copyright (C) 2005-2023  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -45,6 +45,15 @@ static const char **__include_func(config_t *config,
   (void)include_dir;
   Config *self = reinterpret_cast<Config *>(config_get_hook(config));
   return(self->evaluateIncludePath(path, error));
+}
+
+// ---------------------------------------------------------------------------
+
+static void __fatal_error_func(const char *message)
+{
+  // Assume memory allocation failure; this is the only fatal error
+  // condition currently defined.
+  throw std::bad_alloc();
 }
 
 // ---------------------------------------------------------------------------
@@ -322,6 +331,7 @@ Config::Config()
   config_set_hook(_config, reinterpret_cast<void *>(this));
   config_set_destructor(_config, ConfigDestructor);
   config_set_include_func(_config, __include_func);
+  config_set_fatal_error_func(__fatal_error_func);
 }
 
 // ---------------------------------------------------------------------------

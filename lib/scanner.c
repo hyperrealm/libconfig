@@ -556,6 +556,8 @@ void yyfree ( void * , yyscan_t yyscanner );
 	}
 #define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 
+/* Begin user sect3 */
+
 #define libconfig_yywrap(yyscanner) (/*CONSTCOND*/1)
 #define YY_SKIP_YYWRAP
 typedef flex_uint8_t YY_CHAR;
@@ -760,7 +762,7 @@ static const flex_int32_t yy_rule_can_match_eol[45] =
 /* -*- mode: C -*- */
 /* --------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2020  Mark A Lindner
+   Copyright (C) 2005-2023  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -780,7 +782,7 @@ static const flex_int32_t yy_rule_can_match_eol[45] =
    ----------------------------------------------------------------------------
 */
 #define YY_NO_UNISTD_H 1
-#line 36 "scanner.l"
+#line 37 "scanner.l"
 
 #ifdef _MSC_VER
 #pragma warning (disable: 4996)
@@ -800,9 +802,9 @@ static const flex_int32_t yy_rule_can_match_eol[45] =
 
 #define YY_NO_INPUT // Suppress generation of useless input() function
 
-#line 803 "scanner.c"
-
 #line 805 "scanner.c"
+
+#line 807 "scanner.c"
 
 #define INITIAL 0
 #define SINGLE_LINE_COMMENT 1
@@ -1079,10 +1081,10 @@ YY_DECL
 		}
 
 	{
-#line 70 "scanner.l"
+#line 71 "scanner.l"
 
 
-#line 1085 "scanner.c"
+#line 1087 "scanner.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1150,85 +1152,85 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 72 "scanner.l"
+#line 73 "scanner.l"
 { BEGIN SINGLE_LINE_COMMENT; }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 73 "scanner.l"
+#line 74 "scanner.l"
 { BEGIN INITIAL; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 74 "scanner.l"
+#line 75 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 76 "scanner.l"
+#line 77 "scanner.l"
 { BEGIN MULTI_LINE_COMMENT; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 77 "scanner.l"
+#line 78 "scanner.l"
 { BEGIN INITIAL; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 78 "scanner.l"
+#line 79 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 79 "scanner.l"
+#line 80 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 81 "scanner.l"
+#line 82 "scanner.l"
 { BEGIN STRING; }
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 82 "scanner.l"
+#line 83 "scanner.l"
 { libconfig_scanctx_append_string(yyextra, yytext); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 83 "scanner.l"
+#line 84 "scanner.l"
 { libconfig_scanctx_append_char(yyextra, '\n'); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 84 "scanner.l"
+#line 85 "scanner.l"
 { libconfig_scanctx_append_char(yyextra, '\r'); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 85 "scanner.l"
+#line 86 "scanner.l"
 { libconfig_scanctx_append_char(yyextra, '\t'); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 86 "scanner.l"
+#line 87 "scanner.l"
 { libconfig_scanctx_append_char(yyextra, '\f'); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 87 "scanner.l"
+#line 88 "scanner.l"
 { libconfig_scanctx_append_char(yyextra, '\\'); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 88 "scanner.l"
+#line 89 "scanner.l"
 { libconfig_scanctx_append_char(yyextra, '\"'); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 89 "scanner.l"
+#line 90 "scanner.l"
 {
                     char c = (char)(strtol(yytext + 2, NULL, 16) & 0xFF);
                     libconfig_scanctx_append_char(yyextra, c);
@@ -1236,12 +1238,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 93 "scanner.l"
+#line 94 "scanner.l"
 { libconfig_scanctx_append_char(yyextra, '\\'); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 94 "scanner.l"
+#line 95 "scanner.l"
 {
                     yylval->sval = libconfig_scanctx_take_string(yyextra);
                     BEGIN INITIAL;
@@ -1250,28 +1252,28 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 100 "scanner.l"
+#line 101 "scanner.l"
 { BEGIN INCLUDE; }
 	YY_BREAK
 case 20:
 /* rule 20 can match eol */
 YY_RULE_SETUP
-#line 101 "scanner.l"
+#line 102 "scanner.l"
 { libconfig_scanctx_append_string(yyextra, yytext); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 102 "scanner.l"
+#line 103 "scanner.l"
 { libconfig_scanctx_append_char(yyextra, '\\'); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 103 "scanner.l"
+#line 104 "scanner.l"
 { libconfig_scanctx_append_char(yyextra, '\"'); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 104 "scanner.l"
+#line 105 "scanner.l"
 {
   const char *error = NULL;
   const char *path = libconfig_scanctx_take_string(yyextra);
@@ -1298,57 +1300,57 @@ YY_RULE_SETUP
 case 24:
 /* rule 24 can match eol */
 YY_RULE_SETUP
-#line 127 "scanner.l"
+#line 128 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 128 "scanner.l"
+#line 129 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 130 "scanner.l"
+#line 131 "scanner.l"
 { return(TOK_EQUALS); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 131 "scanner.l"
+#line 132 "scanner.l"
 { return(TOK_COMMA); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 132 "scanner.l"
+#line 133 "scanner.l"
 { return(TOK_GROUP_START); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 133 "scanner.l"
+#line 134 "scanner.l"
 { return(TOK_GROUP_END); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 134 "scanner.l"
+#line 135 "scanner.l"
 { yylval->ival = 1; return(TOK_BOOLEAN); }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 135 "scanner.l"
+#line 136 "scanner.l"
 { yylval->ival = 0; return(TOK_BOOLEAN); }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 136 "scanner.l"
+#line 137 "scanner.l"
 { yylval->sval = yytext; return(TOK_NAME); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 137 "scanner.l"
+#line 138 "scanner.l"
 { yylval->fval = atof(yytext); return(TOK_FLOAT); }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 138 "scanner.l"
+#line 139 "scanner.l"
 {
                     int ok;
                     long long llval = libconfig_parse_integer(yytext, &ok);
@@ -1369,12 +1371,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 155 "scanner.l"
+#line 156 "scanner.l"
 { yylval->llval = atoll(yytext); return(TOK_INTEGER64); }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 156 "scanner.l"
+#line 157 "scanner.l"
 {
                     yylval->ival = strtoul(yytext, NULL, 16);
                     return(TOK_HEX);
@@ -1382,7 +1384,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 160 "scanner.l"
+#line 161 "scanner.l"
 {
                     yylval->llval = libconfig_parse_hex64(yytext);
                     return(TOK_HEX64);
@@ -1390,32 +1392,32 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 164 "scanner.l"
+#line 165 "scanner.l"
 { return(TOK_ARRAY_START); }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 165 "scanner.l"
+#line 166 "scanner.l"
 { return(TOK_ARRAY_END); }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 166 "scanner.l"
+#line 167 "scanner.l"
 { return(TOK_LIST_START); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 167 "scanner.l"
+#line 168 "scanner.l"
 { return(TOK_LIST_END); }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 168 "scanner.l"
+#line 169 "scanner.l"
 { return(TOK_SEMICOLON); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 169 "scanner.l"
+#line 170 "scanner.l"
 { return(TOK_GARBAGE); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
@@ -1423,7 +1425,7 @@ case YY_STATE_EOF(SINGLE_LINE_COMMENT):
 case YY_STATE_EOF(MULTI_LINE_COMMENT):
 case YY_STATE_EOF(STRING):
 case YY_STATE_EOF(INCLUDE):
-#line 171 "scanner.l"
+#line 172 "scanner.l"
 {
   const char *error = NULL;
   FILE *fp;
@@ -1459,10 +1461,10 @@ case YY_STATE_EOF(INCLUDE):
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 203 "scanner.l"
+#line 205 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1465 "scanner.c"
+#line 1467 "scanner.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2582,28 +2584,6 @@ static int yy_flex_strlen (const char * s , yyscan_t yyscanner)
 }
 #endif
 
-void *yyalloc (yy_size_t  size , yyscan_t yyscanner)
-{
-	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	(void)yyg;
-	return malloc(size);
-}
-
-void *yyrealloc  (void * ptr, yy_size_t  size , yyscan_t yyscanner)
-{
-	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	(void)yyg;
-
-	/* The cast to (char *) in the following accommodates both
-	 * implementations that use char* generic pointers, and those
-	 * that use void* generic pointers.  It works with the latter
-	 * because both ANSI C and C++ allow castless assignment from
-	 * any pointer type to void*, and deal with argument conversions
-	 * as though doing an assignment.
-	 */
-	return realloc(ptr, size);
-}
-
 void yyfree (void * ptr , yyscan_t yyscanner)
 {
 	struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
@@ -2613,4 +2593,16 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 203 "scanner.l"
+#line 205 "scanner.l"
+
+
+void *libconfig_yyalloc(size_t bytes, void *yyscanner)
+{
+  return(libconfig_malloc(bytes));
+}
+
+void *libconfig_yyrealloc(void *ptr, size_t bytes, void *yyscanner)
+{
+  return(libconfig_realloc(ptr, bytes));
+}
+

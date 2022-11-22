@@ -1,7 +1,7 @@
 /* -*- mode: C -*- */
 /* --------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2020  Mark A Lindner
+   Copyright (C) 2005-2023  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -31,6 +31,7 @@
 %option header-file="scanner.h"
 %option outfile="lex.yy.c"
 %option extra-type="struct scan_context *"
+%option noyyalloc noyyrealloc
 
 %{
 
@@ -199,4 +200,16 @@ include_open ^[ \t]*@include[ \t]+\"
     else
       yyterminate();
   }
+}
+
+%%
+
+void *libconfig_yyalloc(size_t bytes, void *yyscanner)
+{
+  return(libconfig_malloc(bytes));
+}
+
+void *libconfig_yyrealloc(void *ptr, size_t bytes, void *yyscanner)
+{
+  return(libconfig_realloc(ptr, bytes));
 }

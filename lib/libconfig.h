@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2018  Mark A Lindner
+   Copyright (C) 2005-2023  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -41,7 +41,7 @@ extern "C" {
 
 #define LIBCONFIG_VER_MAJOR    1
 #define LIBCONFIG_VER_MINOR    7
-#define LIBCONFIG_VER_REVISION 0
+#define LIBCONFIG_VER_REVISION 4
 
 #include <stdio.h>
 
@@ -110,6 +110,8 @@ typedef const char ** (*config_include_fn_t)(struct config_t *,
                                              const char *,
                                              const char **);
 
+typedef void (*config_fatal_error_fn_t)(const char *);
+
 typedef struct config_t
 {
   config_setting_t *root;
@@ -172,6 +174,9 @@ extern LIBCONFIG_API void config_set_hook(config_t *config, void *hook);
 extern LIBCONFIG_API void config_init(config_t *config);
 extern LIBCONFIG_API void config_destroy(config_t *config);
 extern LIBCONFIG_API void config_clear(config_t *config);
+
+extern LIBCONFIG_API void config_set_fatal_error_func(
+  config_fatal_error_fn_t func);
 
 extern LIBCONFIG_API int config_setting_get_int(
   const config_setting_t *setting);

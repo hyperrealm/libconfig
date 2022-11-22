@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2020  Mark A Lindner
+   Copyright (C) 2005-2023  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -374,7 +374,7 @@ static void __config_list_add(config_list_t *list, config_setting_t *setting)
 {
   if((list->length % CHUNK_SIZE) == 0)
   {
-    list->elements = (config_setting_t **)realloc(
+    list->elements = (config_setting_t **)libconfig_realloc(
       list->elements,
       (list->length + CHUNK_SIZE) * sizeof(config_setting_t *));
   }
@@ -392,7 +392,7 @@ static config_setting_t *__config_list_search(config_list_t *list,
   config_setting_t **found = NULL;
   unsigned int i;
 
-  if(! list)
+  if(! list || ! name)
     return(NULL);
 
   for(i = 0, found = list->elements; i < list->length; i++, found++)
@@ -821,6 +821,12 @@ int config_get_option(const config_t *config, int option)
 void config_set_hook(config_t *config, void *hook)
 {
   config->hook = hook;
+}
+
+/* ------------------------------------------------------------------------- */
+
+void config_set_fatal_error_func(config_fatal_error_fn_t func) {
+  libconfig_set_fatal_error_func(func);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1741,7 +1747,7 @@ const char **config_default_include_func(config_t *config,
 
   if(include_dir && IS_RELATIVE_PATH(path))
   {
-    file = (char *)malloc(strlen(include_dir) + strlen(path) + 2);
+    file = (char *)libconfig_malloc(strlen(include_dir) + strlen(path) + 2);
     strcpy(file, include_dir);
     strcat(file, FILE_SEPARATOR);
     strcat(file, path);
@@ -1751,7 +1757,7 @@ const char **config_default_include_func(config_t *config,
 
   *error = NULL;
 
-  files = (const char **)malloc(sizeof(char **) * 2);
+  files = (const char **)libconfig_malloc(sizeof(char **) * 2);
   files[0] = file;
   files[1] = NULL;
 

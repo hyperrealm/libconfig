@@ -436,6 +436,8 @@ void *yyalloc ( yy_size_t , yyscan_t yyscanner );
 void *yyrealloc ( void *, yy_size_t , yyscan_t yyscanner );
 void yyfree ( void * , yyscan_t yyscanner );
 
+/* Begin user sect3 */
+
 #define libconfig_yywrap(yyscanner) (/*CONSTCOND*/1)
 #define YY_SKIP_YYWRAP
 
@@ -712,8 +714,9 @@ extern int yylex \
 #undef yyTABLES_NAME
 #endif
 
-#line 203 "scanner.l"
+#line 205 "scanner.l"
 
-#line 717 "scanner.h"
+
+#line 720 "scanner.h"
 #undef libconfig_yyIN_HEADER
 #endif /* libconfig_yyHEADER_H */

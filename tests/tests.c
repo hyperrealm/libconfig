@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2018  Mark A Lindner
+   Copyright (C) 2005-2023  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -64,8 +64,8 @@ static void parse_file_and_compare_error(const char *input_file,
                                          const char *parse_error)
 {
   config_t cfg;
-  char actual_error[128];
-  char expected_error[128];
+  char actual_error[256];
+  char expected_error[256];
 
   config_init(&cfg);
   TT_ASSERT_FALSE(config_read_file(&cfg, input_file));
@@ -88,8 +88,8 @@ static void parse_string_and_compare_error(const char *input_text,
                                            const char *parse_error)
 {
   config_t cfg;
-  char actual_error[128];
-  char expected_error[128];
+  char actual_error[256];
+  char expected_error[256];
 
   config_init(&cfg);
   TT_ASSERT_FALSE(config_read_string(&cfg, input_text));
