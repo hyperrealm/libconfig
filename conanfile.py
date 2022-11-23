@@ -27,7 +27,7 @@ class LibconfigConan(ConanFile):
 
     def set_version(self):
         configure_ac = tools.load(os.path.join(self.recipe_folder, "configure.ac"))
-        self.version = next(re.finditer(r"AC_INIT\(libconfig,[ \t]+([0-9.]+),.*", configure_ac)).group(1)
+        self.version = next(re.finditer(r"AC_INIT\(\[libconfig\],[ \t]*\[([0-9.]+)\],.*", configure_ac)).group(1)
 
     def config_options(self):
         if self.settings.os == "Windows":
