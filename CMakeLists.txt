@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 # Extract version from configure.ac.
-set(VERSION_REGEX "^AC_INIT\\(libconfig,[ \t]+([0-9.]+),.*")
+set(VERSION_REGEX "^AC_INIT\\(\[libconfig\],[ \t]*\[([0-9.]+)\],.*")
 file(STRINGS "configure.ac"
   VERSION_STRING REGEX ${VERSION_REGEX})
 string(REGEX REPLACE ${VERSION_REGEX} "\\1" VERSION_STRING "${VERSION_STRING}")

@@ -15,4 +15,5 @@ EXTRA_DIST = \
 	tests.vcproj \
 	tests.vcxproj \
 	testdata/*.cfg \
-	testdata/*.txt
+	testdata/*.txt \
+	CMakeLists.txt

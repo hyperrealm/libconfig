@@ -40,7 +40,8 @@ EXTRA_DIST = \
 	debian/shlibs \
 	debian/watch \
 	libconfig.spec \
-	contrib
+	contrib \
+	CMakeLists.txt
 
 dist-hook:
 	rm -rf `find $(distdir)/contrib -name .svn`

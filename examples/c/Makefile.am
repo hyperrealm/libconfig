@@ -14,4 +14,5 @@ EXTRA_DIST = \
 	cfg_includes/*.cfg \
 	cfg_includes/cfg_subincludes/*.cfg \
 	*.vcproj \
-	*.vcxproj
+	*.vcxproj \
+	CMakeLists.txt

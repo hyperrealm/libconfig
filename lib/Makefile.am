@@ -78,7 +78,8 @@ EXTRA_DIST = \
 	$(BUILT_SOURCES) \
 	libconfigcpp.cc libconfig.hh \
 	*.vcproj \
-	*.vcxproj
+	*.vcxproj \
+	CMakeLists.txt
 
 pkgconfigdir = $(libdir)/pkgconfig
 
