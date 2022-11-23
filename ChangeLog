@@ -1,3 +1,16 @@
+----- version 1.7.4 ------
+
+2022-11-22  Mark Lindner  <markl@neuromancer>
+
+	* <multiple> - Many bugfixes, including:
+	  - Handle malloc failures by calling a fatal error handler
+	  - New API to provide alternative fatal error handler
+	  - Bugfixes to lookup (by name or path) routines
+	  - Bugfixes to APIs with inconsistent const-ness
+	  - Bugfixes to APIs with inconsistent use of short/unsigned short
+	  - Bugfixes to int/int64 auto-conversion
+	  - Various cleanup/fixes to build files
+	  - Added some unit tests
 
 ----- version 1.7.3 ------
 
