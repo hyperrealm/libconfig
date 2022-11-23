@@ -750,12 +750,14 @@ Setting::operator unsigned int() const
     if((val < 0) || (val > UINT_MAX))
       throw SettingRangeException(*this);
 
-    return((unsigned int)val);
+    return(static_cast<unsigned int>(val));
   }
 
   assertType(TypeInt);
 
   int v = config_setting_get_int(_setting);
+  if(v < 0)
+    throw SettingRangeException(*this);
 
   return(static_cast<unsigned int>(v));
 }
@@ -797,11 +799,19 @@ Setting::operator long long() const
 Setting::operator unsigned long long() const
 {
   if(_type == TypeInt)
-    return((unsigned long long)config_setting_get_int(_setting));
+  {
+    int val = config_setting_get_int(_setting);
+    if(val < 0)
+      throw SettingRangeException(*this);
+
+    return(static_cast<unsigned long long>(val));
+  }
 
   assertType(TypeInt64);
 
   long long v = config_setting_get_int64(_setting);
+  if(v < 0)
+    throw SettingRangeException(*this);
 
   return(static_cast<unsigned long long>(v));
 }

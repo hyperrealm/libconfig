@@ -1929,11 +1929,21 @@ title = config.lookup("application.window.title").c_str();
 @end smallexample
 @end cartouche
 
-If the setting value is a 64-bit integer, and is being assigned to a
+A @code{SettingRangeException} is thrown under the following
+circumstances:
+
+@itemize @bullet
+
+@item
+The setting's value is a 64-bit integer, and is being cast to a
 smaller integer type such as @code{int} or @code{unsigned long}, but
-the value is outside the range of that type, a
-@code{SettingRangeException} is thrown; otherwise the value is
-silently cast to that type.
+the value is outside the range of that type.
+
+@item
+The setting's value is a negative integer, and is being cast to an
+unsigned integer type such as @code{unsigned int}.
+
+@end itemize
 
 If the assignment is invalid due to a type mismatch, a
 @code{SettingTypeException} is thrown.
