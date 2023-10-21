@@ -123,16 +123,8 @@ target_include_directories(${libname}++
   PUBLIC "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
   )
 
-install(TARGETS ${libname}
+install(TARGETS ${libname} ${libname}++
     EXPORT libconfigTargets
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-
-install(TARGETS ${libname}++
-    EXPORT libconfig++Targets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -141,20 +133,18 @@ install(TARGETS ${libname}++
 
 
 include(CMakePackageConfigHelpers)
-foreach(target_name libconfig libconfig++)
-  write_basic_package_version_file("${target_name}ConfigVersion.cmake"
+write_basic_package_version_file("libconfigConfigVersion.cmake"
     VERSION ${PACKAGE_VERSION}
     COMPATIBILITY SameMajorVersion
     )
 
-  install(EXPORT ${target_name}Targets
-    FILE "${target_name}Config.cmake"
+install(EXPORT libconfigTargets
+    FILE "libconfigConfig.cmake"
     NAMESPACE libconfig::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libconfig
     )
 
-  install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/${target_name}ConfigVersion.cmake"
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/libconfigConfigVersion.cmake"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libconfig"
     )
-endforeach()
