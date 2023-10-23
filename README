@@ -4,13 +4,13 @@ To produce a PDF manual, issue the command "make pdf" after running
 
 				 -*-
 
-If you do not wish to build the C++ components, use:
+If you do not wish to build the C++ components,then you can use:
 
 ./configure --disable-cxx
 
 				 -*-
 
-The `examples' subdirectory contains some examples of using libconfig
+The `examples' subdirectory contains some examples of using the libconfig
 from C and C++.
 
 				 -*-
