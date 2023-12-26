@@ -10,7 +10,7 @@ If you do not wish to build the C++ components, use:
 
 				 -*-
 
-The `examples' subdirectory contains some examples of using libconfig
+The `examples' subdirectory contains some examples of how to use libconfig
 from C and C++.
 
 				 -*-
