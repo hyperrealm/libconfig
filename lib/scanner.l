@@ -81,9 +81,12 @@ include_open ^[ \t]*@include[ \t]+\"
 
 \"                { BEGIN STRING; }
 <STRING>[^\"\\]+  { libconfig_scanctx_append_string(yyextra, yytext); }
+<STRING>\\a       { libconfig_scanctx_append_char(yyextra, '\a'); }
+<STRING>\\b       { libconfig_scanctx_append_char(yyextra, '\b'); }
 <STRING>\\n       { libconfig_scanctx_append_char(yyextra, '\n'); }
 <STRING>\\r       { libconfig_scanctx_append_char(yyextra, '\r'); }
 <STRING>\\t       { libconfig_scanctx_append_char(yyextra, '\t'); }
+<STRING>\\v       { libconfig_scanctx_append_char(yyextra, '\v'); }
 <STRING>\\f       { libconfig_scanctx_append_char(yyextra, '\f'); }
 <STRING>\\\\      { libconfig_scanctx_append_char(yyextra, '\\'); }
 <STRING>\\\"      { libconfig_scanctx_append_char(yyextra, '\"'); }
@@ -125,7 +128,7 @@ include_open ^[ \t]*@include[ \t]+\"
   BEGIN INITIAL;
 }
 
-\n|\r|\f          { /* ignore */ }
+\n|\r|\f|\a|\b|\v { /* ignore */ }
 [ \t]+            { /* ignore */ }
 
 \=|\:             { return(TOK_EQUALS); }
