@@ -39,7 +39,7 @@
 # define YY_LIBCONFIG_YY_GRAMMAR_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int libconfig_yydebug;
