@@ -664,6 +664,40 @@ TT_TEST(ReadStream)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(BinaryAndHex)
+{
+  char *buf;
+  config_t cfg;
+  int rc;
+  int ival;
+  long long llval;
+
+
+  config_init(&cfg);
+
+  buf = "somebin=0b1010101;\nsomehex=0xbeef;\nsomebighex=0x100000000L;\nsomebigbin=0b111111111111111111111111111111111L; ";
+  rc = config_read_string(&cfg, buf);
+  TT_ASSERT_TRUE(rc);
+  rc = config_lookup_int(&cfg,"somebin",&ival);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT_EQ(ival, 85);
+  rc = config_lookup_int(&cfg,"somehex",&ival);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT_EQ(ival, 48879);
+  rc = config_lookup_int64(&cfg,"somebighex",&llval);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT64_EQ(llval, 0x100000000LL);
+  rc = config_lookup_int64(&cfg,"somebigbin",&llval);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT64_EQ(llval, 0x1ffffffffLL);
+
+  parse_and_compare("./testdata/binhex.cfg", "./testdata/binhex.cfg");
+
+
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
   int failures;
@@ -684,6 +718,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, OverrideSetting);
   TT_SUITE_TEST(LibConfigTests, SettingLookups);
   TT_SUITE_TEST(LibConfigTests, ReadStream);
+  TT_SUITE_TEST(LibConfigTests, BinaryAndHex);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);
