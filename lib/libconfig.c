@@ -143,7 +143,8 @@ static void __config_write_value(const config_t *config,
                                  const config_value_t *value, int type,
                                  int format, int depth, FILE *stream)
 {
-  char fbuf[64];
+  char temp_buf[65]; /* Long enough for 64 binary digits + NULL terminator.
+                        Used to be 64 when just used for floats */
 
   switch(type)
   {
@@ -160,7 +161,13 @@ static void __config_write_value(const config_t *config,
           fprintf(stream, "0x%X", value->ival);
           break;
 
-        case CONFIG_FORMAT_DEFAULT:
+        case CONFIG_FORMAT_BIN:
+          /* Once %b/%B become more widely supported, could feature test for them */
+          libconfig_format_bin(value->ival, temp_buf, sizeof(temp_buf));
+          fprintf(stream, "0b%s", temp_buf);
+          break;
+
+       case CONFIG_FORMAT_DEFAULT:
         default:
           fprintf(stream, "%d", value->ival);
           break;
@@ -173,6 +180,12 @@ static void __config_write_value(const config_t *config,
       {
         case CONFIG_FORMAT_HEX:
           fprintf(stream, "0x" INT64_HEX_FMT "L", value->llval);
+          break;
+
+        case CONFIG_FORMAT_BIN:
+          /* Once %b/%B become more widely supported, could feature test for them */
+          libconfig_format_bin(value->llval, temp_buf, sizeof(temp_buf));
+          fprintf(stream, "0b%sL", temp_buf);
           break;
 
         case CONFIG_FORMAT_DEFAULT:
@@ -188,8 +201,8 @@ static void __config_write_value(const config_t *config,
       const int sci_ok = config_get_option(
             config, CONFIG_OPTION_ALLOW_SCIENTIFIC_NOTATION);
       libconfig_format_double(value->fval, config->float_precision, sci_ok,
-                              fbuf, sizeof(fbuf));
-      fputs(fbuf, stream);
+                              temp_buf, sizeof(temp_buf));
+      fputs(temp_buf, stream);
       break;
     }
 
@@ -1181,7 +1194,7 @@ int config_setting_set_format(config_setting_t *setting, unsigned short format)
 {
   if(((setting->type != CONFIG_TYPE_INT)
       && (setting->type != CONFIG_TYPE_INT64))
-     || ((format != CONFIG_FORMAT_DEFAULT) && (format != CONFIG_FORMAT_HEX)))
+     || ((format != CONFIG_FORMAT_DEFAULT) && (format != CONFIG_FORMAT_HEX) && (format != CONFIG_FORMAT_BIN)))
     return(CONFIG_FALSE);
 
   setting->format = format;

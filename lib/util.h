@@ -37,7 +37,8 @@ extern void *libconfig_realloc(void *ptr, size_t size);
 
 extern long long libconfig_parse_integer(const char *s, int *ok);
 extern unsigned long long libconfig_parse_hex64(const char *s);
+extern unsigned long long libconfig_parse_bin64(const char *s);
 
 extern void libconfig_format_double(double val, int precision, int sci_ok,
                                     char *buf, size_t buflen);
-
+extern void libconfig_format_bin(int64_t val, char *buf, size_t buflen);

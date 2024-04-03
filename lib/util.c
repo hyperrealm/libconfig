@@ -151,6 +151,42 @@ unsigned long long libconfig_parse_hex64(const char *s)
 
 /* ------------------------------------------------------------------------- */
 
+unsigned long long libconfig_parse_bin64(const char *s)
+{
+#ifdef __MINGW32__
+
+  /* Assume that MinGW's strtoull() is broken for base 2 as well...
+   */
+
+  const char *p = s;
+  unsigned long long val = 0;
+
+  if(*p != '0')
+    return(0);
+
+  ++p;
+
+  if(*p != 'b' && *p != 'B')
+    return(0);
+
+  for(++p; *p=='0' || *p == '1'; ++p)
+  {
+    val <<= 1;
+    val |= *p =='1';
+  }
+
+  return(val);
+
+#else /* ! __MINGW32__ */
+
+  /* skip the first 2 bytes since I don't know if all implementations will ignore 0b */
+  return(strtoull(s+2, NULL, 2));
+
+#endif /* __MINGW32__ */
+}
+
+/* ------------------------------------------------------------------------- */
+
 void libconfig_format_double(double val, int precision, int sci_ok, char *buf,
                              size_t buflen)
 {
@@ -184,3 +220,34 @@ void libconfig_format_double(double val, int precision, int sci_ok, char *buf,
 }
 
 /* ------------------------------------------------------------------------- */
+
+
+#ifdef __GNUC__
+#define clzl(x) __builtin_clzl(x)
+#else
+static int clzl(int64_t val)
+{
+  int leading = 0;
+  int64_t check = (1ll << 63);
+  while (!(val & check) && check)
+  {
+    leading++;
+    check >>=1;
+  }
+  return leading;
+}
+#endif
+
+void libconfig_format_bin(int64_t val, char *buf, size_t buflen)
+{
+  /* find number of leading 0's */
+  unsigned c = clzl(val);
+  unsigned i = 0;
+  while ( (c < 64) && (i < buflen -1) )
+  {
+    buf[i] = (val & ( 1ll << (63-c))) ? '1' : '0';
+    i++;
+    c++;
+  }
+  buf[i]=0;
+}

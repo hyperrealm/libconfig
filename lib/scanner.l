@@ -60,6 +60,8 @@ false             [Ff][Aa][Ll][Ss][Ee]
 name              [A-Za-z\*][-A-Za-z0-9_\*]*
 integer           [-+]?[0-9]+
 integer64         [-+]?[0-9]+L(L)?
+bin               0[bB][01]+
+bin64             0[bB][01]+L(L)?
 hex               0[Xx][0-9A-Fa-f]+
 hex64             0[Xx][0-9A-Fa-f]+L(L)?
 hexchar           \\[Xx][0-9A-Fa-f]{2}
@@ -157,6 +159,14 @@ include_open ^[ \t]*@include[ \t]+\"
                     }
                   }
 {integer64}       { yylval->llval = atoll(yytext); return(TOK_INTEGER64); }
+{bin}             {
+                    yylval->ival = strtoul(yytext+2, NULL,2);
+                    return(TOK_BIN);
+                  }
+{bin64}           {
+                    yylval->llval = libconfig_parse_bin64(yytext);
+                    return(TOK_BIN64);
+                  }
 {hex}             {
                     yylval->ival = strtoul(yytext, NULL, 16);
                     return(TOK_HEX);
