@@ -232,7 +232,7 @@ static int clzl(int64_t val)
   while (!(val & check) && check)
   {
     leading++;
-    check >>=1;
+    check >>= 1;
   }
   return leading;
 }
@@ -243,11 +243,11 @@ void libconfig_format_bin(int64_t val, char *buf, size_t buflen)
   /* find number of leading 0's */
   unsigned c = clzl(val);
   unsigned i = 0;
-  while ( (c < 64) && (i < buflen -1) )
+  while ( (c < 64) && (i < buflen - 1) )
   {
-    buf[i] = (val & ( 1ll << (63-c))) ? '1' : '0';
+    buf[i] = (val & (1ll << (63 - c))) ? '1' : '0';
     i++;
     c++;
   }
-  buf[i]=0;
+  buf[i] = 0;
 }
