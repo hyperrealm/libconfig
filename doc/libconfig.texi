@@ -514,7 +514,7 @@ Integers can be represented in one of two ways: as a series of one or more
 decimal digits (@samp{0} - @samp{9}), with an optional leading sign character
 (@samp{+} or @samp{-}); as a hexadecimal value consisting of the characters
 @samp{0x} followed by a series of one or more hexadecimal digits (@samp{0} -
-@samp{9}, @samp{A} - @samp{F}, @samp{a} - @samp{f}); or (as of version 1.7.3 of
+@samp{9}, @samp{A} - @samp{F}, @samp{a} - @samp{f}); or (as of version 1.7.4 of
 the library) as a binary value consisting of the characters @samp{0b} followed
 by a series of @samp{0}s or @samp{1}s. Additionally, octal notation integers
 (that is, those having a leading zero with non-zero value) are also allowed.
