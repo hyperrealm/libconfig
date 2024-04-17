@@ -94,16 +94,20 @@ void *libconfig_realloc(void *ptr, size_t size)
 
 /* ------------------------------------------------------------------------- */
 
-long long libconfig_parse_integer(const char *s, int *ok)
+long long libconfig_parse_integer(const char *s, int *ok, int L)
 {
   long long llval;
   char *endptr;
   int errsave = errno;
   errno = 0;
   llval = strtoll(s, &endptr, 0);	/* base 10 or base 8 */
+
+  // see if we can ignore the L
+  while (L && !errno && *endptr == 'L') endptr++;
+
   if(*endptr || errno)
   {
-    errno = 0;
+    errno = errsave;
     *ok = 0;
     return(0);	/* parse error */
   }
@@ -115,7 +119,8 @@ long long libconfig_parse_integer(const char *s, int *ok)
 
 /* ------------------------------------------------------------------------- */
 
-unsigned long long libconfig_parse_hex64(const char *s)
+
+static unsigned long long parse_uinteger(const char * s, int * ok, int L, int base)
 {
 #ifdef __MINGW32__
 
@@ -127,62 +132,119 @@ unsigned long long libconfig_parse_hex64(const char *s)
   unsigned long long val = 0;
 
   if(*p != '0')
+  {
+    *ok = 0;
     return(0);
+  }
 
   ++p;
 
-  if(*p != 'x' && *p != 'X')
-    return(0);
-
-  for(++p; isxdigit(*p); ++p)
+  if (base == 16)
   {
-    val <<= 4;
-    val |= ((*p < 'A') ? (*p & 0xF) : (9 + (*p & 0x7)));
+    if(*p != 'x' && *p != 'X')
+    {
+      *ok = 0;
+      return(0);
+    }
+
+    for(++p; isxdigit(*p); ++p)
+    {
+      val <<= 4;
+      val |= ((*p < 'A') ? (*p & 0xF) : (9 + (*p & 0x7)));
+    }
+
+  }
+  else if (base == 2)
+  {
+    if(*p != 'b' && *p != 'B')
+    {
+      *ok = 0;
+      return(0);
+    }
+
+    for(++p; *p=='0' || *p == '1'; ++p)
+    {
+      val <<= 1;
+      val |= *p =='1';
+    }
+  }
+  else //invalid base
+  {
+    *ok = 0;
+    return {0};
   }
 
+
+  // if we're allowed to end with Ls and have Ls at the end, that's ok...
+  while (L && *p == 'L') p++;
+
+  // we have an invalid thing
+  if (*p)
+  {
+    *ok = 0;
+    return {0};
+  }
+
+  // all is well
+  *ok =1;
   return(val);
 
 #else /* ! __MINGW32__ */
 
-  return(strtoull(s, NULL, 16));
+ unsigned long long val;
+ int err_save = errno;
+ char * endptr;
+ errno = 0;
+ if (base == 16)
+ {
+   val = strtoull(s, &endptr, 16);
+ }
+ else if (base == 2)
+ {
 
-#endif /* __MINGW32__ */
+   if (s[0] != '0' || (s[1] != 'b' && s[1] != 'B'))
+   {
+     *ok = 0;
+     return (0);
+   }
+
+   /* skip the first 2 bytes since I don't know if all implementations will ignore 0b */
+   val = strtoull(s+2, &endptr, 2);
+ }
+ else
+ {
+   *ok = 0;
+   return (0);
+ }
+
+ // see if we can ignore the L
+ while (L && !errno && *endptr == 'L') endptr++;
+
+ if (errno || *endptr)
+ {
+   errno = err_save;
+   *ok = 0;
+   return (0);
+ }
+
+ errno = err_save;
+ *ok = 1;
+ return val;
+#endif /*  __MINGW32__*/
+}
+
+/* --------------------------------------------------------------------------*/
+
+unsigned long long libconfig_parse_hex64(const char *s, int *ok, int L)
+{
+ return parse_uinteger(s,ok,L,16);
 }
 
 /* ------------------------------------------------------------------------- */
 
-unsigned long long libconfig_parse_bin64(const char *s)
+unsigned long long libconfig_parse_bin64(const char *s, int * ok, int L)
 {
-#ifdef __MINGW32__
-
-  /* Assume that MinGW's strtoull() is broken for base 2 as well...
-   */
-
-  const char *p = s;
-  unsigned long long val = 0;
-
-  if(*p != '0')
-    return(0);
-
-  ++p;
-
-  if(*p != 'b' && *p != 'B')
-    return(0);
-
-  for(++p; *p=='0' || *p == '1'; ++p)
-  {
-    val <<= 1;
-    val |= *p =='1';
-  }
-
-  return(val);
-
-#else /* ! __MINGW32__ */
-
-  /* skip the first 2 bytes since I don't know if all implementations will ignore 0b */
-  return(strtoull(s+2, NULL, 2));
-
-#endif /* __MINGW32__ */
+ return parse_uinteger(s,ok,L,2);
 }
 
 /* ------------------------------------------------------------------------- */
