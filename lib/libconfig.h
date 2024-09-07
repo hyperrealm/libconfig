@@ -90,6 +90,7 @@ typedef struct config_setting_t
   void *hook;
   unsigned int line;
   const char *file;
+  char *comment;
 } config_setting_t;
 
 typedef enum
@@ -295,6 +296,8 @@ extern LIBCONFIG_API config_setting_t *config_setting_get_member(
 
 extern LIBCONFIG_API config_setting_t *config_setting_add(
   config_setting_t *parent, const char *name, int type);
+extern LIBCONFIG_API config_setting_t *config_setting_add_with_comment(
+  config_setting_t *parent, const char *name, int type, const char *comment);
 extern LIBCONFIG_API int config_setting_remove(config_setting_t *parent,
                                                const char *name);
 extern LIBCONFIG_API int config_setting_remove_elem(config_setting_t *parent,
