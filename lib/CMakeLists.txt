@@ -62,7 +62,7 @@ if(BUILD_SHARED_LIBS)
     target_compile_definitions(${libname}++ PRIVATE LIBCONFIG_STATIC)
 else()
     target_compile_definitions(${libname} PUBLIC LIBCONFIG_STATIC)
-    target_compile_definitions(${libname}++ PUBLIC LIBCONFIGXX_STATIC)
+    target_compile_definitions(${libname}++ PUBLIC LIBCONFIG_STATIC LIBCONFIGXX_STATIC)
 endif()
 
 if(APPLE)
