@@ -516,8 +516,8 @@ class LIBCONFIGXX_API Config
   inline void readFile(const std::string &filename)
   { readFile(filename.c_str()); }
 
-  void writeFile(const char *filename);
-  inline void writeFile(const std::string &filename)
+  void writeFile(const char *filename) const;
+  inline void writeFile(const std::string &filename) const
   { writeFile(filename.c_str()); }
 
   Setting & lookup(const char *path) const;
