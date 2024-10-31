@@ -521,7 +521,7 @@ void Config::readFile(const char *filename)
 
 // ---------------------------------------------------------------------------
 
-void Config::writeFile(const char *filename)
+void Config::writeFile(const char *filename) const
 {
   if(! config_write_file(_config, filename))
     handleError();
