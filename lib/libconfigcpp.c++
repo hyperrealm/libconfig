@@ -363,6 +363,24 @@ Config::Config()
   config_set_fatal_error_func(__fatal_error_func);
 }
 
+Config::Config(Config&& cfg) noexcept
+{
+  _config = cfg._config;
+  cfg._config = nullptr;
+}
+
+Config& Config::operator=(Config&& cfg) noexcept
+{
+  if (this != &cfg)
+  {
+	config_destroy(_config);
+	delete _config;
+	_config = cfg._config;
+	cfg._config = nullptr;
+  }
+  return *this;
+}
+
 // ---------------------------------------------------------------------------
 
 Config::~Config()
@@ -687,6 +705,26 @@ Setting::Setting(config_setting_t *setting)
       _format = FormatDefault;
       break;
   }
+}
+
+Setting::Setting(Setting&& setting) noexcept
+{
+  _setting = setting._setting;
+  setting._setting = nullptr;
+  _type = std::move(setting._type);
+  _format = std::move(setting._format);
+}
+
+Setting& Setting::operator=(Setting&& setting) noexcept
+{
+  if (this != &setting)
+  {
+    _setting = setting._setting;
+    setting._setting = nullptr;
+    _type = std::move(setting._type);
+    _format = std::move(setting._format);
+  }
+  return *this;
 }
 
 // ---------------------------------------------------------------------------

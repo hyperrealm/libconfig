@@ -191,7 +191,8 @@ class LIBCONFIGXX_API Setting
   typedef SettingConstIterator const_iterator;
 
   public:
-
+  Setting(Setting&&) noexcept;
+  Setting& operator=(Setting&&) noexcept;
   virtual ~Setting();
 
   inline Type getType() const { return(_type); }
@@ -474,6 +475,8 @@ class LIBCONFIGXX_API Config
   };
 
   Config();
+  Config(Config&&) noexcept;
+  Config& operator=(Config&&) noexcept;
   virtual ~Config();
 
   void clear();
