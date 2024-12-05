@@ -40,8 +40,7 @@
 #include "wincompat.h"
 
 /* These declarations are provided to suppress compiler warnings. */
-extern int libconfig_yylex();
-extern int libconfig_yyget_lineno();
+extern int libconfig_yyget_lineno(void *);
 
 #define YYMALLOC libconfig_malloc
 
@@ -81,6 +80,11 @@ void libconfig_yyerror(void *scanner, struct parse_context *ctx,
   double fval;
   char *sval;
 }
+
+%{
+/* These declarations are provided to suppress compiler warnings. */
+extern int libconfig_yylex(YYSTYPE *, void *);
+%}
 
 %token <ival> TOK_BOOLEAN TOK_INTEGER TOK_HEX
 %token <llval> TOK_INTEGER64 TOK_HEX64
