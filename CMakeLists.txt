@@ -10,6 +10,7 @@ project(libconfig LANGUAGES C CXX VERSION ${VERSION_STRING})
 option(BUILD_EXAMPLES "Enable examples" ON)
 option(BUILD_SHARED_LIBS  "Enable shared library" ON)
 option(BUILD_TESTS "Enable tests" ON)
+option(BUILD_FUZZERS "Enable fuzzers" OFF)
 
 set_property(GLOBAL	PROPERTY USE_FOLDERS ON)
 
@@ -32,4 +33,8 @@ if(BUILD_TESTS)
 	enable_testing()
 	add_subdirectory(tinytest)
 	add_subdirectory(tests)
+endif()
+
+if (BUILD_FUZZER AND DEFINED ENV{LIB_FUZZING_ENGINE})
+	add_subdirectory(fuzz)
 endif()
