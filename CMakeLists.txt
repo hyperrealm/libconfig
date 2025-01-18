@@ -35,6 +35,6 @@ if(BUILD_TESTS)
 	add_subdirectory(tests)
 endif()
 
-if (BUILD_FUZZER AND DEFINED ENV{LIB_FUZZING_ENGINE})
+if (BUILD_FUZZERS AND DEFINED ENV{LIB_FUZZING_ENGINE})
 	add_subdirectory(fuzz)
 endif()
