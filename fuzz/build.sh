@@ -2,7 +2,7 @@ cd $SRC/libconfig
 
 mkdir -p build
 cmake -S . -B build \
-        -DBUILD_FUZZER=On \
+        -DBUILD_FUZZERS=On \
         -DCMAKE_C_COMPILER_WORKS=1 \
         -DCMAKE_CXX_COMPILER_WORKS=1 \
         -DBUILD_SHARED_LIBS=Off \
