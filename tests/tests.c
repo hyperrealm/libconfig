@@ -634,6 +634,10 @@ TT_TEST(SettingLookups)
 
   setting = config_setting_lookup(parent, "[0].array.[0].blah");
   TT_ASSERT_PTR_NULL(setting);
+
+  TT_ASSERT_PTR_NOTNULL(config_lookup(&cfg, "foo.[3].nested"));
+  TT_ASSERT_PTR_NOTNULL(config_lookup(&cfg, "foo.[3].nested.deeper"));
+  TT_ASSERT_PTR_NOTNULL(config_lookup(&cfg, "foo.[3].nested.deeper.color"));
 }
 
 /* ------------------------------------------------------------------------- */

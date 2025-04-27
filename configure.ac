@@ -1,7 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([libconfig],[1.7.4],[hyperrealm@gmail.com],[libconfig],
-        [https://hyperrealm.github.io/libconfig/])
+AC_INIT([libconfig],[1.8],[hyperrealm@gmail.com],[libconfig],[https://hyperrealm.github.io/libconfig/])
 AC_CONFIG_AUX_DIR([aux-build])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_TARGET
