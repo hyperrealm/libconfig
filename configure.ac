@@ -48,8 +48,6 @@ fi
 
 AC_MSG_CHECKING([for compiler switch to enable full C/C++ warnings]);
 
-dnl Checks for libraries
-
 dnl Enable warnings, if we can determine an appropriate switch...
 case "${CC}" in
 
@@ -142,7 +140,6 @@ esac
 
 AM_CONDITIONAL(GNU_WIN, test x$gnuwin = xyes)
 
-dnl Checks for library functions.
 
 AC_CONFIG_FILES([Makefile
 	lib/Makefile

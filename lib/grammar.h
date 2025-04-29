@@ -111,7 +111,7 @@ extern int libconfig_yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 78 "grammar.y"
+#line 77 "grammar.y"
 
   int ival;
   long long llval;

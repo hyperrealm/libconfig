@@ -84,8 +84,7 @@
 #include "wincompat.h"
 
 /* These declarations are provided to suppress compiler warnings. */
-extern int libconfig_yylex();
-extern int libconfig_yyget_lineno();
+extern int libconfig_yyget_lineno(void *);
 
 #define YYMALLOC libconfig_malloc
 
@@ -117,7 +116,7 @@ void libconfig_yyerror(void *scanner, struct parse_context *ctx,
 }
 
 
-#line 121 "grammar.c"
+#line 120 "grammar.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -146,7 +145,7 @@ void libconfig_yyerror(void *scanner, struct parse_context *ctx,
 # define YY_LIBCONFIG_YY_GRAMMAR_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int libconfig_yydebug;
@@ -218,14 +217,14 @@ extern int libconfig_yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 78 "grammar.y"
+#line 77 "grammar.y"
 
   int ival;
   long long llval;
   double fval;
   char *sval;
 
-#line 229 "grammar.c"
+#line 228 "grammar.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -293,6 +292,13 @@ enum yysymbol_kind_t
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
 
+/* Second part of user prologue.  */
+#line 84 "grammar.y"
+
+/* These declarations are provided to suppress compiler warnings. */
+extern int libconfig_yylex(YYSTYPE *, void *);
+
+#line 302 "grammar.c"
 
 
 #ifdef short
@@ -676,11 +682,11 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    94,    94,    96,   100,   101,   104,   106,   109,   111,
-     112,   117,   116,   136,   135,   159,   158,   181,   182,   183,
-     184,   188,   189,   193,   213,   235,   257,   279,   301,   323,
-     345,   363,   391,   392,   393,   396,   398,   402,   403,   404,
-     407,   409,   414,   413
+       0,    99,    99,   101,   105,   106,   109,   111,   114,   116,
+     117,   122,   121,   141,   140,   164,   163,   186,   187,   188,
+     189,   193,   194,   198,   218,   240,   262,   284,   306,   328,
+     350,   368,   396,   397,   398,   401,   403,   407,   408,   409,
+     412,   414,   419,   418
 };
 #endif
 
@@ -1019,9 +1025,9 @@ yydestruct (const char *yymsg,
   switch (yykind)
     {
     case YYSYMBOL_TOK_STRING: /* TOK_STRING  */
-#line 90 "grammar.y"
+#line 95 "grammar.y"
             { free(((*yyvaluep).sval)); }
-#line 1025 "grammar.c"
+#line 1031 "grammar.c"
         break;
 
       default:
@@ -1295,7 +1301,7 @@ yyreduce:
   switch (yyn)
     {
   case 11: /* $@1: %empty  */
-#line 117 "grammar.y"
+#line 122 "grammar.y"
   {
     ctx->setting = config_setting_add(ctx->parent, (yyvsp[0].sval), CONFIG_TYPE_NONE);
 
@@ -1309,11 +1315,11 @@ yyreduce:
       CAPTURE_PARSE_POS(ctx->setting);
     }
   }
-#line 1313 "grammar.c"
+#line 1319 "grammar.c"
     break;
 
   case 13: /* $@2: %empty  */
-#line 136 "grammar.y"
+#line 141 "grammar.y"
   {
     if(IN_LIST())
     {
@@ -1327,20 +1333,20 @@ yyreduce:
       ctx->setting = NULL;
     }
   }
-#line 1331 "grammar.c"
+#line 1337 "grammar.c"
     break;
 
   case 14: /* array: TOK_ARRAY_START $@2 simple_value_list_optional TOK_ARRAY_END  */
-#line 151 "grammar.y"
+#line 156 "grammar.y"
   {
     if(ctx->parent)
       ctx->parent = ctx->parent->parent;
   }
-#line 1340 "grammar.c"
+#line 1346 "grammar.c"
     break;
 
   case 15: /* $@3: %empty  */
-#line 159 "grammar.y"
+#line 164 "grammar.y"
   {
     if(IN_LIST())
     {
@@ -1354,32 +1360,32 @@ yyreduce:
       ctx->setting = NULL;
     }
   }
-#line 1358 "grammar.c"
+#line 1364 "grammar.c"
     break;
 
   case 16: /* list: TOK_LIST_START $@3 value_list_optional TOK_LIST_END  */
-#line 174 "grammar.y"
+#line 179 "grammar.y"
   {
     if(ctx->parent)
       ctx->parent = ctx->parent->parent;
   }
-#line 1367 "grammar.c"
-    break;
-
-  case 21: /* string: TOK_STRING  */
-#line 188 "grammar.y"
-             { libconfig_parsectx_append_string(ctx, (yyvsp[0].sval)); free((yyvsp[0].sval)); }
 #line 1373 "grammar.c"
     break;
 
-  case 22: /* string: string TOK_STRING  */
-#line 189 "grammar.y"
-                      { libconfig_parsectx_append_string(ctx, (yyvsp[0].sval)); free((yyvsp[0].sval)); }
+  case 21: /* string: TOK_STRING  */
+#line 193 "grammar.y"
+             { libconfig_parsectx_append_string(ctx, (yyvsp[0].sval)); free((yyvsp[0].sval)); }
 #line 1379 "grammar.c"
     break;
 
-  case 23: /* simple_value: TOK_BOOLEAN  */
+  case 22: /* string: string TOK_STRING  */
 #line 194 "grammar.y"
+                      { libconfig_parsectx_append_string(ctx, (yyvsp[0].sval)); free((yyvsp[0].sval)); }
+#line 1385 "grammar.c"
+    break;
+
+  case 23: /* simple_value: TOK_BOOLEAN  */
+#line 199 "grammar.y"
   {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1399,11 +1405,11 @@ yyreduce:
     else
       config_setting_set_bool(ctx->setting, (int)(yyvsp[0].ival));
   }
-#line 1403 "grammar.c"
+#line 1409 "grammar.c"
     break;
 
   case 24: /* simple_value: TOK_INTEGER  */
-#line 214 "grammar.y"
+#line 219 "grammar.y"
   {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1425,11 +1431,11 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_DEFAULT);
     }
   }
-#line 1429 "grammar.c"
+#line 1435 "grammar.c"
     break;
 
   case 25: /* simple_value: TOK_INTEGER64  */
-#line 236 "grammar.y"
+#line 241 "grammar.y"
   {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1451,11 +1457,11 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_DEFAULT);
     }
   }
-#line 1455 "grammar.c"
+#line 1461 "grammar.c"
     break;
 
   case 26: /* simple_value: TOK_HEX  */
-#line 258 "grammar.y"
+#line 263 "grammar.y"
   {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1477,11 +1483,11 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_HEX);
     }
   }
-#line 1481 "grammar.c"
+#line 1487 "grammar.c"
     break;
 
   case 27: /* simple_value: TOK_HEX64  */
-#line 280 "grammar.y"
+#line 285 "grammar.y"
   {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1503,11 +1509,11 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_HEX);
     }
   }
-#line 1507 "grammar.c"
+#line 1513 "grammar.c"
     break;
 
   case 28: /* simple_value: TOK_BIN  */
-#line 302 "grammar.y"
+#line 307 "grammar.y"
   {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1529,11 +1535,11 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_BIN);
     }
   }
-#line 1533 "grammar.c"
+#line 1539 "grammar.c"
     break;
 
   case 29: /* simple_value: TOK_BIN64  */
-#line 324 "grammar.y"
+#line 329 "grammar.y"
   {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1555,11 +1561,11 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_BIN);
     }
   }
-#line 1559 "grammar.c"
+#line 1565 "grammar.c"
     break;
 
   case 30: /* simple_value: TOK_FLOAT  */
-#line 346 "grammar.y"
+#line 351 "grammar.y"
   {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1577,11 +1583,11 @@ yyreduce:
     else
       config_setting_set_float(ctx->setting, (yyvsp[0].fval));
   }
-#line 1581 "grammar.c"
+#line 1587 "grammar.c"
     break;
 
   case 31: /* simple_value: string  */
-#line 364 "grammar.y"
+#line 369 "grammar.y"
   {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1606,11 +1612,11 @@ yyreduce:
       __delete(s);
     }
   }
-#line 1610 "grammar.c"
+#line 1616 "grammar.c"
     break;
 
   case 42: /* $@4: %empty  */
-#line 414 "grammar.y"
+#line 419 "grammar.y"
   {
     if(IN_LIST())
     {
@@ -1624,20 +1630,20 @@ yyreduce:
       ctx->setting = NULL;
     }
   }
-#line 1628 "grammar.c"
+#line 1634 "grammar.c"
     break;
 
   case 43: /* group: TOK_GROUP_START $@4 setting_list_optional TOK_GROUP_END  */
-#line 429 "grammar.y"
+#line 434 "grammar.y"
   {
     if(ctx->parent)
       ctx->parent = ctx->parent->parent;
   }
-#line 1637 "grammar.c"
+#line 1643 "grammar.c"
     break;
 
 
-#line 1641 "grammar.c"
+#line 1647 "grammar.c"
 
       default: break;
     }
@@ -1830,5 +1836,5 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 435 "grammar.y"
+#line 440 "grammar.y"
 
