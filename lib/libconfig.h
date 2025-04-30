@@ -190,6 +190,17 @@ extern LIBCONFIG_API int config_setting_get_bool(
 extern LIBCONFIG_API const char *config_setting_get_string(
   const config_setting_t *setting);
 
+extern LIBCONFIG_API int config_setting_get_int_safe(
+  const config_setting_t *setting, int *value);
+extern LIBCONFIG_API int config_setting_get_int64_safe(
+  const config_setting_t *setting, long long *value);
+extern LIBCONFIG_API int config_setting_get_float_safe(
+  const config_setting_t *setting, double *value);
+extern LIBCONFIG_API int config_setting_get_bool_safe(
+  const config_setting_t *setting, int *value);
+extern LIBCONFIG_API int config_setting_get_string_safe(
+  const config_setting_t *setting, const char **value);
+
 extern LIBCONFIG_API int config_setting_lookup_int(
   const config_setting_t *setting, const char *name, int *value);
 extern LIBCONFIG_API int config_setting_lookup_int64(

@@ -77,7 +77,7 @@ extern void pathbuf_append_path_len(pathbuf_t *buf, const char *path, size_t len
 void pathbuf_remove_last_component(pathbuf_t *buf)
 {
   char *p = strrchr(buf->path, '/');
-  if(p)
+  if(p > buf->path)
   {
     *p = '\0';
     buf->length = (size_t)(p - buf->path);

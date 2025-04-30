@@ -897,6 +897,13 @@ int config_setting_get_int(const config_setting_t *setting)
 
 /* ------------------------------------------------------------------------- */
 
+int config_setting_get_int_safe(const config_setting_t *setting, int *value)
+{
+  return __config_setting_get_int(setting, value);
+}
+
+/* ------------------------------------------------------------------------- */
+
 static int __config_setting_get_int64(const config_setting_t *setting,
                                       long long *value)
 {
@@ -931,6 +938,14 @@ long long config_setting_get_int64(const config_setting_t *setting)
   long long value = 0;
   __config_setting_get_int64(setting, &value);
   return(value);
+}
+
+/* ------------------------------------------------------------------------- */
+
+int config_setting_get_int64_safe(const config_setting_t *setting,
+                                  long long *value)
+{
+  return __config_setting_get_int64(setting, value);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -998,6 +1013,14 @@ double config_setting_get_float(const config_setting_t *setting)
   double value = 0.0;
   __config_setting_get_float(setting, &value);
   return(value);
+}
+
+/* ------------------------------------------------------------------------- */
+
+int config_setting_get_float_safe(const config_setting_t *setting,
+                                  double *value)
+{
+  return __config_setting_get_float(setting, value);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1155,6 +1178,20 @@ int config_setting_get_bool(const config_setting_t *setting)
 
 /* ------------------------------------------------------------------------- */
 
+int config_setting_get_bool_safe(const config_setting_t *setting,
+                                 int *value)
+{
+  if(setting->type == CONFIG_TYPE_BOOL)
+  {
+    *value = setting->value.ival;
+    return(CONFIG_TRUE);
+  }
+  
+  return(CONFIG_FALSE);
+}
+
+/* ------------------------------------------------------------------------- */
+
 int config_setting_set_bool(config_setting_t *setting, int value)
 {
   if(setting->type == CONFIG_TYPE_NONE)
@@ -1171,6 +1208,20 @@ int config_setting_set_bool(config_setting_t *setting, int value)
 const char *config_setting_get_string(const config_setting_t *setting)
 {
   return((setting->type == CONFIG_TYPE_STRING) ? setting->value.sval : NULL);
+}
+
+/* ------------------------------------------------------------------------- */
+
+int config_setting_get_string_safe(const config_setting_t *setting,
+                                   const char **value)
+{
+  if(setting->type == CONFIG_TYPE_STRING)
+  {
+    *value = setting->value.sval;
+    return(CONFIG_TRUE);
+  }
+  
+  return(CONFIG_FALSE);
 }
 
 /* ------------------------------------------------------------------------- */

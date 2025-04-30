@@ -1121,11 +1121,30 @@ setting's value is changed; the string must not be freed by the
 caller.
 
 @end deftypefun
+
+@deftypefun int config_setting_get_int_safe (@w{const config_setting_t * @var{setting}}, @w{int *@var{value}})
+@deftypefunx int config_setting_get_int64_safe (@w{const config_setting_t * @var{setting}}, @w{long long *@var{value}})
+@deftypefunx int config_setting_get_float_safe (@w{const config_setting_t * @var{setting}}, @w{double *@var{value}})
+@deftypefunx int config_setting_get_bool_safe (@w{const config_setting_t * @var{setting}}, @w{int *@var{value}})
+@deftypefunx int config_setting_get_string_safe (@w{const config_setting_t * @var{setting}}, @w{const char **@var{value}})
+
+@b{Since @i{v1.8.1}}
+
+These functions are ``safe'' versions of the corresponding functions
+whose names do not have the @code{_safe} suffix, in that they do not
+silently return a default value if the setting is not of the expected
+type. Specifically, if @var{setting} is of the expected type (or its
+value can be converted to the expected type, if auto-conversion is
+enabled), they store its value at @var{value} and return
+@code{CONFIG_TRUE}; otherwise, they return @code{CONFIG_FALSE}.
+
+@end deftypefun
+
 @deftypefun int config_setting_set_int (@w{config_setting_t * @var{setting}}, @w{int @var{value}})
 @deftypefunx int config_setting_set_int64 (@w{config_setting_t * @var{setting}}, @w{long long @var{value}})
 @deftypefunx int config_setting_set_float (@w{config_setting_t * @var{setting}}, @w{double @var{value}})
 @deftypefunx int config_setting_set_bool (@w{config_setting_t * @var{setting}}, @w{int @var{value}})
-@deftypefunx int config_setting_set_string (@w{config_setting_t * @var{setting}}, @w{const char * @var{value}})
+@deftypefunx int config_setting_set_string (@w{config_setting_t * @var{setting}}, @w{const char *@var{value}})
 
 These functions set the value of the given @var{setting} to
 @var{value}. On success, they return @code{CONFIG_TRUE}. If
