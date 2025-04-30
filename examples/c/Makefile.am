@@ -8,6 +8,14 @@ AM_CPPFLAGS = -I $(top_srcdir)/lib
 
 LDADD = $(top_builddir)/lib/libconfig.la
 
+example1_SOURCES = example1.c
+
+example2_SOURCES = example2.c
+
+example3_SOURCES = example3.c
+
+example4_SOURCES = example4.c pathbuf.c
+
 EXTRA_DIST = \
 	example.cfg \
 	example4.cfg \

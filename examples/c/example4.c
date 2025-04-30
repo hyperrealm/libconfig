@@ -22,13 +22,14 @@
 
 #include <dirent.h>
 #include <fnmatch.h>
-#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 
 #include <libconfig.h>
+
+#include "pathbuf.h"
 
 /* This example reads the configuration file 'example.cfg' and displays
  * some of its contents.
@@ -43,77 +44,61 @@ static const char **include_func(config_t *config,
   DIR *dp;
   struct dirent *dir_entry;
   struct stat stat_buf;
-  char include_path[PATH_MAX + 1];
-  size_t include_path_len = 0;
-  char file_path[PATH_MAX + 1];
+  const char *include_path, *file_path;
   char **result = NULL;
   char **result_next = result;
   int result_count = 0;
   int result_capacity = 0;
+  pathbuf_t *path_buf;
 
-  *include_path = 0;
-
-  if(*path != '/')
-  {
-    if(include_dir)
-    {
-      strcat(include_path, include_dir);
-      include_path_len += strlen(include_dir);
-    }
-  }
+  path_buf = pathbuf_create();
+  
+  if((*path != '/') && include_dir)
+    pathbuf_append_path(path_buf, include_dir);
 
   p = strrchr(path, '/');
   if(p > path)
-  {
-    int len = p - path;
+    pathbuf_append_path_len(path_buf, path, p - path);
 
-    if((include_path_len > 0)
-       && (*(include_path + include_path_len - 1) != '/'))
-    {
-      strcat(include_path, "/");
-      ++include_path_len;
-    }
+  if(pathbuf_get_length(path_buf) == 0)
+    pathbuf_append_path(path_buf, ".");
 
-    strncat(include_path, path, len);
-    include_path_len += len;
-  }
-
-  if(include_path_len == 0)
-  {
-    strcpy(include_path, ".");
-    include_path_len = 1;
-  }
-
+  include_path = pathbuf_get_path(path_buf);
   dp = opendir(include_path);
+
   if(dp)
   {
     while((dir_entry = readdir(dp)) != NULL)
     {
-      int r = snprintf(file_path, PATH_MAX, "%s/%s", include_path,
-                       dir_entry->d_name);
-      if(r < 0) abort(); // Handle possible truncation of very long path
-      
-      if(lstat(file_path, &stat_buf) != 0) continue;
-      if(!S_ISREG(stat_buf.st_mode)) continue;
-      if(fnmatch(path, file_path, FNM_PATHNAME) != 0) continue;
+      pathbuf_append_path(path_buf, dir_entry->d_name);
+      file_path = pathbuf_get_path(path_buf);
 
-      if(result_count == result_capacity)
+      if((lstat(file_path, &stat_buf) == 0)
+         && S_ISREG(stat_buf.st_mode)
+         && fnmatch(path, file_path, FNM_PATHNAME) == 0)
       {
-        result_capacity += 16;
-        result = (char **)realloc(result, (result_capacity + 1) * sizeof(char *));
-        result_next = result + result_count;
+        if(result_count == result_capacity)
+        {
+          result_capacity += 16;
+          result = (char **)realloc(result, (result_capacity + 1) * sizeof(char *));
+          result_next = result + result_count;
+        }
+
+        *result_next = strdup(file_path);
+        ++result_next;
+        ++result_count;
+        
+        printf("file to include: %s\n", file_path);
       }
 
-      *result_next = strdup(file_path);
-      ++result_next;
-      ++result_count;
-
-      printf("file: %s\n", file_path);
+      pathbuf_remove_last_component(path_buf);
     }
     closedir(dp);
   }
 
   *result_next = NULL;
+
+  pathbuf_destroy(path_buf);
 
   return((const char **)result);
 }
@@ -134,6 +119,7 @@ int main(int argc, char **argv)
     return(EXIT_FAILURE);
   }
 
+  putchar('\n');
   config_write(&cfg, stdout);
    
   config_destroy(&cfg);
