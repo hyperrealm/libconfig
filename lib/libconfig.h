@@ -41,7 +41,7 @@ extern "C" {
 
 #define LIBCONFIG_VER_MAJOR    1
 #define LIBCONFIG_VER_MINOR    8
-#define LIBCONFIG_VER_REVISION 0
+#define LIBCONFIG_VER_REVISION 1
 
 #include <stdio.h>
 
