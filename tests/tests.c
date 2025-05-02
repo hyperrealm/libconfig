@@ -638,6 +638,8 @@ TT_TEST(SettingLookups)
   TT_ASSERT_PTR_NOTNULL(config_lookup(&cfg, "foo.[3].nested"));
   TT_ASSERT_PTR_NOTNULL(config_lookup(&cfg, "foo.[3].nested.deeper"));
   TT_ASSERT_PTR_NOTNULL(config_lookup(&cfg, "foo.[3].nested.deeper.color"));
+
+  config_destroy(&cfg);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -664,18 +666,19 @@ TT_TEST(ReadStream)
            config_error_line(&cfg));
   }
   TT_ASSERT_TRUE(ok);
+
+  config_destroy(&cfg);
 }
 
 /* ------------------------------------------------------------------------- */
 
 TT_TEST(BinaryAndHex)
 {
-  char *buf;
+  const char *buf;
   config_t cfg;
   int rc;
   int ival;
   long long llval;
-
 
   config_init(&cfg);
 
@@ -685,28 +688,37 @@ TT_TEST(BinaryAndHex)
         "someautobigbin=0b111111111111111111111111111111111;"
         "somebighex=0x100000000L;\n"
         "somebigbin=0b111111111111111111111111111111111L;";
+
   rc = config_read_string(&cfg, buf);
   TT_ASSERT_TRUE(rc);
-  rc = config_lookup_int(&cfg,"somebin",&ival);
+
+  rc = config_lookup_int(&cfg, "somebin", &ival);
   TT_ASSERT_TRUE(rc);
   TT_ASSERT_INT_EQ(ival, 85);
-  rc = config_lookup_int(&cfg,"somehex",&ival);
+
+  rc = config_lookup_int(&cfg, "somehex", &ival);
   TT_ASSERT_TRUE(rc);
   TT_ASSERT_INT_EQ(ival, 48879);
-  rc = config_lookup_int64(&cfg,"someautobighex",&llval);
+
+  rc = config_lookup_int64(&cfg, "someautobighex", &llval);
   TT_ASSERT_TRUE(rc);
   TT_ASSERT_INT64_EQ(llval, 0x100000000LL);
-  rc = config_lookup_int64(&cfg,"someautobigbin",&llval);
+
+  rc = config_lookup_int64(&cfg, "someautobigbin", &llval);
   TT_ASSERT_TRUE(rc);
   TT_ASSERT_INT64_EQ(llval, 0x1ffffffffLL);
-  rc = config_lookup_int64(&cfg,"somebighex",&llval);
+
+  rc = config_lookup_int64(&cfg, "somebighex", &llval);
   TT_ASSERT_TRUE(rc);
   TT_ASSERT_INT64_EQ(llval, 0x100000000LL);
-  rc = config_lookup_int64(&cfg,"somebigbin",&llval);
+
+  rc = config_lookup_int64(&cfg, "somebigbin", &llval);
   TT_ASSERT_TRUE(rc);
   TT_ASSERT_INT64_EQ(llval, 0x1ffffffffLL);
 
   parse_and_compare("./testdata/binhex.cfg", "./testdata/binhex.cfg");
+
+  config_destroy(&cfg);
 }
 
 /* ------------------------------------------------------------------------- */
