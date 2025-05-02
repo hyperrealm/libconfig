@@ -286,7 +286,7 @@ void libconfig_format_double(double val, int precision, int sci_ok, char *buf,
 /* ------------------------------------------------------------------------- */
 
 #ifdef __GNUC__
-#define clzl(x) __builtin_clzl(x)
+#define clzl(x) __builtin_clzll(x)
 #else
 static int clzl(int64_t val)
 {
