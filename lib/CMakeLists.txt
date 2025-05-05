@@ -1,3 +1,27 @@
+function(set_version_info_from_makefile MAKEFILE_PATH TARGET_NAME)
+    file(READ "${MAKEFILE_PATH}" MAKEFILE_CONTENTS)
+
+    string(REGEX MATCH "VERINFO *= *-version-info +([0-9]+):([0-9]+):([0-9]+)" _ "${MAKEFILE_CONTENTS}")
+
+    if(NOT CMAKE_MATCH_1)
+        message(FATAL_ERROR "No valid VERINFO line found in ${MAKEFILE_PATH}")
+    endif()
+
+    set(CURRENT   ${CMAKE_MATCH_1})
+    set(REVISION  ${CMAKE_MATCH_2})
+    set(AGE       ${CMAKE_MATCH_3})
+
+    math(EXPR SOVERSION "${CURRENT} - ${AGE}")
+    set(VERSION "${SOVERSION}.${AGE}.${REVISION}")
+
+    set_target_properties(${TARGET_NAME} PROPERTIES
+        VERSION ${VERSION}
+        SOVERSION ${SOVERSION}
+    )
+
+    message(STATUS "Set version info for ${TARGET_NAME}: VERSION=${VERSION}, SOVERSION=${SOVERSION}")
+endfunction()
+
 set(libinc
     libconfig.h)
 
@@ -47,16 +71,15 @@ target_include_directories(${libname}++ PUBLIC
 
 set_target_properties(${libname}
     PROPERTIES LINKER_LANGUAGE C
-        SOVERSION "${libconfig_VERSION_MAJOR}"
-        VERSION "${libconfig_VERSION}"
         DEFINE_SYMBOL LIBCONFIG_EXPORTS
         PUBLIC_HEADER "${libinc}")
 set_target_properties(${libname}++
     PROPERTIES LINKER_LANGUAGE CXX
-        SOVERSION "${libconfig_VERSION_MAJOR}"
         DEFINE_SYMBOL LIBCONFIGXX_EXPORTS
-        VERSION "${libconfig_VERSION}"
         PUBLIC_HEADER "${libinc_cpp}")
+
+set_version_info_from_makefile("Makefile.am" ${libname})
+set_version_info_from_makefile("Makefile.am" ${libname}++)
 
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(${libname}++ PRIVATE LIBCONFIG_STATIC)
