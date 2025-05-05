@@ -55,7 +55,7 @@ extern int posix_fsync(int fd);
 #define snprintf  _snprintf
 #endif
 
-#if !(defined(__MINGW32__) || defined(__MINGW64__) && _MSC_VER < 1800
+#if !(defined(__MINGW32__) || defined(__MINGW64__)) && _MSC_VER < 1800
 #define atoll     _atoi64
 #define strtoull  _strtoui64
 #define strtoll   _strtoi64
