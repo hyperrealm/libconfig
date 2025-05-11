@@ -154,6 +154,14 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, const size_t size)
     // Copy the data to a buffer that can be mutated
     memcpy(data_buff, data, size);
 
+    // Validate fuzz_data_t fields to prevent out-of-bounds access
+    if (fuzz_data->content_size > MAX_CONFIG_SIZE ||
+        fuzz_data->path_size > MAX_PATH_SIZE ||
+        (uint64_t)fuzz_data->content_size + (uint64_t)fuzz_data->path_size + 2 > (MAX_BUFF_SIZE - sizeof(fuzz_data_t))) {
+        rc = 0;
+        goto end;
+    }
+
     config_init(&cfg);
 
     if (fuzz_data->content_size > MAX_CONFIG_SIZE || 
