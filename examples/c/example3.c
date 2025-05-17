@@ -39,7 +39,8 @@ int main(int argc, char **argv)
   root = config_root_setting(&cfg);
 
   /* Add some settings to the configuration. */
-  group = config_setting_add(root, "address", CONFIG_TYPE_GROUP);
+  group = config_setting_add_with_comment(
+      root, "address", CONFIG_TYPE_GROUP, "Address for parcel delivery");
 
   setting = config_setting_add(group, "street", CONFIG_TYPE_STRING);
   config_setting_set_string(setting, "1 Woz Way");
