@@ -598,7 +598,7 @@ TT_TEST(SettingLookups)
 
   ok = config_lookup_string(&cfg, "foo.[0].[1]", &str);
   TT_ASSERT_FALSE(ok);
-  
+
   ok = config_lookup_string(&cfg, "foo.[0].array.[0].blah", &str);
   TT_ASSERT_FALSE(ok);
 
@@ -610,7 +610,7 @@ TT_TEST(SettingLookups)
 
   setting = config_lookup(&cfg, "foo.[0].array.[0");
   TT_ASSERT_PTR_NULL(setting);
-  
+
   setting = config_lookup(&cfg, "/foo.[0].array.[0]");
   TT_ASSERT_PTR_NOTNULL(setting);
 
@@ -622,7 +622,7 @@ TT_TEST(SettingLookups)
 
   setting = config_setting_lookup(parent, ".[0]");
   TT_ASSERT_PTR_NOTNULL(setting);
-  
+
   setting = config_setting_lookup(parent, ".[0].array");
   TT_ASSERT_PTR_NOTNULL(setting);
 
@@ -659,7 +659,7 @@ TT_TEST(ReadStream)
   ok = config_read(&cfg, stream);
 
   fclose(stream);
-  
+
   if(!ok)
   {
     printf("error: %s:%d\n", config_error_text(&cfg),
@@ -715,7 +715,7 @@ TT_TEST(BinaryAndHex)
 
   rc = config_lookup_int(&cfg, "someautobigbin", &ival);
   TT_ASSERT_FALSE(rc);
-  
+
   rc = config_lookup_int64(&cfg, "somebighex", &llval);
   TT_ASSERT_TRUE(rc);
   TT_ASSERT_INT64_EQ(llval, 0x100000000LL);
@@ -734,7 +734,7 @@ TT_TEST(BinaryAndHex)
   rc = config_lookup_int64(&cfg, "somebigoctal", &llval);
   TT_ASSERT_TRUE(rc);
   TT_ASSERT_INT64_EQ(llval, 549755813887LL);
-  
+
   parse_and_compare("./testdata/binhex.cfg", "./testdata/binhex.cfg");
 
   config_destroy(&cfg);

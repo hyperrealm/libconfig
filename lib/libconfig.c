@@ -78,6 +78,26 @@ static void __config_write_setting(const config_t *config,
 
 /* ------------------------------------------------------------------------- */
 
+#ifdef LIBCONFIG_ASSERTS
+
+static void __config_assert(const char *function, const char *expr)
+{
+  fprintf(stderr, "failed assertion in %s(): %s\n", function, expr);
+  fflush(stderr);
+  abort();
+}
+
+#define config_assert(expr) \
+  if((expr) == 0) __config_assert(__FUNCTION__, #expr)
+
+#else
+
+#define config_assert(expr)
+
+#endif
+
+/* ------------------------------------------------------------------------- */
+
 static void __config_locale_override(void)
 {
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)) \
@@ -192,7 +212,7 @@ static void __config_write_value(const config_t *config,
           libconfig_format_bin(value->llval, temp_buf, sizeof(temp_buf));
           fprintf(stream, "0b%sL", temp_buf);
           break;
-          
+
         case CONFIG_FORMAT_OCT:
           fprintf(stream, "0o%llo", value->llval);
           break;
@@ -774,6 +794,8 @@ unsigned short config_get_float_precision(const config_t *config)
 
 void config_init(config_t *config)
 {
+  config_assert(config != NULL);
+
   __zero(config);
   config_clear(config);
 
@@ -790,6 +812,8 @@ void config_init(config_t *config)
 
 void config_set_options(config_t *config, int options)
 {
+  config_assert(config != NULL);
+
   config->options = options;
 }
 
@@ -797,6 +821,8 @@ void config_set_options(config_t *config, int options)
 
 int config_get_options(const config_t *config)
 {
+  config_assert(config != NULL);
+
   return(config->options);
 }
 
@@ -804,6 +830,8 @@ int config_get_options(const config_t *config)
 
 void config_set_option(config_t *config, int option, int flag)
 {
+  config_assert(config != NULL);
+
   if(flag)
     config->options |= option;
   else
@@ -814,6 +842,8 @@ void config_set_option(config_t *config, int option, int flag)
 
 int config_get_option(const config_t *config, int option)
 {
+  config_assert(config != NULL);
+
   return((config->options & option) == option);
 }
 
@@ -821,6 +851,8 @@ int config_get_option(const config_t *config, int option)
 
 void config_set_hook(config_t *config, void *hook)
 {
+  config_assert(config != NULL);
+
   config->hook = hook;
 }
 
@@ -899,6 +931,9 @@ static int __config_setting_get_int(const config_setting_t *setting,
 int config_setting_get_int(const config_setting_t *setting)
 {
   int value = 0;
+
+  config_assert(setting != NULL);
+
   __config_setting_get_int(setting, &value);
   return(value);
 }
@@ -907,6 +942,9 @@ int config_setting_get_int(const config_setting_t *setting)
 
 int config_setting_get_int_safe(const config_setting_t *setting, int *value)
 {
+  config_assert(setting != NULL);
+  config_assert(value != NULL);
+
   return __config_setting_get_int(setting, value);
 }
 
@@ -944,6 +982,9 @@ static int __config_setting_get_int64(const config_setting_t *setting,
 long long config_setting_get_int64(const config_setting_t *setting)
 {
   long long value = 0;
+
+  config_assert(setting != NULL);
+
   __config_setting_get_int64(setting, &value);
   return(value);
 }
@@ -953,6 +994,9 @@ long long config_setting_get_int64(const config_setting_t *setting)
 int config_setting_get_int64_safe(const config_setting_t *setting,
                                   long long *value)
 {
+  config_assert(setting != NULL);
+  config_assert(value != NULL);
+
   return __config_setting_get_int64(setting, value);
 }
 
@@ -961,7 +1005,12 @@ int config_setting_get_int64_safe(const config_setting_t *setting,
 int config_setting_lookup_int(const config_setting_t *setting,
                               const char *name, int *value)
 {
-  config_setting_t *member = config_setting_get_member(setting, name);
+  config_setting_t *member;
+
+  config_assert(setting != NULL);
+  config_assert(value != NULL);
+
+  member = config_setting_get_member(setting, name);
   if(! member)
     return(CONFIG_FALSE);
 
@@ -973,7 +1022,13 @@ int config_setting_lookup_int(const config_setting_t *setting,
 int config_setting_lookup_int64(const config_setting_t *setting,
                                 const char *name, long long *value)
 {
-  config_setting_t *member = config_setting_get_member(setting, name);
+  config_setting_t *member;
+
+  config_assert(setting != NULL);
+  config_assert(name != NULL);
+  config_assert(value != NULL);
+
+  member = config_setting_get_member(setting, name);
   if(! member)
     return(CONFIG_FALSE);
 
@@ -1019,6 +1074,9 @@ static int __config_setting_get_float(const config_setting_t *setting,
 double config_setting_get_float(const config_setting_t *setting)
 {
   double value = 0.0;
+
+  config_assert(setting != NULL);
+
   __config_setting_get_float(setting, &value);
   return(value);
 }
@@ -1036,7 +1094,13 @@ int config_setting_get_float_safe(const config_setting_t *setting,
 int config_setting_lookup_float(const config_setting_t *setting,
                                 const char *name, double *value)
 {
-  config_setting_t *member = config_setting_get_member(setting, name);
+  config_setting_t *member;
+
+  config_assert(setting != NULL);
+  config_assert(name != NULL);
+  config_assert(value != NULL);
+
+  member = config_setting_get_member(setting, name);
   if(! member)
     return(CONFIG_FALSE);
 
@@ -1048,7 +1112,13 @@ int config_setting_lookup_float(const config_setting_t *setting,
 int config_setting_lookup_string(const config_setting_t *setting,
                                  const char *name, const char **value)
 {
-  config_setting_t *member = config_setting_get_member(setting, name);
+  config_setting_t *member;
+
+  config_assert(setting != NULL);
+  config_assert(name != NULL);
+  config_assert(value != NULL);
+
+  member = config_setting_get_member(setting, name);
   if(! member)
     return(CONFIG_FALSE);
 
@@ -1064,7 +1134,13 @@ int config_setting_lookup_string(const config_setting_t *setting,
 int config_setting_lookup_bool(const config_setting_t *setting,
                                const char *name, int *value)
 {
-  config_setting_t *member = config_setting_get_member(setting, name);
+  config_setting_t *member;
+
+  config_assert(setting != NULL);
+  config_assert(name != NULL);
+  config_assert(value != NULL);
+
+  member = config_setting_get_member(setting, name);
   if(! member)
     return(CONFIG_FALSE);
 
@@ -1079,6 +1155,8 @@ int config_setting_lookup_bool(const config_setting_t *setting,
 
 int config_setting_set_int(config_setting_t *setting, int value)
 {
+  config_assert(setting != NULL);
+
   switch(setting->type)
   {
     case CONFIG_TYPE_NONE:
@@ -1107,6 +1185,8 @@ int config_setting_set_int(config_setting_t *setting, int value)
 
 int config_setting_set_int64(config_setting_t *setting, long long value)
 {
+  config_assert(setting != NULL);
+
   switch(setting->type)
   {
     case CONFIG_TYPE_NONE:
@@ -1144,6 +1224,8 @@ int config_setting_set_int64(config_setting_t *setting, long long value)
 
 int config_setting_set_float(config_setting_t *setting, double value)
 {
+  config_assert(setting != NULL);
+
   switch(setting->type)
   {
     case CONFIG_TYPE_NONE:
@@ -1181,6 +1263,8 @@ int config_setting_set_float(config_setting_t *setting, double value)
 
 int config_setting_get_bool(const config_setting_t *setting)
 {
+  config_assert(setting != NULL);
+
   return((setting->type == CONFIG_TYPE_BOOL) ? setting->value.ival : 0);
 }
 
@@ -1189,12 +1273,15 @@ int config_setting_get_bool(const config_setting_t *setting)
 int config_setting_get_bool_safe(const config_setting_t *setting,
                                  int *value)
 {
+  config_assert(setting != NULL);
+  config_assert(value != NULL);
+
   if(setting->type == CONFIG_TYPE_BOOL)
   {
     *value = setting->value.ival;
     return(CONFIG_TRUE);
   }
-  
+
   return(CONFIG_FALSE);
 }
 
@@ -1202,6 +1289,8 @@ int config_setting_get_bool_safe(const config_setting_t *setting,
 
 int config_setting_set_bool(config_setting_t *setting, int value)
 {
+  config_assert(setting != NULL);
+
   if(setting->type == CONFIG_TYPE_NONE)
     setting->type = CONFIG_TYPE_BOOL;
   else if(setting->type != CONFIG_TYPE_BOOL)
@@ -1215,6 +1304,8 @@ int config_setting_set_bool(config_setting_t *setting, int value)
 
 const char *config_setting_get_string(const config_setting_t *setting)
 {
+  config_assert(setting != NULL);
+
   return((setting->type == CONFIG_TYPE_STRING) ? setting->value.sval : NULL);
 }
 
@@ -1223,12 +1314,15 @@ const char *config_setting_get_string(const config_setting_t *setting)
 int config_setting_get_string_safe(const config_setting_t *setting,
                                    const char **value)
 {
+  config_assert(setting != NULL);
+  config_assert(value != NULL);
+
   if(setting->type == CONFIG_TYPE_STRING)
   {
     *value = setting->value.sval;
     return(CONFIG_TRUE);
   }
-  
+
   return(CONFIG_FALSE);
 }
 
@@ -1236,6 +1330,9 @@ int config_setting_get_string_safe(const config_setting_t *setting,
 
 int config_setting_set_string(config_setting_t *setting, const char *value)
 {
+  config_assert(setting != NULL);
+  config_assert(value != NULL);
+
   if(setting->type == CONFIG_TYPE_NONE)
     setting->type = CONFIG_TYPE_STRING;
   else if(setting->type != CONFIG_TYPE_STRING)
@@ -1252,6 +1349,8 @@ int config_setting_set_string(config_setting_t *setting, const char *value)
 
 int config_setting_set_format(config_setting_t *setting, unsigned short format)
 {
+  config_assert(setting != NULL);
+
   if(((setting->type != CONFIG_TYPE_INT)
       && (setting->type != CONFIG_TYPE_INT64))
      || ((format != CONFIG_FORMAT_DEFAULT)
@@ -1268,6 +1367,8 @@ int config_setting_set_format(config_setting_t *setting, unsigned short format)
 
 unsigned short config_setting_get_format(const config_setting_t *setting)
 {
+  config_assert(setting != NULL);
+
   return(setting->format != 0 ? setting->format
          : setting->config->default_format);
 }
@@ -1279,6 +1380,9 @@ const config_setting_t *config_setting_lookup_const(
 {
   const char *p = path;
   const config_setting_t *found = setting;
+
+  config_assert(setting != NULL);
+  config_assert(path != NULL);
 
   while(*p && found)
   {
@@ -1318,6 +1422,9 @@ const config_setting_t *config_setting_lookup_const(
 config_setting_t *config_setting_lookup(const config_setting_t *setting,
                                         const char *path)
 {
+  config_assert(setting != NULL);
+  config_assert(path != NULL);
+
   return((config_setting_t *)config_setting_lookup_const(setting, path));
 }
 
@@ -1325,6 +1432,9 @@ config_setting_t *config_setting_lookup(const config_setting_t *setting,
 
 config_setting_t *config_lookup(const config_t *config, const char *path)
 {
+  config_assert(config != NULL);
+  config_assert(path != NULL);
+
   return(config_setting_lookup(config->root, path));
 }
 
@@ -1333,6 +1443,9 @@ config_setting_t *config_lookup(const config_t *config, const char *path)
 const config_setting_t *config_lookup_const(const config_t *config,
                                             const char *path)
 {
+  config_assert(config != NULL);
+  config_assert(path != NULL);
+
   return(config_setting_lookup(config->root, path));
 }
 
@@ -1341,7 +1454,13 @@ const config_setting_t *config_lookup_const(const config_t *config,
 int config_lookup_string(const config_t *config, const char *path,
                          const char **value)
 {
-  const config_setting_t *s = config_lookup(config, path);
+  const config_setting_t *s;
+
+  config_assert(config != NULL);
+  config_assert(path != NULL);
+  config_assert(value != NULL);
+
+  s = config_lookup(config, path);
   if(! s)
     return(CONFIG_FALSE);
 
@@ -1358,7 +1477,13 @@ int config_lookup_string(const config_t *config, const char *path,
 int config_lookup_int(const config_t *config, const char *path,
                       int *value)
 {
-  const config_setting_t *s = config_lookup(config, path);
+  const config_setting_t *s;
+
+  config_assert(config != NULL);
+  config_assert(path != NULL);
+  config_assert(value != NULL);
+
+  s = config_lookup(config, path);
   if(! s)
     return(CONFIG_FALSE);
 
@@ -1370,7 +1495,13 @@ int config_lookup_int(const config_t *config, const char *path,
 int config_lookup_int64(const config_t *config, const char *path,
                         long long *value)
 {
-  const config_setting_t *s = config_lookup(config, path);
+  const config_setting_t *s;
+
+  config_assert(config != NULL);
+  config_assert(path != NULL);
+  config_assert(value != NULL);
+
+  s = config_lookup(config, path);
   if(! s)
     return(CONFIG_FALSE);
 
@@ -1382,7 +1513,13 @@ int config_lookup_int64(const config_t *config, const char *path,
 int config_lookup_float(const config_t *config, const char *path,
                         double *value)
 {
-  const config_setting_t *s = config_lookup(config, path);
+  const config_setting_t *s;
+
+  config_assert(config != NULL);
+  config_assert(path != NULL);
+  config_assert(value != NULL);
+
+  s = config_lookup(config, path);
   if(! s)
     return(CONFIG_FALSE);
 
@@ -1393,7 +1530,13 @@ int config_lookup_float(const config_t *config, const char *path,
 
 int config_lookup_bool(const config_t *config, const char *path, int *value)
 {
-  const config_setting_t *s = config_lookup(config, path);
+  const config_setting_t *s;
+
+  config_assert(config != NULL);
+  config_assert(path != NULL);
+  config_assert(value != NULL);
+
+  s = config_lookup(config, path);
   if(! s)
     return(CONFIG_FALSE);
 
@@ -1408,7 +1551,11 @@ int config_lookup_bool(const config_t *config, const char *path, int *value)
 
 int config_setting_get_int_elem(const config_setting_t *setting, int idx)
 {
-  const config_setting_t *element = config_setting_get_elem(setting, idx);
+  const config_setting_t *element;
+
+  config_assert(setting != NULL);
+
+  element = config_setting_get_elem(setting, idx);
 
   return(element ? config_setting_get_int(element) : 0);
 }
@@ -1419,6 +1566,8 @@ config_setting_t *config_setting_set_int_elem(config_setting_t *setting,
                                               int idx, int value)
 {
   config_setting_t *element = NULL;
+
+  config_assert(setting != NULL);
 
   if((setting->type != CONFIG_TYPE_ARRAY)
      && (setting->type != CONFIG_TYPE_LIST))
@@ -1450,7 +1599,11 @@ config_setting_t *config_setting_set_int_elem(config_setting_t *setting,
 long long config_setting_get_int64_elem(const config_setting_t *setting,
                                         int idx)
 {
-  const config_setting_t *element = config_setting_get_elem(setting, idx);
+  const config_setting_t *element;
+
+  config_assert(setting != NULL);
+
+  element = config_setting_get_elem(setting, idx);
 
   return(element ? config_setting_get_int64(element) : 0);
 }
@@ -1461,6 +1614,8 @@ config_setting_t *config_setting_set_int64_elem(config_setting_t *setting,
                                                 int idx, long long value)
 {
   config_setting_t *element = NULL;
+
+  config_assert(setting != NULL);
 
   if((setting->type != CONFIG_TYPE_ARRAY)
      && (setting->type != CONFIG_TYPE_LIST))
@@ -1491,7 +1646,11 @@ config_setting_t *config_setting_set_int64_elem(config_setting_t *setting,
 
 double config_setting_get_float_elem(const config_setting_t *setting, int idx)
 {
-  config_setting_t *element = config_setting_get_elem(setting, idx);
+  config_setting_t *element;
+
+  config_assert(setting != NULL);
+
+  element = config_setting_get_elem(setting, idx);
 
   return(element ? config_setting_get_float(element) : 0.0);
 }
@@ -1502,6 +1661,8 @@ config_setting_t *config_setting_set_float_elem(config_setting_t *setting,
                                                 int idx, double value)
 {
   config_setting_t *element = NULL;
+
+  config_assert(setting != NULL);
 
   if((setting->type != CONFIG_TYPE_ARRAY)
      && (setting->type != CONFIG_TYPE_LIST))
@@ -1530,7 +1691,11 @@ config_setting_t *config_setting_set_float_elem(config_setting_t *setting,
 
 int config_setting_get_bool_elem(const config_setting_t *setting, int idx)
 {
-  config_setting_t *element = config_setting_get_elem(setting, idx);
+  config_setting_t *element;
+
+  config_assert(setting != NULL);
+
+  element = config_setting_get_elem(setting, idx);
 
   if(! element)
     return(CONFIG_FALSE);
@@ -1547,6 +1712,8 @@ config_setting_t *config_setting_set_bool_elem(config_setting_t *setting,
                                                int idx, int value)
 {
   config_setting_t *element = NULL;
+
+  config_assert(setting != NULL);
 
   if((setting->type != CONFIG_TYPE_ARRAY)
      && (setting->type != CONFIG_TYPE_LIST))
@@ -1576,8 +1743,11 @@ config_setting_t *config_setting_set_bool_elem(config_setting_t *setting,
 const char *config_setting_get_string_elem(const config_setting_t *setting,
                                            int idx)
 {
-  config_setting_t *element = config_setting_get_elem(setting, idx);
+  config_setting_t *element;
 
+  config_assert(setting != NULL);
+
+  element = config_setting_get_elem(setting, idx);
   if(! element)
     return(NULL);
 
@@ -1593,6 +1763,9 @@ config_setting_t *config_setting_set_string_elem(config_setting_t *setting,
                                                  int idx, const char *value)
 {
   config_setting_t *element = NULL;
+
+  config_assert(setting != NULL);
+  config_assert(value != NULL);
 
   if((setting->type != CONFIG_TYPE_ARRAY)
      && (setting->type != CONFIG_TYPE_LIST))
@@ -1621,8 +1794,10 @@ config_setting_t *config_setting_set_string_elem(config_setting_t *setting,
 
 config_setting_t *config_setting_get_elem(const config_setting_t *setting,
                                           unsigned int idx)
-{  
+{
   config_list_t *list;
+
+  config_assert(setting != NULL);
 
   if(! config_setting_is_aggregate(setting))
     return(NULL);
@@ -1642,6 +1817,8 @@ config_setting_t *config_setting_get_elem(const config_setting_t *setting,
 config_setting_t *config_setting_get_member(const config_setting_t *setting,
                                             const char *name)
 {
+  config_assert(setting != NULL);
+
   if(setting->type != CONFIG_TYPE_GROUP)
     return(NULL);
 
@@ -1655,6 +1832,8 @@ config_setting_t *config_setting_get_member(const config_setting_t *setting,
 
 void config_set_destructor(config_t *config, void (*destructor)(void *))
 {
+  config_assert(config != NULL);
+
   config->destructor = destructor;
 }
 
@@ -1662,14 +1841,18 @@ void config_set_destructor(config_t *config, void (*destructor)(void *))
 
 void config_set_include_dir(config_t *config, const char *include_dir)
 {
+  config_assert(config != NULL);
+
   __delete(config->include_dir);
-  config->include_dir = strdup(include_dir);
+  config->include_dir = include_dir ? strdup(include_dir) : NULL;
 }
 
 /* ------------------------------------------------------------------------- */
 
 void config_set_include_func(config_t *config, config_include_fn_t func)
 {
+  config_assert(config != NULL);
+
   config->include_fn = func ? func : config_default_include_func;
 }
 
@@ -1677,6 +1860,8 @@ void config_set_include_func(config_t *config, config_include_fn_t func)
 
 int config_setting_length(const config_setting_t *setting)
 {
+  config_assert(setting != NULL);
+
   if(! config_setting_is_aggregate(setting))
     return(0);
 
@@ -1690,6 +1875,8 @@ int config_setting_length(const config_setting_t *setting)
 
 void config_setting_set_hook(config_setting_t *setting, void *hook)
 {
+  config_assert(setting != NULL);
+
   setting->hook = hook;
 }
 
@@ -1830,6 +2017,9 @@ const char **config_default_include_func(config_t *config,
   char *file;
   const char **files;
 
+  config_assert(config != NULL);
+  config_assert(path != NULL);
+
   if(include_dir && IS_RELATIVE_PATH(path))
   {
     file = (char *)libconfig_malloc(strlen(include_dir) + strlen(path) + 2);
@@ -1853,6 +2043,8 @@ const char **config_default_include_func(config_t *config,
 
 int config_setting_is_scalar(const config_setting_t *setting)
 {
+  config_assert(setting != NULL);
+
   return(__config_type_is_scalar(setting->type));
 }
 
@@ -1860,6 +2052,8 @@ int config_setting_is_scalar(const config_setting_t *setting)
 
 int config_setting_is_aggregate(const config_setting_t *setting)
 {
+  config_assert(setting != NULL);
+
   return((setting->type == CONFIG_TYPE_ARRAY)
          || (setting->type == CONFIG_TYPE_LIST)
          || (setting->type == CONFIG_TYPE_GROUP));

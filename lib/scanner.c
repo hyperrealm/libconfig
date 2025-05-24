@@ -1532,7 +1532,6 @@ case 39:
 YY_RULE_SETUP
 #line 171 "scanner.l"
 {
-  printf("bin: %s\n", yytext);
                     int ok, is_long;
                     long long llval = libconfig_parse_integer(yytext + 2, 2,
                                                               &is_long, &ok);
@@ -1553,7 +1552,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 190 "scanner.l"
+#line 189 "scanner.l"
 {
                     int ok, is_long;
                     long long llval = libconfig_parse_integer(yytext + 2, 8,
@@ -1575,7 +1574,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 208 "scanner.l"
+#line 207 "scanner.l"
 {
                     int ok, is_long;
                     long long llval = libconfig_parse_integer(yytext + 2, 16,
@@ -1597,32 +1596,32 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 226 "scanner.l"
+#line 225 "scanner.l"
 { return(TOK_ARRAY_START); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 227 "scanner.l"
+#line 226 "scanner.l"
 { return(TOK_ARRAY_END); }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 228 "scanner.l"
+#line 227 "scanner.l"
 { return(TOK_LIST_START); }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 229 "scanner.l"
+#line 228 "scanner.l"
 { return(TOK_LIST_END); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 230 "scanner.l"
+#line 229 "scanner.l"
 { return(TOK_SEMICOLON); }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 231 "scanner.l"
+#line 230 "scanner.l"
 { return(TOK_GARBAGE); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
@@ -1630,7 +1629,7 @@ case YY_STATE_EOF(SINGLE_LINE_COMMENT):
 case YY_STATE_EOF(MULTI_LINE_COMMENT):
 case YY_STATE_EOF(STRING):
 case YY_STATE_EOF(INCLUDE):
-#line 233 "scanner.l"
+#line 232 "scanner.l"
 {
   const char *error = NULL;
   FILE *fp;
@@ -1666,10 +1665,10 @@ case YY_STATE_EOF(INCLUDE):
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 266 "scanner.l"
+#line 265 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1673 "scanner.c"
+#line 1672 "scanner.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2798,7 +2797,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 266 "scanner.l"
+#line 265 "scanner.l"
 
 
 void *libconfig_yyalloc(size_t bytes, void *yyscanner)

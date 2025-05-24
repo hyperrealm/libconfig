@@ -169,7 +169,6 @@ include_open ^[ \t]*@include[ \t]+\"
                     return(TOK_INTEGER64);
                   }
 {bin}             {
-  printf("bin: %s\n", yytext);
                     int ok, is_long;
                     long long llval = libconfig_parse_integer(yytext + 2, 2,
                                                               &is_long, &ok);

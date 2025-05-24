@@ -10,6 +10,14 @@ If you do not wish to build the C++ components, use:
 
 				 -*-
 
+If you would like the library to raise an assertion (abort the program) if
+a NULL pointer is passed as a parameter to any API function that does not
+accept NULL pointers for that parameter, use:
+
+./configure --enable-asserts
+
+				 -*-
+
 The `examples' subdirectory contains some examples of how to use libconfig
 from C and C++.
 

@@ -83,6 +83,18 @@ AC_CHECK_FUNCS([newlocale uselocale freelocale])
 
 dnl Package options
 
+doasserts=no
+
+AC_ARG_ENABLE(asserts,
+AS_HELP_STRING([--enable-asserts], [Enable null pointer asserts]),
+[if test "$enableval" = "yes"; then doasserts="yes"; fi],
+[
+doasserts=no
+]
+)
+
+AM_CONDITIONAL(ENABLE_ASSERTS, test x$doasserts = xyes)
+
 docxx=yes
 
 AC_ARG_ENABLE(cxx,
