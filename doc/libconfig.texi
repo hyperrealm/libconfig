@@ -7,7 +7,7 @@
 @settitle libconfig
 
 @set edition 1.8.1
-@set update-date 1 May 2025
+@set update-date 1 Jun 2025
 @set subtitle-text A Library For Processing Structured Configuration Files
 @set author-text Mark A.@: Lindner
 
@@ -121,9 +121,11 @@ libraries falls short in one or more ways. The main features of
 
 @itemize @bullet
 
-@item A fully reentrant parser. Independent configurations can be parsed in concurrent threads at the same time.
+@item A fully reentrant parser. Independent configurations can be parsed in
+concurrent threads at the same time.
 
-@item Both C @i{and} C++ bindings, as well as hooks to allow for the creation of wrappers in other languages.
+@item Both C @i{and} C++ bindings, as well as hooks to allow for the creation of
+wrappers in other languages.
 
 @item A simple, structured configuration file format that is more
 readable and compact than XML and more flexible than the obsolete but
@@ -275,7 +277,9 @@ g++ `pkg-config --cflags libconfig++` myprogram.cpp -o myprogram \
 @sp 1
 Note the backticks in the above examples.
 
-When using @b{autoconf}, the @code{PKG_CHECK_MODULES} m4 macro may be used to check for the presence of a given version of @i{libconfig}, and set the appropriate Makefile variables automatically. For example:
+When using @b{autoconf}, the @code{PKG_CHECK_MODULES} m4 macro may be
+used to check for the presence of a given version of @i{libconfig},
+and set the appropriate Makefile variables automatically. For example:
 
 @smallexample
 PKG_CHECK_MODULES([LIBCONFIGXX], [libconfig++ >= 1.4],,
@@ -283,11 +287,11 @@ PKG_CHECK_MODULES([LIBCONFIGXX], [libconfig++ >= 1.4],,
 )
 @end smallexample
 
-In the above example, if @i{libconfig++} version 1.4 or newer is found,
-the Makefile variables @code{LIBCONFIGXX_LIBS} and @code{LIBCONFIGXX_CFLAGS} will be
-set to the appropriate compiler and linker flags for compiling with
-@i{libconfig}, and if it is not found, the configure script will abort
-with an error to that effect.
+In the above example, if @i{libconfig++} version 1.4 or newer is
+found, the Makefile variables @code{LIBCONFIGXX_LIBS} and
+@code{LIBCONFIGXX_CFLAGS} will be set to the appropriate compiler and
+linker flags for compiling with @i{libconfig}, and if it is not found,
+the configure script will abort with an error to that effect.
 
 @node Version Test Macros, , Compiling Using pkg-config, Introduction
 @comment  node-name,  next,  previous,  up
@@ -405,7 +409,7 @@ application:
     columns = [ "Last Name", "First Name", "MI" ];
     bitmask = 0x1FC3;	// hex
     bitmask2 = 0b1011; // binary
-    umask = 0027;	// octal. Range limited to that of "int"
+    umask = 0o27;	// octal. Range limited to that of "int"
   @};
 @};
 @end smallexample
@@ -491,7 +495,8 @@ An array has the form:
 An array may have zero or more elements, but the elements must all be
 scalar values of the same type.
 
-The last element in an array may be followed by a comma, which will be ignored.
+The last element in an array may be followed by a comma, which will be
+ignored.
 
 @node Lists, Integer Values, Arrays, Configuration Files
 @comment  node-name,  next,  previous,  up
@@ -510,15 +515,26 @@ The last element in a list may be followed by a comma, which will be ignored.
 @comment  node-name,  next,  previous,  up
 @section Integer Values
 
-Integers can be represented in one of two ways: as a series of one or more
-decimal digits (@samp{0} - @samp{9}), with an optional leading sign character
-(@samp{+} or @samp{-}); as a hexadecimal value consisting of the characters
-@samp{0x} followed by a series of one or more hexadecimal digits (@samp{0} -
-@samp{9}, @samp{A} - @samp{F}, @samp{a} - @samp{f}); or (as of version 1.8 of
-the library) as a binary value consisting of the characters @samp{0b} followed
-by a series of one or more binary digits (@samp{0} - @samp{1}). Additionally,
-octal notation integers (that is, those having a leading zero with non-zero value)
-are also allowed.
+Integers can be represented in one of four ways:
+
+@itemize @bullet
+
+@item As a series of one or more decimal digits (@samp{0} - @samp{9}), with an
+optional leading sign character (@samp{+} or @samp{-}).
+
+@item As a binary value consisting of the characters @samp{0b} followed by a
+series of one or more binary digits (@samp{0} - @samp{1}).
+
+@item As an octal value consisting of the characters @samp{0o} or @samp{0q}
+followed by a series of one or more octal digits (@samp{0} - @samp{7}). (Since
+version 1.8.1; prior versions of the library supported the old octal
+format of a single leading `0', which is ambiguous.)
+
+@item As a hexadecimal value consisting of the characters
+@samp{0x} followed by a series of one or more hexadecimal digits
+(@samp{0} - @samp{9}, @samp{A} - @samp{F}, @samp{a} - @samp{f}).
+
+@end itemize
 
 @node 64-bit Integer Values, Floating Point Values, Integer Values, Configuration Files
 @comment  node-name,  next,  previous,  up
@@ -529,8 +545,19 @@ that an `L' character is appended to indicate a 64-bit value. For example,
 @samp{0L} indicates a 64-bit integer value 0.  As of version 1.5 of the
 library, the trailing `L' is optional; if the integer value exceeds the range
 of a 32-bit integer, it will automatically be interpreted as a 64-bit integer.
-As of version 1.7.4 of the library this behavior is extended to hexadecimal
-(and binary) integers as well.
+
+As of version 1.8.1 of the library, this behavior also applies to
+integers expressed in binary (base 2), octal (base 8), and hexadecimal
+(base 16). A binary value with 32 or less digits and no trailing `L'
+will always be parsed as a 32-bit integer, while a binary value with
+33 to 64 digits @i{or} with a trailing `L' will always be parsed as a
+64-bit integer. Similarly, an octal value with 10 or less digits and
+no trailing `L' will always be parsed as a 32-bit integer, while an
+octal value with 11 to 21 digits @i{or} with a trailing `L' will
+always be parsed as a 64-bit integer.  And finally, a hexadecimal
+value with 8 or less digits and no trailing `L' will always be parsed
+as a 32-bit integer, while a hexadecimal value with 9 to 16 digits
+@i{or} with a trailing `L' will always be parsed as a 64-bit integer.
 
 The @i{integer} and @i{64-bit integer} setting types are interchangeable to the
 extent that a conversion between the corresponding native types would not
@@ -567,8 +594,8 @@ Boolean values may have one of the following values: @samp{true},
 String values consist of arbitrary text delimited by double
 quotes. Literal double quotes can be escaped by preceding them with a
 backslash: @samp{\"}. The escape sequences @samp{\\}, @samp{\f},
-@samp{\n}, @samp{\r}, @samp{\a}, @samp{\b}, @samp{\v} and @samp{\t} are also recognized, and have the
-usual meaning.
+@samp{\n}, @samp{\r}, @samp{\a}, @samp{\b}, @samp{\v} and @samp{\t}
+are also recognized, and have the usual meaning.
 
 In addition, the @samp{\x} escape sequence is supported; this sequence
 must be followed by @i{exactly two} hexadecimal digits, which represent an
@@ -640,12 +667,12 @@ the form:
 
 @cindex include function
 The interpretation of @i{path} depends on the currently registered
-@i{include function}. The default include function prepends the include
-directory, if any, to @i{path}, and then interprets the result as a single,
-literal file path. The application may supply its own include function which
-does variable substitution, wildcard expansion, or other transformations,
-returning a list of zero or more paths to files whose contents should be inlined
-at the point of inclusion.
+@i{include function}. The default include function prepends the
+include directory, if any, to @i{path}, and then interprets the result
+as a single, literal file path. The application may supply its own
+include function which does variable substitution, wildcard expansion,
+or other transformations, returning a list of zero or more paths to
+files whose contents should be inlined at the point of inclusion.
 
 Any backslashes or double quotes in the path must be escaped as
 @samp{\\} and @samp{\"}, respectively.
@@ -725,9 +752,9 @@ attempt to deallocate the @i{config_t} structure itself.
 
 @b{Since @i{v1.7}}
 
-This function clears the configuration @var{config}. All child settings of the
-root setting are recursively destroyed. All other attributes of the configuration
-are left unchanged.
+This function clears the configuration @var{config}. All child
+settings of the root setting are recursively destroyed. All other
+attributes of the configuration are left unchanged.
 
 @end deftypefun
 
@@ -1184,11 +1211,13 @@ These functions get and set the external format for the setting @var{setting}.
 @cindex format
 
 The @var{format} must be one of the constants
-@code{CONFIG_FORMAT_DEFAULT} or @code{CONFIG_FORMAT_HEX}. All settings
-support the @code{CONFIG_FORMAT_DEFAULT} format. The
-@code{CONFIG_FORMAT_HEX} format specifies hexadecimal formatting for
-integer values, and hence only applies to settings of type
-@code{CONFIG_TYPE_INT} and @code{CONFIG_TYPE_INT64}.  If @var{format}
+@code{CONFIG_FORMAT_DEFAULT}, @code{CONFIG_FORMAT_BIN} (since version
+1.8), @code{CONFIG_FORMAT_OCT} (since version 1.8.1), or
+@code{CONFIG_FORMAT_HEX}. All settings support the
+@code{CONFIG_FORMAT_DEFAULT} format. The remaining formats specify
+base-2, base-8, and base-16 representations, respectively, for integer
+values, and hence only apply to settings of type
+@code{CONFIG_TYPE_INT} and @code{CONFIG_TYPE_INT64}. If @var{format}
 is invalid for the given setting, it is ignored.
 
 If a non-default format has not been set for the setting, @code{config_setting_get_format()} returns the default format for the configuration, as set by @code{config_set_default_format()}.
@@ -1197,7 +1226,6 @@ If a non-default format has not been set for the setting, @code{config_setting_g
 success and @code{CONFIG_FALSE} on failure.
 
 @end deftypefun
-
 
 @deftypefun {config_setting_t *} config_setting_get_member (@w{config_setting_t * @var{setting}}, @w{const char * @var{name}})
 
@@ -2227,12 +2255,13 @@ These methods get and set the external format for the setting.
 
 @tindex Setting::Format
 The @var{Setting::Format} enumeration consists of the following
-constants: @code{FormatDefault}, @code{FormatBin}, and @code{FormatHex}.
-All settings support the @code{FormatDefault} format. The @code{FormatHex}
-and @code{FormatBin} formats specify hexadecimal and binary formatting,
-respectively, for integer values; hence these only apply to settings of
-type @code{TypeInt} and @code{TypeInt64}. If @var{format} is invalid
-for the given setting, it is ignored.
+constants: @code{FormatDefault}, @code{FormatBin} (since version 1.8),
+@code{FormatOct} (since version 1.8.1), and @code{FormatHex}. All
+settings support the @code{FormatDefault} format. The remaining
+formats specify base-2, base-8, and base-16 representations,
+respectively, for integer values; hence these only apply to settings
+of type @code{TypeInt} and @code{TypeInt64}. If @var{format} is
+invalid for the given setting, it is ignored.
 
 @end deftypemethod
 

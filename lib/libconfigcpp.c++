@@ -414,6 +414,8 @@ void Config::setDefaultFormat(Setting::Format format)
     _defaultFormat = Setting::FormatHex;
   else if(format == Setting::FormatBin)
     _defaultFormat = Setting::FormatBin;
+  else if (format == Setting::FormatOct)
+    _defaultFormat = Setting::FormatOct;
   else
     _defaultFormat = Setting::FormatDefault;
 
@@ -684,9 +686,13 @@ Setting::Setting(config_setting_t *setting)
       _format = FormatHex;
       break;
 
-   case CONFIG_FORMAT_BIN:
-     _format = FormatBin;
-     break;
+    case CONFIG_FORMAT_BIN:
+      _format = FormatBin;
+      break;
+
+    case CONFIG_FORMAT_OCT:
+      _format = FormatOct;
+      break;
 
     case CONFIG_FORMAT_DEFAULT:
     default:
@@ -712,6 +718,8 @@ void Setting::setFormat(Format format)
       _format = FormatHex;
     else if(format == FormatBin)
       _format = FormatBin;
+    else if(format == FormatOct)
+      _format = FormatOct;
     else
       _format = FormatDefault;
   }

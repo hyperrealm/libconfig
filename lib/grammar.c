@@ -164,24 +164,26 @@ extern int libconfig_yydebug;
     TOK_INTEGER = 259,             /* TOK_INTEGER  */
     TOK_HEX = 260,                 /* TOK_HEX  */
     TOK_BIN = 261,                 /* TOK_BIN  */
-    TOK_INTEGER64 = 262,           /* TOK_INTEGER64  */
-    TOK_HEX64 = 263,               /* TOK_HEX64  */
-    TOK_BIN64 = 264,               /* TOK_BIN64  */
-    TOK_FLOAT = 265,               /* TOK_FLOAT  */
-    TOK_STRING = 266,              /* TOK_STRING  */
-    TOK_NAME = 267,                /* TOK_NAME  */
-    TOK_EQUALS = 268,              /* TOK_EQUALS  */
-    TOK_NEWLINE = 269,             /* TOK_NEWLINE  */
-    TOK_ARRAY_START = 270,         /* TOK_ARRAY_START  */
-    TOK_ARRAY_END = 271,           /* TOK_ARRAY_END  */
-    TOK_LIST_START = 272,          /* TOK_LIST_START  */
-    TOK_LIST_END = 273,            /* TOK_LIST_END  */
-    TOK_COMMA = 274,               /* TOK_COMMA  */
-    TOK_GROUP_START = 275,         /* TOK_GROUP_START  */
-    TOK_GROUP_END = 276,           /* TOK_GROUP_END  */
-    TOK_SEMICOLON = 277,           /* TOK_SEMICOLON  */
-    TOK_GARBAGE = 278,             /* TOK_GARBAGE  */
-    TOK_ERROR = 279                /* TOK_ERROR  */
+    TOK_OCT = 262,                 /* TOK_OCT  */
+    TOK_INTEGER64 = 263,           /* TOK_INTEGER64  */
+    TOK_HEX64 = 264,               /* TOK_HEX64  */
+    TOK_BIN64 = 265,               /* TOK_BIN64  */
+    TOK_OCT64 = 266,               /* TOK_OCT64  */
+    TOK_FLOAT = 267,               /* TOK_FLOAT  */
+    TOK_STRING = 268,              /* TOK_STRING  */
+    TOK_NAME = 269,                /* TOK_NAME  */
+    TOK_EQUALS = 270,              /* TOK_EQUALS  */
+    TOK_NEWLINE = 271,             /* TOK_NEWLINE  */
+    TOK_ARRAY_START = 272,         /* TOK_ARRAY_START  */
+    TOK_ARRAY_END = 273,           /* TOK_ARRAY_END  */
+    TOK_LIST_START = 274,          /* TOK_LIST_START  */
+    TOK_LIST_END = 275,            /* TOK_LIST_END  */
+    TOK_COMMA = 276,               /* TOK_COMMA  */
+    TOK_GROUP_START = 277,         /* TOK_GROUP_START  */
+    TOK_GROUP_END = 278,           /* TOK_GROUP_END  */
+    TOK_SEMICOLON = 279,           /* TOK_SEMICOLON  */
+    TOK_GARBAGE = 280,             /* TOK_GARBAGE  */
+    TOK_ERROR = 281                /* TOK_ERROR  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -194,24 +196,26 @@ extern int libconfig_yydebug;
 #define TOK_INTEGER 259
 #define TOK_HEX 260
 #define TOK_BIN 261
-#define TOK_INTEGER64 262
-#define TOK_HEX64 263
-#define TOK_BIN64 264
-#define TOK_FLOAT 265
-#define TOK_STRING 266
-#define TOK_NAME 267
-#define TOK_EQUALS 268
-#define TOK_NEWLINE 269
-#define TOK_ARRAY_START 270
-#define TOK_ARRAY_END 271
-#define TOK_LIST_START 272
-#define TOK_LIST_END 273
-#define TOK_COMMA 274
-#define TOK_GROUP_START 275
-#define TOK_GROUP_END 276
-#define TOK_SEMICOLON 277
-#define TOK_GARBAGE 278
-#define TOK_ERROR 279
+#define TOK_OCT 262
+#define TOK_INTEGER64 263
+#define TOK_HEX64 264
+#define TOK_BIN64 265
+#define TOK_OCT64 266
+#define TOK_FLOAT 267
+#define TOK_STRING 268
+#define TOK_NAME 269
+#define TOK_EQUALS 270
+#define TOK_NEWLINE 271
+#define TOK_ARRAY_START 272
+#define TOK_ARRAY_END 273
+#define TOK_LIST_START 274
+#define TOK_LIST_END 275
+#define TOK_COMMA 276
+#define TOK_GROUP_START 277
+#define TOK_GROUP_END 278
+#define TOK_SEMICOLON 279
+#define TOK_GARBAGE 280
+#define TOK_ERROR 281
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -224,7 +228,7 @@ union YYSTYPE
   double fval;
   char *sval;
 
-#line 228 "grammar.c"
+#line 232 "grammar.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -250,44 +254,46 @@ enum yysymbol_kind_t
   YYSYMBOL_TOK_INTEGER = 4,                /* TOK_INTEGER  */
   YYSYMBOL_TOK_HEX = 5,                    /* TOK_HEX  */
   YYSYMBOL_TOK_BIN = 6,                    /* TOK_BIN  */
-  YYSYMBOL_TOK_INTEGER64 = 7,              /* TOK_INTEGER64  */
-  YYSYMBOL_TOK_HEX64 = 8,                  /* TOK_HEX64  */
-  YYSYMBOL_TOK_BIN64 = 9,                  /* TOK_BIN64  */
-  YYSYMBOL_TOK_FLOAT = 10,                 /* TOK_FLOAT  */
-  YYSYMBOL_TOK_STRING = 11,                /* TOK_STRING  */
-  YYSYMBOL_TOK_NAME = 12,                  /* TOK_NAME  */
-  YYSYMBOL_TOK_EQUALS = 13,                /* TOK_EQUALS  */
-  YYSYMBOL_TOK_NEWLINE = 14,               /* TOK_NEWLINE  */
-  YYSYMBOL_TOK_ARRAY_START = 15,           /* TOK_ARRAY_START  */
-  YYSYMBOL_TOK_ARRAY_END = 16,             /* TOK_ARRAY_END  */
-  YYSYMBOL_TOK_LIST_START = 17,            /* TOK_LIST_START  */
-  YYSYMBOL_TOK_LIST_END = 18,              /* TOK_LIST_END  */
-  YYSYMBOL_TOK_COMMA = 19,                 /* TOK_COMMA  */
-  YYSYMBOL_TOK_GROUP_START = 20,           /* TOK_GROUP_START  */
-  YYSYMBOL_TOK_GROUP_END = 21,             /* TOK_GROUP_END  */
-  YYSYMBOL_TOK_SEMICOLON = 22,             /* TOK_SEMICOLON  */
-  YYSYMBOL_TOK_GARBAGE = 23,               /* TOK_GARBAGE  */
-  YYSYMBOL_TOK_ERROR = 24,                 /* TOK_ERROR  */
-  YYSYMBOL_YYACCEPT = 25,                  /* $accept  */
-  YYSYMBOL_configuration = 26,             /* configuration  */
-  YYSYMBOL_setting_list = 27,              /* setting_list  */
-  YYSYMBOL_setting_list_optional = 28,     /* setting_list_optional  */
-  YYSYMBOL_setting_terminator = 29,        /* setting_terminator  */
-  YYSYMBOL_setting = 30,                   /* setting  */
-  YYSYMBOL_31_1 = 31,                      /* $@1  */
-  YYSYMBOL_array = 32,                     /* array  */
-  YYSYMBOL_33_2 = 33,                      /* $@2  */
-  YYSYMBOL_list = 34,                      /* list  */
-  YYSYMBOL_35_3 = 35,                      /* $@3  */
-  YYSYMBOL_value = 36,                     /* value  */
-  YYSYMBOL_string = 37,                    /* string  */
-  YYSYMBOL_simple_value = 38,              /* simple_value  */
-  YYSYMBOL_value_list = 39,                /* value_list  */
-  YYSYMBOL_value_list_optional = 40,       /* value_list_optional  */
-  YYSYMBOL_simple_value_list = 41,         /* simple_value_list  */
-  YYSYMBOL_simple_value_list_optional = 42, /* simple_value_list_optional  */
-  YYSYMBOL_group = 43,                     /* group  */
-  YYSYMBOL_44_4 = 44                       /* $@4  */
+  YYSYMBOL_TOK_OCT = 7,                    /* TOK_OCT  */
+  YYSYMBOL_TOK_INTEGER64 = 8,              /* TOK_INTEGER64  */
+  YYSYMBOL_TOK_HEX64 = 9,                  /* TOK_HEX64  */
+  YYSYMBOL_TOK_BIN64 = 10,                 /* TOK_BIN64  */
+  YYSYMBOL_TOK_OCT64 = 11,                 /* TOK_OCT64  */
+  YYSYMBOL_TOK_FLOAT = 12,                 /* TOK_FLOAT  */
+  YYSYMBOL_TOK_STRING = 13,                /* TOK_STRING  */
+  YYSYMBOL_TOK_NAME = 14,                  /* TOK_NAME  */
+  YYSYMBOL_TOK_EQUALS = 15,                /* TOK_EQUALS  */
+  YYSYMBOL_TOK_NEWLINE = 16,               /* TOK_NEWLINE  */
+  YYSYMBOL_TOK_ARRAY_START = 17,           /* TOK_ARRAY_START  */
+  YYSYMBOL_TOK_ARRAY_END = 18,             /* TOK_ARRAY_END  */
+  YYSYMBOL_TOK_LIST_START = 19,            /* TOK_LIST_START  */
+  YYSYMBOL_TOK_LIST_END = 20,              /* TOK_LIST_END  */
+  YYSYMBOL_TOK_COMMA = 21,                 /* TOK_COMMA  */
+  YYSYMBOL_TOK_GROUP_START = 22,           /* TOK_GROUP_START  */
+  YYSYMBOL_TOK_GROUP_END = 23,             /* TOK_GROUP_END  */
+  YYSYMBOL_TOK_SEMICOLON = 24,             /* TOK_SEMICOLON  */
+  YYSYMBOL_TOK_GARBAGE = 25,               /* TOK_GARBAGE  */
+  YYSYMBOL_TOK_ERROR = 26,                 /* TOK_ERROR  */
+  YYSYMBOL_YYACCEPT = 27,                  /* $accept  */
+  YYSYMBOL_configuration = 28,             /* configuration  */
+  YYSYMBOL_setting_list = 29,              /* setting_list  */
+  YYSYMBOL_setting_list_optional = 30,     /* setting_list_optional  */
+  YYSYMBOL_setting_terminator = 31,        /* setting_terminator  */
+  YYSYMBOL_setting = 32,                   /* setting  */
+  YYSYMBOL_33_1 = 33,                      /* $@1  */
+  YYSYMBOL_array = 34,                     /* array  */
+  YYSYMBOL_35_2 = 35,                      /* $@2  */
+  YYSYMBOL_list = 36,                      /* list  */
+  YYSYMBOL_37_3 = 37,                      /* $@3  */
+  YYSYMBOL_value = 38,                     /* value  */
+  YYSYMBOL_string = 39,                    /* string  */
+  YYSYMBOL_simple_value = 40,              /* simple_value  */
+  YYSYMBOL_value_list = 41,                /* value_list  */
+  YYSYMBOL_value_list_optional = 42,       /* value_list_optional  */
+  YYSYMBOL_simple_value_list = 43,         /* simple_value_list  */
+  YYSYMBOL_simple_value_list_optional = 44, /* simple_value_list_optional  */
+  YYSYMBOL_group = 45,                     /* group  */
+  YYSYMBOL_46_4 = 46                       /* $@4  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -298,7 +304,7 @@ typedef enum yysymbol_kind_t yysymbol_kind_t;
 /* These declarations are provided to suppress compiler warnings. */
 extern int libconfig_yylex(YYSTYPE *, void *);
 
-#line 302 "grammar.c"
+#line 308 "grammar.c"
 
 
 #ifdef short
@@ -622,19 +628,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  6
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   39
+#define YYLAST   50
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  25
+#define YYNTOKENS  27
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  20
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  43
+#define YYNRULES  45
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  49
+#define YYNSTATES  51
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   279
+#define YYMAXUTOK   281
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -675,7 +681,8 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21,    22,    23,    24
+      15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
+      25,    26
 };
 
 #if YYDEBUG
@@ -685,8 +692,8 @@ static const yytype_int16 yyrline[] =
        0,    99,    99,   101,   105,   106,   109,   111,   114,   116,
      117,   122,   121,   141,   140,   164,   163,   186,   187,   188,
      189,   193,   194,   198,   218,   240,   262,   284,   306,   328,
-     350,   368,   396,   397,   398,   401,   403,   407,   408,   409,
-     412,   414,   419,   418
+     350,   372,   394,   412,   440,   441,   442,   445,   447,   451,
+     452,   453,   456,   458,   463,   462
 };
 #endif
 
@@ -703,15 +710,16 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "TOK_BOOLEAN",
-  "TOK_INTEGER", "TOK_HEX", "TOK_BIN", "TOK_INTEGER64", "TOK_HEX64",
-  "TOK_BIN64", "TOK_FLOAT", "TOK_STRING", "TOK_NAME", "TOK_EQUALS",
-  "TOK_NEWLINE", "TOK_ARRAY_START", "TOK_ARRAY_END", "TOK_LIST_START",
-  "TOK_LIST_END", "TOK_COMMA", "TOK_GROUP_START", "TOK_GROUP_END",
-  "TOK_SEMICOLON", "TOK_GARBAGE", "TOK_ERROR", "$accept", "configuration",
-  "setting_list", "setting_list_optional", "setting_terminator", "setting",
-  "$@1", "array", "$@2", "list", "$@3", "value", "string", "simple_value",
-  "value_list", "value_list_optional", "simple_value_list",
-  "simple_value_list_optional", "group", "$@4", YY_NULLPTR
+  "TOK_INTEGER", "TOK_HEX", "TOK_BIN", "TOK_OCT", "TOK_INTEGER64",
+  "TOK_HEX64", "TOK_BIN64", "TOK_OCT64", "TOK_FLOAT", "TOK_STRING",
+  "TOK_NAME", "TOK_EQUALS", "TOK_NEWLINE", "TOK_ARRAY_START",
+  "TOK_ARRAY_END", "TOK_LIST_START", "TOK_LIST_END", "TOK_COMMA",
+  "TOK_GROUP_START", "TOK_GROUP_END", "TOK_SEMICOLON", "TOK_GARBAGE",
+  "TOK_ERROR", "$accept", "configuration", "setting_list",
+  "setting_list_optional", "setting_terminator", "setting", "$@1", "array",
+  "$@2", "list", "$@3", "value", "string", "simple_value", "value_list",
+  "value_list_optional", "simple_value_list", "simple_value_list_optional",
+  "group", "$@4", YY_NULLPTR
 };
 
 static const char *
@@ -735,11 +743,12 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       4,   -19,    17,     4,   -19,     6,   -19,   -19,    -2,   -19,
+       4,   -19,    19,     4,   -19,     6,   -19,   -19,    -2,   -19,
      -19,   -19,   -19,   -19,   -19,   -19,   -19,   -19,   -19,   -19,
-     -19,   -19,   -19,    -8,     9,   -19,   -19,    25,    -2,     4,
-     -19,   -19,   -19,   -19,   -19,     2,     7,   -19,     3,    20,
-       4,    18,    25,   -19,    -2,   -19,   -19,   -19,   -19
+     -19,   -19,   -19,   -19,   -19,    -8,     9,   -19,   -19,    37,
+      -2,     4,   -19,   -19,   -19,   -19,   -19,     2,     7,   -19,
+       3,    10,     4,     8,    37,   -19,    -2,   -19,   -19,   -19,
+     -19
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -748,10 +757,11 @@ static const yytype_int8 yypact[] =
 static const yytype_int8 yydefact[] =
 {
        2,    11,     0,     3,     4,     0,     1,     5,     0,    23,
-      24,    26,    28,    25,    27,    29,    30,    21,    13,    15,
-      42,    18,    19,     8,    31,    17,    20,    40,    35,     6,
-      10,     9,    12,    22,    37,    41,     0,    32,    36,     0,
-       7,     0,    39,    14,    34,    16,    43,    38,    33
+      24,    26,    28,    30,    25,    27,    29,    31,    32,    21,
+      13,    15,    44,    18,    19,     8,    33,    17,    20,    42,
+      37,     6,    10,     9,    12,    22,    39,    43,     0,    34,
+      38,     0,     7,     0,    41,    14,    36,    16,    45,    40,
+      35
 };
 
 /* YYPGOTO[NTERM-NUM].  */
@@ -764,8 +774,8 @@ static const yytype_int8 yypgoto[] =
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     3,    41,    32,     4,     5,    21,    27,    22,
-      28,    23,    24,    25,    38,    39,    35,    36,    26,    29
+       0,     2,     3,    43,    34,     4,     5,    23,    29,    24,
+      30,    25,    26,    27,    40,    41,    37,    38,    28,    31
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -774,38 +784,43 @@ static const yytype_int8 yydefgoto[] =
 static const yytype_int8 yytable[] =
 {
        7,     9,    10,    11,    12,    13,    14,    15,    16,    17,
-      37,    30,    34,    18,    31,    19,     1,     6,    20,     8,
-      33,    42,    44,    43,    40,     0,    48,    47,     9,    10,
-      11,    12,    13,    14,    15,    16,    17,     7,    45,    46
+      18,    19,    39,    32,    36,    20,    33,    21,     1,     6,
+      22,     8,    35,    44,    46,    45,    42,     0,    50,    49,
+      47,    48,     0,     0,     0,     0,     0,     0,     0,     7,
+       9,    10,    11,    12,    13,    14,    15,    16,    17,    18,
+      19
 };
 
 static const yytype_int8 yycheck[] =
 {
        3,     3,     4,     5,     6,     7,     8,     9,    10,    11,
-      28,    19,    27,    15,    22,    17,    12,     0,    20,    13,
-      11,    19,    19,    16,    29,    -1,    44,    42,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    40,    18,    21
+      12,    13,    30,    21,    29,    17,    24,    19,    14,     0,
+      22,    15,    13,    21,    21,    18,    31,    -1,    46,    44,
+      20,    23,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    42,
+       3,     4,     5,     6,     7,     8,     9,    10,    11,    12,
+      13
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,    12,    26,    27,    30,    31,     0,    30,    13,     3,
-       4,     5,     6,     7,     8,     9,    10,    11,    15,    17,
-      20,    32,    34,    36,    37,    38,    43,    33,    35,    44,
-      19,    22,    29,    11,    38,    41,    42,    36,    39,    40,
-      27,    28,    19,    16,    19,    18,    21,    38,    36
+       0,    14,    28,    29,    32,    33,     0,    32,    15,     3,
+       4,     5,     6,     7,     8,     9,    10,    11,    12,    13,
+      17,    19,    22,    34,    36,    38,    39,    40,    45,    35,
+      37,    46,    21,    24,    31,    13,    40,    43,    44,    38,
+      41,    42,    29,    30,    21,    18,    21,    20,    23,    40,
+      38
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    25,    26,    26,    27,    27,    28,    28,    29,    29,
-      29,    31,    30,    33,    32,    35,    34,    36,    36,    36,
-      36,    37,    37,    38,    38,    38,    38,    38,    38,    38,
-      38,    38,    39,    39,    39,    40,    40,    41,    41,    41,
-      42,    42,    44,    43
+       0,    27,    28,    28,    29,    29,    30,    30,    31,    31,
+      31,    33,    32,    35,    34,    37,    36,    38,    38,    38,
+      38,    39,    39,    40,    40,    40,    40,    40,    40,    40,
+      40,    40,    40,    40,    41,    41,    41,    42,    42,    43,
+      43,    43,    44,    44,    46,    45
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
@@ -814,8 +829,8 @@ static const yytype_int8 yyr2[] =
        0,     2,     0,     1,     1,     2,     0,     1,     0,     1,
        1,     0,     5,     0,     4,     0,     4,     1,     1,     1,
        1,     1,     2,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     3,     2,     0,     1,     1,     3,     2,
-       0,     1,     0,     4
+       1,     1,     1,     1,     1,     3,     2,     0,     1,     1,
+       3,     2,     0,     1,     0,     4
 };
 
 
@@ -1027,7 +1042,7 @@ yydestruct (const char *yymsg,
     case YYSYMBOL_TOK_STRING: /* TOK_STRING  */
 #line 95 "grammar.y"
             { free(((*yyvaluep).sval)); }
-#line 1031 "grammar.c"
+#line 1046 "grammar.c"
         break;
 
       default:
@@ -1315,7 +1330,7 @@ yyreduce:
       CAPTURE_PARSE_POS(ctx->setting);
     }
   }
-#line 1319 "grammar.c"
+#line 1334 "grammar.c"
     break;
 
   case 13: /* $@2: %empty  */
@@ -1333,7 +1348,7 @@ yyreduce:
       ctx->setting = NULL;
     }
   }
-#line 1337 "grammar.c"
+#line 1352 "grammar.c"
     break;
 
   case 14: /* array: TOK_ARRAY_START $@2 simple_value_list_optional TOK_ARRAY_END  */
@@ -1342,7 +1357,7 @@ yyreduce:
     if(ctx->parent)
       ctx->parent = ctx->parent->parent;
   }
-#line 1346 "grammar.c"
+#line 1361 "grammar.c"
     break;
 
   case 15: /* $@3: %empty  */
@@ -1360,7 +1375,7 @@ yyreduce:
       ctx->setting = NULL;
     }
   }
-#line 1364 "grammar.c"
+#line 1379 "grammar.c"
     break;
 
   case 16: /* list: TOK_LIST_START $@3 value_list_optional TOK_LIST_END  */
@@ -1369,19 +1384,19 @@ yyreduce:
     if(ctx->parent)
       ctx->parent = ctx->parent->parent;
   }
-#line 1373 "grammar.c"
+#line 1388 "grammar.c"
     break;
 
   case 21: /* string: TOK_STRING  */
 #line 193 "grammar.y"
              { libconfig_parsectx_append_string(ctx, (yyvsp[0].sval)); free((yyvsp[0].sval)); }
-#line 1379 "grammar.c"
+#line 1394 "grammar.c"
     break;
 
   case 22: /* string: string TOK_STRING  */
 #line 194 "grammar.y"
                       { libconfig_parsectx_append_string(ctx, (yyvsp[0].sval)); free((yyvsp[0].sval)); }
-#line 1385 "grammar.c"
+#line 1400 "grammar.c"
     break;
 
   case 23: /* simple_value: TOK_BOOLEAN  */
@@ -1405,7 +1420,7 @@ yyreduce:
     else
       config_setting_set_bool(ctx->setting, (int)(yyvsp[0].ival));
   }
-#line 1409 "grammar.c"
+#line 1424 "grammar.c"
     break;
 
   case 24: /* simple_value: TOK_INTEGER  */
@@ -1431,7 +1446,7 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_DEFAULT);
     }
   }
-#line 1435 "grammar.c"
+#line 1450 "grammar.c"
     break;
 
   case 25: /* simple_value: TOK_INTEGER64  */
@@ -1457,7 +1472,7 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_DEFAULT);
     }
   }
-#line 1461 "grammar.c"
+#line 1476 "grammar.c"
     break;
 
   case 26: /* simple_value: TOK_HEX  */
@@ -1483,7 +1498,7 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_HEX);
     }
   }
-#line 1487 "grammar.c"
+#line 1502 "grammar.c"
     break;
 
   case 27: /* simple_value: TOK_HEX64  */
@@ -1509,7 +1524,7 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_HEX);
     }
   }
-#line 1513 "grammar.c"
+#line 1528 "grammar.c"
     break;
 
   case 28: /* simple_value: TOK_BIN  */
@@ -1535,7 +1550,7 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_BIN);
     }
   }
-#line 1539 "grammar.c"
+#line 1554 "grammar.c"
     break;
 
   case 29: /* simple_value: TOK_BIN64  */
@@ -1561,11 +1576,63 @@ yyreduce:
       config_setting_set_format(ctx->setting, CONFIG_FORMAT_BIN);
     }
   }
-#line 1565 "grammar.c"
+#line 1580 "grammar.c"
     break;
 
-  case 30: /* simple_value: TOK_FLOAT  */
+  case 30: /* simple_value: TOK_OCT  */
 #line 351 "grammar.y"
+  {
+    if(IN_ARRAY() || IN_LIST())
+    {
+      config_setting_t *e = config_setting_set_int_elem(ctx->parent, -1, (yyvsp[0].ival));
+      if(! e)
+      {
+        libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
+        YYABORT;
+      }
+      else
+      {
+        config_setting_set_format(e, CONFIG_FORMAT_OCT);
+        CAPTURE_PARSE_POS(e);
+      }
+    }
+    else
+    {
+      config_setting_set_int(ctx->setting, (yyvsp[0].ival));
+      config_setting_set_format(ctx->setting, CONFIG_FORMAT_BIN);
+    }
+  }
+#line 1606 "grammar.c"
+    break;
+
+  case 31: /* simple_value: TOK_OCT64  */
+#line 373 "grammar.y"
+  {
+    if(IN_ARRAY() || IN_LIST())
+    {
+      config_setting_t *e = config_setting_set_int64_elem(ctx->parent, -1, (yyvsp[0].llval));
+      if(! e)
+      {
+        libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
+        YYABORT;
+      }
+      else
+      {
+        config_setting_set_format(e, CONFIG_FORMAT_OCT);
+        CAPTURE_PARSE_POS(e);
+      }
+    }
+    else
+    {
+      config_setting_set_int64(ctx->setting, (yyvsp[0].llval));
+      config_setting_set_format(ctx->setting, CONFIG_FORMAT_BIN);
+    }
+  }
+#line 1632 "grammar.c"
+    break;
+
+  case 32: /* simple_value: TOK_FLOAT  */
+#line 395 "grammar.y"
   {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1583,11 +1650,11 @@ yyreduce:
     else
       config_setting_set_float(ctx->setting, (yyvsp[0].fval));
   }
-#line 1587 "grammar.c"
+#line 1654 "grammar.c"
     break;
 
-  case 31: /* simple_value: string  */
-#line 369 "grammar.y"
+  case 33: /* simple_value: string  */
+#line 413 "grammar.y"
   {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1612,11 +1679,11 @@ yyreduce:
       __delete(s);
     }
   }
-#line 1616 "grammar.c"
+#line 1683 "grammar.c"
     break;
 
-  case 42: /* $@4: %empty  */
-#line 419 "grammar.y"
+  case 44: /* $@4: %empty  */
+#line 463 "grammar.y"
   {
     if(IN_LIST())
     {
@@ -1630,20 +1697,20 @@ yyreduce:
       ctx->setting = NULL;
     }
   }
-#line 1634 "grammar.c"
+#line 1701 "grammar.c"
     break;
 
-  case 43: /* group: TOK_GROUP_START $@4 setting_list_optional TOK_GROUP_END  */
-#line 434 "grammar.y"
+  case 45: /* group: TOK_GROUP_START $@4 setting_list_optional TOK_GROUP_END  */
+#line 478 "grammar.y"
   {
     if(ctx->parent)
       ctx->parent = ctx->parent->parent;
   }
-#line 1643 "grammar.c"
+#line 1710 "grammar.c"
     break;
 
 
-#line 1647 "grammar.c"
+#line 1714 "grammar.c"
 
       default: break;
     }
@@ -1836,5 +1903,5 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 440 "grammar.y"
+#line 484 "grammar.y"
 

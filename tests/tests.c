@@ -685,9 +685,12 @@ TT_TEST(BinaryAndHex)
   buf = "somebin=0b1010101;\n"
         "somehex=0xbeef;\n"
         "someautobighex=0x100000000;\n"
-        "someautobigbin=0b111111111111111111111111111111111;"
+        "someautobigbin=0b111111111111111111111111111111111;" // 33 bits
+        "largestintbin=0b11111111111111111111111111111111;" // 32 bits
         "somebighex=0x100000000L;\n"
-        "somebigbin=0b111111111111111111111111111111111L;";
+        "somebigbin=0b111111111111111111111111111111111L;"
+        "somebigoctal=0o7777777777777;"
+    ;
 
   rc = config_read_string(&cfg, buf);
   TT_ASSERT_TRUE(rc);
@@ -702,12 +705,17 @@ TT_TEST(BinaryAndHex)
 
   rc = config_lookup_int64(&cfg, "someautobighex", &llval);
   TT_ASSERT_TRUE(rc);
+  printf("some auto big hex: %lld\n", llval);
   TT_ASSERT_INT64_EQ(llval, 0x100000000LL);
 
   rc = config_lookup_int64(&cfg, "someautobigbin", &llval);
+  printf("some auto big bin: %lld\n", llval);
   TT_ASSERT_TRUE(rc);
   TT_ASSERT_INT64_EQ(llval, 0x1ffffffffLL);
 
+  rc = config_lookup_int(&cfg, "someautobigbin", &ival);
+  TT_ASSERT_FALSE(rc);
+  
   rc = config_lookup_int64(&cfg, "somebighex", &llval);
   TT_ASSERT_TRUE(rc);
   TT_ASSERT_INT64_EQ(llval, 0x100000000LL);
@@ -716,6 +724,17 @@ TT_TEST(BinaryAndHex)
   TT_ASSERT_TRUE(rc);
   TT_ASSERT_INT64_EQ(llval, 0x1ffffffffLL);
 
+  rc = config_lookup_int(&cfg, "largestintbin", &ival);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT_EQ(ival, -1);
+
+  rc = config_lookup_int(&cfg, "somebigoctal", &ival);
+  TT_ASSERT_FALSE(rc);
+
+  rc = config_lookup_int64(&cfg, "somebigoctal", &llval);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT64_EQ(llval, 549755813887LL);
+  
   parse_and_compare("./testdata/binhex.cfg", "./testdata/binhex.cfg");
 
   config_destroy(&cfg);

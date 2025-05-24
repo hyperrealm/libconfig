@@ -185,7 +185,8 @@ class LIBCONFIGXX_API Setting
   {
     FormatDefault = 0,
     FormatHex = 1,
-    FormatBin = 2
+    FormatBin = 2,
+    FormatOct = 3
   };
 
   typedef SettingIterator iterator;

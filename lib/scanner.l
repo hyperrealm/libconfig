@@ -60,10 +60,9 @@ false             [Ff][Aa][Ll][Ss][Ee]
 name              [A-Za-z\*][-A-Za-z0-9_\*]*
 integer           [-+]?[0-9]+
 integer64         [-+]?[0-9]+L(L)?
-bin               0[bB][01]+
-bin64             0[bB][01]+L(L)?
-hex               0[Xx][0-9A-Fa-f]+
-hex64             0[Xx][0-9A-Fa-f]+L(L)?
+bin               0[bB]([01]){1,64}(L(L)?)?
+oct               0[oOqQ]([0-7]){1,21}(L(L)?)?
+hex               0[Xx]([0-9A-Fa-f]){1,16}(L(L)?)?
 hexchar           \\[Xx][0-9A-Fa-f]{2}
 float             ([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]?([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)
 include_open ^[ \t]*@include[ \t]+\"
@@ -142,12 +141,13 @@ include_open ^[ \t]*@include[ \t]+\"
 {name}            { yylval->sval = yytext; return(TOK_NAME); }
 {float}           { yylval->fval = atof(yytext); return(TOK_FLOAT); }
 {integer}         {
-                    int ok;
-                    long long llval = libconfig_parse_integer(yytext, 0, &ok);
+                    int ok, is_long;
+                    long long llval = libconfig_parse_integer(yytext, 10,
+                                                              &is_long, &ok);
                     if(!ok)
                       return(TOK_ERROR);
 
-                    if((llval < INT_MIN) || (llval > INT_MAX))
+                    if(is_long)
                     {
                       yylval->llval = llval;
                       return(TOK_INTEGER64);
@@ -159,8 +159,9 @@ include_open ^[ \t]*@include[ \t]+\"
                     }
                   }
 {integer64}       {
-                    int ok;
-                    long long llval = libconfig_parse_integer(yytext, 1, &ok);
+                    int ok, is_long;
+                    long long llval = libconfig_parse_integer(yytext, 10,
+                                                              &is_long, &ok);
                     if(!ok)
                       return(TOK_ERROR);
 
@@ -168,56 +169,59 @@ include_open ^[ \t]*@include[ \t]+\"
                     return(TOK_INTEGER64);
                   }
 {bin}             {
-                    int ok;
-                    unsigned long long llval = libconfig_parse_bin64(yytext, 0,
-                                                                     &ok);
+  printf("bin: %s\n", yytext);
+                    int ok, is_long;
+                    long long llval = libconfig_parse_integer(yytext + 2, 2,
+                                                              &is_long, &ok);
                     if(!ok)
                       return(TOK_ERROR);
 
-                    if(llval < INT_MAX)
+                    if(is_long)
+                    {
+                      yylval->llval = llval;
+                      return(TOK_BIN64);
+                    }
+                    else
                     {
                       yylval->ival = (int)llval;
-                      return TOK_BIN;
+                      return(TOK_BIN);
                     }
-
-                    yylval->llval = llval;
-                    return(TOK_BIN64);
                   }
-{bin64}           {
-                    int ok;
-                    unsigned long long llval = libconfig_parse_bin64(yytext, 1,
-                                                                     &ok);
+{oct}             {
+                    int ok, is_long;
+                    long long llval = libconfig_parse_integer(yytext + 2, 8,
+                                                              &is_long, &ok);
                     if(!ok)
                       return(TOK_ERROR);
 
-                    yylval->llval = llval;
-                    return(TOK_BIN64);
+                    if(is_long)
+                    {
+                      yylval->llval = llval;
+                      return(TOK_OCT64);
+                    }
+                    else
+                    {
+                      yylval->ival = (int)llval;
+                      return(TOK_OCT);
+                    }
                   }
 {hex}             {
-                    int ok;
-                    unsigned long long llval = libconfig_parse_hex64(yytext, 0,
-                                                                     &ok);
+                    int ok, is_long;
+                    long long llval = libconfig_parse_integer(yytext + 2, 16,
+                                                              &is_long, &ok);
                     if(!ok)
                       return(TOK_ERROR);
 
-                    if(llval < INT_MAX)
+                    if(is_long)
+                    {
+                      yylval->llval = llval;
+                      return(TOK_HEX64);
+                    }
+                    else
                     {
                       yylval->ival = (int)llval;
-                      return TOK_HEX;
+                      return(TOK_HEX);
                     }
-
-                    yylval->llval = llval;
-                    return(TOK_HEX64);
-                  }
-{hex64}           {
-                    int ok;
-                    unsigned long long llval = libconfig_parse_hex64(yytext, 1,
-                                                                     &ok);
-                    if(!ok)
-                      return(TOK_ERROR);
-
-                    yylval->llval = llval;
-                    return(TOK_HEX64);
                   }
 \[                { return(TOK_ARRAY_START); }
 \]                { return(TOK_ARRAY_END); }

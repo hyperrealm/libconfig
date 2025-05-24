@@ -86,8 +86,8 @@ void libconfig_yyerror(void *scanner, struct parse_context *ctx,
 extern int libconfig_yylex(YYSTYPE *, void *);
 %}
 
-%token <ival> TOK_BOOLEAN TOK_INTEGER TOK_HEX TOK_BIN
-%token <llval> TOK_INTEGER64 TOK_HEX64 TOK_BIN64
+%token <ival> TOK_BOOLEAN TOK_INTEGER TOK_HEX TOK_BIN TOK_OCT
+%token <llval> TOK_INTEGER64 TOK_HEX64 TOK_BIN64 TOK_OCT64
 %token <fval> TOK_FLOAT
 %token <sval> TOK_STRING TOK_NAME
 %token TOK_EQUALS TOK_NEWLINE TOK_ARRAY_START TOK_ARRAY_END TOK_LIST_START TOK_LIST_END TOK_COMMA TOK_GROUP_START TOK_GROUP_END TOK_SEMICOLON TOK_GARBAGE TOK_ERROR
@@ -338,6 +338,50 @@ simple_value:
       else
       {
         config_setting_set_format(e, CONFIG_FORMAT_BIN);
+        CAPTURE_PARSE_POS(e);
+      }
+    }
+    else
+    {
+      config_setting_set_int64(ctx->setting, $1);
+      config_setting_set_format(ctx->setting, CONFIG_FORMAT_BIN);
+    }
+  }
+  | TOK_OCT
+  {
+    if(IN_ARRAY() || IN_LIST())
+    {
+      config_setting_t *e = config_setting_set_int_elem(ctx->parent, -1, $1);
+      if(! e)
+      {
+        libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
+        YYABORT;
+      }
+      else
+      {
+        config_setting_set_format(e, CONFIG_FORMAT_OCT);
+        CAPTURE_PARSE_POS(e);
+      }
+    }
+    else
+    {
+      config_setting_set_int(ctx->setting, $1);
+      config_setting_set_format(ctx->setting, CONFIG_FORMAT_BIN);
+    }
+  }
+  | TOK_OCT64
+  {
+    if(IN_ARRAY() || IN_LIST())
+    {
+      config_setting_t *e = config_setting_set_int64_elem(ctx->parent, -1, $1);
+      if(! e)
+      {
+        libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
+        YYABORT;
+      }
+      else
+      {
+        config_setting_set_format(e, CONFIG_FORMAT_OCT);
         CAPTURE_PARSE_POS(e);
       }
     }

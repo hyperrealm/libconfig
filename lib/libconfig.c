@@ -168,6 +168,10 @@ static void __config_write_value(const config_t *config,
           fprintf(stream, "0b%s", temp_buf);
           break;
 
+       case CONFIG_FORMAT_OCT:
+         fprintf(stream, "0o%o", value->ival);
+         break;
+
        case CONFIG_FORMAT_DEFAULT:
         default:
           fprintf(stream, "%d", value->ival);
@@ -187,6 +191,10 @@ static void __config_write_value(const config_t *config,
           /* Once %b/%B become more widely supported, could feature test for them */
           libconfig_format_bin(value->llval, temp_buf, sizeof(temp_buf));
           fprintf(stream, "0b%sL", temp_buf);
+          break;
+          
+        case CONFIG_FORMAT_OCT:
+          fprintf(stream, "0o%llo", value->llval);
           break;
 
         case CONFIG_FORMAT_DEFAULT:

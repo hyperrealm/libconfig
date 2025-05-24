@@ -58,6 +58,7 @@ extern "C" {
 #define CONFIG_FORMAT_DEFAULT  0
 #define CONFIG_FORMAT_HEX      1
 #define CONFIG_FORMAT_BIN      2
+#define CONFIG_FORMAT_OCT      3
 
 #define CONFIG_OPTION_AUTOCONVERT                     0x01
 #define CONFIG_OPTION_SEMICOLON_SEPARATORS            0x02
