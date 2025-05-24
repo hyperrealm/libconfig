@@ -607,6 +607,9 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
 
 int config_read(config_t *config, FILE *stream)
 {
+  config_assert(config != NULL);
+  config_assert(stream != NULL);
+
   return(__config_read(config, stream, NULL, NULL));
 }
 
@@ -614,6 +617,9 @@ int config_read(config_t *config, FILE *stream)
 
 int config_read_string(config_t *config, const char *str)
 {
+  config_assert(config != NULL);
+  config_assert(str != NULL);
+
   return(__config_read(config, NULL, NULL, str));
 }
 
@@ -657,6 +663,9 @@ static void __config_write_setting(const config_t *config,
 
 void config_write(const config_t *config, FILE *stream)
 {
+  config_assert(config != NULL);
+  config_assert(stream != NULL);
+
   __config_locale_override();
 
   __config_write_setting(config, config->root, stream, 0);
@@ -669,8 +678,12 @@ void config_write(const config_t *config, FILE *stream)
 int config_read_file(config_t *config, const char *filename)
 {
   int ret, ok = 0;
+  FILE *stream;
 
-  FILE *stream = fopen(filename, "rt");
+  config_assert(config != NULL);
+  config_assert(filename != NULL);
+
+  stream = fopen(filename, "rt");
   if(stream != NULL)
   {
     // On some operating systems, fopen() succeeds on a directory.
@@ -705,7 +718,12 @@ int config_read_file(config_t *config, const char *filename)
 
 int config_write_file(config_t *config, const char *filename)
 {
-  FILE *stream = fopen(filename, "wt");
+  FILE *stream;
+
+  config_assert(config != NULL);
+  config_assert(filename != NULL);
+
+  stream = fopen(filename, "wt");
   if(stream == NULL)
   {
     config->error_text = __io_error;
@@ -740,6 +758,9 @@ int config_write_file(config_t *config, const char *filename)
 
 void config_destroy(config_t *config)
 {
+  if(config == NULL)
+    return;
+
   __config_setting_destroy(config->root);
   libconfig_strvec_delete(config->filenames);
   __delete(config->include_dir);
@@ -750,6 +771,8 @@ void config_destroy(config_t *config)
 
 void config_clear(config_t *config)
 {
+  config_assert(config != NULL);
+
   /* Destroy the root setting (recursively) and then create a new one. */
   __config_setting_destroy(config->root);
 
@@ -765,6 +788,8 @@ void config_clear(config_t *config)
 
 void config_set_tab_width(config_t *config, unsigned short width)
 {
+  config_assert(config != NULL);
+
   /* As per documentation: valid range is 0 - 15. */
   config->tab_width = (width <= 15) ? width : 15;
 }
@@ -773,6 +798,8 @@ void config_set_tab_width(config_t *config, unsigned short width)
 
 unsigned short config_get_tab_width(const config_t *config)
 {
+  config_assert(config != NULL);
+
   return config->tab_width;
 }
 
@@ -780,6 +807,8 @@ unsigned short config_get_tab_width(const config_t *config)
 
 void config_set_float_precision(config_t *config, unsigned short digits)
 {
+  config_assert(config != NULL);
+
   config->float_precision = digits;
 }
 
@@ -787,6 +816,8 @@ void config_set_float_precision(config_t *config, unsigned short digits)
 
 unsigned short config_get_float_precision(const config_t *config)
 {
+  config_assert(config != NULL);
+
   return config->float_precision;
 }
 
@@ -864,8 +895,8 @@ void config_set_fatal_error_func(config_fatal_error_fn_t func) {
 
 /* ------------------------------------------------------------------------- */
 
-static config_setting_t *config_setting_create(config_setting_t *parent,
-                                               const char *name, int type)
+static config_setting_t *__config_setting_create(config_setting_t *parent,
+                                                 const char *name, int type)
 {
   config_setting_t *setting;
   config_list_t *list;
@@ -1578,7 +1609,7 @@ config_setting_t *config_setting_set_int_elem(config_setting_t *setting,
     if(! __config_list_checktype(setting, CONFIG_TYPE_INT))
       return(NULL);
 
-    element = config_setting_create(setting, NULL, CONFIG_TYPE_INT);
+    element = __config_setting_create(setting, NULL, CONFIG_TYPE_INT);
   }
   else
   {
@@ -1626,7 +1657,7 @@ config_setting_t *config_setting_set_int64_elem(config_setting_t *setting,
     if(! __config_list_checktype(setting, CONFIG_TYPE_INT64))
       return(NULL);
 
-    element = config_setting_create(setting, NULL, CONFIG_TYPE_INT64);
+    element = __config_setting_create(setting, NULL, CONFIG_TYPE_INT64);
   }
   else
   {
@@ -1673,7 +1704,7 @@ config_setting_t *config_setting_set_float_elem(config_setting_t *setting,
     if(! __config_list_checktype(setting, CONFIG_TYPE_FLOAT))
       return(NULL);
 
-    element = config_setting_create(setting, NULL, CONFIG_TYPE_FLOAT);
+    element = __config_setting_create(setting, NULL, CONFIG_TYPE_FLOAT);
   }
   else
     element = config_setting_get_elem(setting, idx);
@@ -1724,7 +1755,7 @@ config_setting_t *config_setting_set_bool_elem(config_setting_t *setting,
     if(! __config_list_checktype(setting, CONFIG_TYPE_BOOL))
       return(NULL);
 
-    element = config_setting_create(setting, NULL, CONFIG_TYPE_BOOL);
+    element = __config_setting_create(setting, NULL, CONFIG_TYPE_BOOL);
   }
   else
     element = config_setting_get_elem(setting, idx);
@@ -1776,7 +1807,7 @@ config_setting_t *config_setting_set_string_elem(config_setting_t *setting,
     if(! __config_list_checktype(setting, CONFIG_TYPE_STRING))
       return(NULL);
 
-    element = config_setting_create(setting, NULL, CONFIG_TYPE_STRING);
+    element = __config_setting_create(setting, NULL, CONFIG_TYPE_STRING);
   }
   else
     element = config_setting_get_elem(setting, idx);
@@ -1911,7 +1942,7 @@ config_setting_t *config_setting_add(config_setting_t *parent,
       return(NULL); /* already exists */
   }
 
-  return(config_setting_create(parent, name, type));
+  return(__config_setting_create(parent, name, type));
 }
 
 /* ------------------------------------------------------------------------- */
