@@ -366,7 +366,7 @@ simple_value:
     else
     {
       config_setting_set_int(ctx->setting, $1);
-      config_setting_set_format(ctx->setting, CONFIG_FORMAT_BIN);
+      config_setting_set_format(ctx->setting, CONFIG_FORMAT_OCT);
     }
   }
   | TOK_OCT64
@@ -388,7 +388,7 @@ simple_value:
     else
     {
       config_setting_set_int64(ctx->setting, $1);
-      config_setting_set_format(ctx->setting, CONFIG_FORMAT_BIN);
+      config_setting_set_format(ctx->setting, CONFIG_FORMAT_OCT);
     }
   }
   | TOK_FLOAT

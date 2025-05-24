@@ -1599,7 +1599,7 @@ yyreduce:
     else
     {
       config_setting_set_int(ctx->setting, (yyvsp[0].ival));
-      config_setting_set_format(ctx->setting, CONFIG_FORMAT_BIN);
+      config_setting_set_format(ctx->setting, CONFIG_FORMAT_OCT);
     }
   }
 #line 1606 "grammar.c"
@@ -1625,7 +1625,7 @@ yyreduce:
     else
     {
       config_setting_set_int64(ctx->setting, (yyvsp[0].llval));
-      config_setting_set_format(ctx->setting, CONFIG_FORMAT_BIN);
+      config_setting_set_format(ctx->setting, CONFIG_FORMAT_OCT);
     }
   }
 #line 1632 "grammar.c"
