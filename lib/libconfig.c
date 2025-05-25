@@ -56,15 +56,14 @@
 /* ------------------------------------------------------------------------- */
 
 #ifndef LIBCONFIG_STATIC
-#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__) \
-  || defined(WIN64) || defined(_WIN64) || defined(__WIN64__))
+#ifdef LIBCONFIG_WINDOWS_OS
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
   return(TRUE);
 }
 
-#endif /* WIN32 || WIN64 */
+#endif /* LIBCONFIG_WINDOWS_OS */
 #endif /* LIBCONFIG_STATIC */
 
 /* ------------------------------------------------------------------------- */
@@ -100,8 +99,7 @@ static void __config_assert(const char *function, const char *expr)
 
 static void __config_locale_override(void)
 {
-#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)) \
-  && ! defined(__MINGW32__)
+#if defined(LIBCONFIG_WINDOWS_OS) && !defined(LIBCONFIG_MINGW_OS)
 
   _configthreadlocale(_ENABLE_PER_THREAD_LOCALE);
   setlocale(LC_NUMERIC, "C");
@@ -127,8 +125,7 @@ static void __config_locale_override(void)
 
 static void __config_locale_restore(void)
 {
-#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)) \
-  && ! defined(__MINGW32__)
+#if defined(LIBCONFIG_WINDOWS_OS) && !defined(LIBCONFIG_MINGW_OS)
 
     _configthreadlocale(_DISABLE_PER_THREAD_LOCALE);
 
@@ -164,7 +161,7 @@ static void __config_write_value(const config_t *config,
                                  const config_value_t *value, int type,
                                  int format, int depth, FILE *stream)
 {
-  // Long enough for 64-bit binary value + NULL terminator.
+  /* Long enough for 64-bit binary value + NULL terminator. */
   char temp_buf[(sizeof(int64_t) * BITS_IN_BYTE) + 1];
 
   switch(type)
@@ -214,7 +211,7 @@ static void __config_write_value(const config_t *config,
           break;
 
         case CONFIG_FORMAT_OCT:
-          fprintf(stream, "0o%llo", value->llval);
+          fprintf(stream, "0o%lloL", value->llval);
           break;
 
         case CONFIG_FORMAT_DEFAULT:
@@ -686,13 +683,13 @@ int config_read_file(config_t *config, const char *filename)
   stream = fopen(filename, "rt");
   if(stream != NULL)
   {
-    // On some operating systems, fopen() succeeds on a directory.
+    /* On some operating systems, fopen() succeeds on a directory. */
     int fd = posix_fileno(stream);
     struct stat statbuf;
 
     if(fstat(fd, &statbuf) == 0)
     {
-      // Only proceed if this is not a directory.
+      /* Only proceed if this is not a directory. */
       if(!S_ISDIR(statbuf.st_mode))
         ok = 1;
     }
@@ -800,7 +797,7 @@ unsigned short config_get_tab_width(const config_t *config)
 {
   config_assert(config != NULL);
 
-  return config->tab_width;
+  return(config->tab_width);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -818,7 +815,7 @@ unsigned short config_get_float_precision(const config_t *config)
 {
   config_assert(config != NULL);
 
-  return config->float_precision;
+  return(config->float_precision);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -889,7 +886,8 @@ void config_set_hook(config_t *config, void *hook)
 
 /* ------------------------------------------------------------------------- */
 
-void config_set_fatal_error_func(config_fatal_error_fn_t func) {
+void config_set_fatal_error_func(config_fatal_error_fn_t func)
+{
   libconfig_set_fatal_error_func(func);
 }
 
@@ -1028,7 +1026,7 @@ int config_setting_get_int64_safe(const config_setting_t *setting,
   config_assert(setting != NULL);
   config_assert(value != NULL);
 
-  return __config_setting_get_int64(setting, value);
+  return(__config_setting_get_int64(setting, value));
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1373,6 +1371,7 @@ int config_setting_set_string(config_setting_t *setting, const char *value)
     __delete(setting->value.sval);
 
   setting->value.sval = (value == NULL) ? NULL : strdup(value);
+
   return(CONFIG_TRUE);
 }
 
@@ -1575,6 +1574,7 @@ int config_lookup_bool(const config_t *config, const char *path, int *value)
     return(CONFIG_FALSE);
 
   *value = config_setting_get_bool(s);
+
   return(CONFIG_TRUE);
 }
 

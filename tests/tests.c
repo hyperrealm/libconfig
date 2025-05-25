@@ -773,7 +773,7 @@ int main(int argc, char **argv)
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);
 
-  if (failures)
+  if(failures)
     return EXIT_FAILURE;
 
   return EXIT_SUCCESS;

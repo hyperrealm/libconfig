@@ -51,7 +51,7 @@
 #include "wincompat.h"
 #include "util.h"
 
-#define YY_NO_INPUT // Suppress generation of useless input() function
+#define YY_NO_INPUT /* Suppress generation of useless input() function */
 
 %}
 

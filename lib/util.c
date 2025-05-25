@@ -100,7 +100,7 @@ long long libconfig_parse_integer(const char *s, int base, int *is_long,
   long long llval;
   char *endptr;
   int errsave = errno;
-  
+
   errno = 0;
   llval = strtoll(s, &endptr, base);
 
@@ -109,7 +109,7 @@ long long libconfig_parse_integer(const char *s, int base, int *is_long,
 
   *is_long = ((llval < INT_MIN) || (llval > INT_MAX));
 
-  // See if we can ignore the L.
+  /* Check for trailing L's */
   while(!errno && *endptr == 'L')
   {
     *is_long = 1;
@@ -123,7 +123,7 @@ long long libconfig_parse_integer(const char *s, int base, int *is_long,
     return(0);	/* parse error */
   }
   errno = errsave;
-                           
+
   *ok = 1;
   return(llval);
 }
@@ -165,8 +165,11 @@ void libconfig_format_double(double val, int precision, int sci_ok, char *buf,
 /* ------------------------------------------------------------------------- */
 
 #ifdef __GNUC__
+
 #define clzl(x) __builtin_clzll(x)
-#else
+
+#else /* __GNUC__ */
+
 static int clzl(int64_t val)
 {
   int leading = 0;
@@ -178,7 +181,8 @@ static int clzl(int64_t val)
   }
   return leading;
 }
-#endif
+
+#endif /* __GNUC__ */
 
 /* ------------------------------------------------------------------------- */
 
@@ -196,3 +200,5 @@ void libconfig_format_bin(int64_t val, char *buf, size_t buflen)
   }
   buf[i] = '\0';
 }
+
+/* ------------------------------------------------------------------------- */

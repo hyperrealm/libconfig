@@ -929,7 +929,7 @@ static const flex_int32_t yy_rule_can_match_eol[49] =
 #include "wincompat.h"
 #include "util.h"
 
-#define YY_NO_INPUT // Suppress generation of useless input() function
+#define YY_NO_INPUT /* Suppress generation of useless input() function */
 
 #line 935 "scanner.c"
 
