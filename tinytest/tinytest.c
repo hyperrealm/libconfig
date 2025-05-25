@@ -25,7 +25,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 #include <io.h>
 #define F_OK 4  // Windows doesn't have F_OK
 #else
@@ -291,12 +291,12 @@ void tt_suite_run(tt_testsuite_t *suite)
 
     if(suite->current_test->failed)
     {
-      printf("[FAIL] %s\n", suite->current_test->name);
+      printf("[FAIL] %s\n\n", suite->current_test->name);
       ++suite->num_failures;
     }
     else
     {
-      printf("[ OK ] %s\n", suite->current_test->name);
+      printf("[ OK ] %s\n\n", suite->current_test->name);
     }
   }
 
@@ -633,8 +633,9 @@ tt_bool_t tt_file_exists(const char *file)
 
 #ifdef _MSC_VER
 
-// All of this extra code is because MSVC doesn't support the C99 standard.
-// Sigh.
+/* All of this extra code is because MSVC doesn't support the C99 standard.
+   Sigh.
+*/
 
 /*
  */
@@ -725,6 +726,6 @@ void tt_test_ptr(const char *file, int line, const char *aexpr, tt_op_t op,
   tt_expect(file, line, aexpr, op, bexpr, aval, bval, fatal);
 }
 
-#endif // WIN32
+#endif /* defined(WIN32) || defined(WIN64) */
 
 /* end of source file */

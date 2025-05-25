@@ -95,7 +95,7 @@ void *libconfig_realloc(void *ptr, size_t size)
 /* ------------------------------------------------------------------------- */
 
 long long libconfig_parse_integer(const char *s, int base, int *is_long,
-                                    int *ok)
+                                  int *ok)
 {
   long long llval;
   char *endptr;
@@ -109,18 +109,18 @@ long long libconfig_parse_integer(const char *s, int base, int *is_long,
 
   *is_long = ((llval < INT_MIN) || (llval > INT_MAX));
 
-  /* Check for trailing L's */
+  /* Check for trailing L's. */
   while(!errno && *endptr == 'L')
   {
     *is_long = 1;
-    endptr++;
+    ++endptr;
   }
 
   if(*endptr || errno)
   {
     errno = errsave;
     *ok = 0;
-    return(0);	/* parse error */
+    return(0);  /* parse error */
   }
   errno = errsave;
 
@@ -164,41 +164,26 @@ void libconfig_format_double(double val, int precision, int sci_ok, char *buf,
 
 /* ------------------------------------------------------------------------- */
 
-#ifdef __GNUC__
+/* buf must be at least 65 bytes. Return value is pointer to most significant
+   nonzero bit, or pointer to the least significant zero bit if value is 0. */
 
-#define clzl(x) __builtin_clzll(x)
-
-#else /* __GNUC__ */
-
-static int clzl(int64_t val)
+char *libconfig_format_bin(int64_t val, char *buf)
 {
-  int leading = 0;
-  int64_t check = (1ll << 63);
-  while(!(val & check) && check)
+  static const int num_bits = sizeof(val) * BITS_IN_BYTE;
+  char *p = buf + num_bits;
+  char *first_bit = NULL;
+
+  *p = '\0';
+
+  for(int i = 0; i < num_bits; ++i)
   {
-    leading++;
-    check >>= 1;
+    int x = val & 1;
+    val >>= 1;
+    *(--p) = '0' + x;
+    if(!first_bit || x) first_bit = p;
   }
-  return leading;
-}
 
-#endif /* __GNUC__ */
-
-/* ------------------------------------------------------------------------- */
-
-void libconfig_format_bin(int64_t val, char *buf, size_t buflen)
-{
-  /* find number of leading 0's */
-  size_t c = clzl(val);
-  size_t i = 0;
-
-  while((c < 64) && (i < buflen - 1))
-  {
-    buf[i] = (val & (1ll << (63 - c))) ? '1' : '0';
-    ++i;
-    ++c;
-  }
-  buf[i] = '\0';
+  return(first_bit);
 }
 
 /* ------------------------------------------------------------------------- */

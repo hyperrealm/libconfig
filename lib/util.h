@@ -24,6 +24,8 @@
 #include <stdint.h>
 #include <sys/types.h>
 
+#define BITS_IN_BYTE 8
+
 extern void libconfig_set_fatal_error_func(void (*func)(const char *));
 
 extern void libconfig_fatal_error(const char *message);
@@ -41,4 +43,5 @@ extern long long libconfig_parse_integer(const char *s, int base,
 
 extern void libconfig_format_double(double val, int precision, int sci_ok,
                                     char *buf, size_t buflen);
-extern void libconfig_format_bin(int64_t val, char *buf, size_t buflen);
+
+extern char *libconfig_format_bin(int64_t val, char *buf);

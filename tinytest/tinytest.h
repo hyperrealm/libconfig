@@ -123,13 +123,13 @@ extern void tt_test_int(const char *file, int line, const char *aexpr,
 
 #endif
 
-#define TT_EXPECT_INT_EQ(A, B)                          \
+#define TT_EXPECT_INT_EQ(A, B)                  \
   TT_TEST_INT_((A), TT_OP_INT_EQ, (B), TT_FALSE)
 
 #define TT_ASSERT_INT_EQ(A, B)                  \
   TT_TEST_INT_((A), TT_OP_INT_EQ, (B), TT_TRUE)
 
-#define TT_EXPECT_INT_NE(A, B)                          \
+#define TT_EXPECT_INT_NE(A, B)                  \
   TT_TEST_INT_((A), TT_OP_INT_NE, (B), TT_FALSE)
 
 #define TT_ASSERT_INT_NE(A, B)                  \
@@ -233,40 +233,40 @@ extern void tt_test_int64(const char *file, int line, const char *aexpr,
 
 #endif
 
-#define TT_EXPECT_INT64_EQ(A, B)                        \
+#define TT_EXPECT_INT64_EQ(A, B)                      \
   TT_TEST_INT64_((A), TT_OP_INT64_EQ, (B), TT_FALSE)
 
-#define TT_ASSERT_INT64_EQ(A, B)                \
+#define TT_ASSERT_INT64_EQ(A, B)                      \
   TT_TEST_INT64_((A), TT_OP_INT64_EQ, (B), TT_TRUE)
 
-#define TT_EXPECT_INT64_NE(A, B)                        \
+#define TT_EXPECT_INT64_NE(A, B)                      \
   TT_TEST_INT64_((A), TT_OP_INT64_NE, (B), TT_FALSE)
 
-#define TT_ASSERT_INT64_NE(A, B)                \
+#define TT_ASSERT_INT64_NE(A, B)                      \
   TT_TEST_INT64_((A), TT_OP_INT64_NE, (B), TT_TRUE)
 
-#define TT_EXPECT_INT64_LT(A, B)                        \
+#define TT_EXPECT_INT64_LT(A, B)                      \
   TT_TEST_INT64_((A), TT_OP_INT64_LT, (B), TT_FALSE)
 
-#define TT_ASSERT_INT64_LT(A, B)                \
+#define TT_ASSERT_INT64_LT(A, B)                      \
   TT_TEST_INT64_((A), TT_OP_INT64_LT, (B), TT_TRUE)
 
-#define TT_EXPECT_INT64_LE(A, B)                        \
+#define TT_EXPECT_INT64_LE(A, B)                      \
   TT_TEST_INT64_((A), TT_OP_INT64_LE, (B), TT_FALSE)
 
-#define TT_ASSERT_INT64_LE(A, B)                \
+#define TT_ASSERT_INT64_LE(A, B)                      \
   TT_TEST_INT64_((A), TT_OP_INT64_LE, (B), TT_TRUE)
 
-#define TT_EXPECT_INT64_GT(A, B)                        \
+#define TT_EXPECT_INT64_GT(A, B)                      \
   TT_TEST_INT64_((A), TT_OP_INT64_GT, (B), TT_FALSE)
 
-#define TT_ASSERT_INT64_GT(A, B)                \
+#define TT_ASSERT_INT64_GT(A, B)                      \
   TT_TEST_INT64_((A), TT_OP_INT64_GT, (B), TT_TRUE)
 
-#define TT_EXPECT_INT64_GE(A, B)                        \
+#define TT_EXPECT_INT64_GE(A, B)                      \
   TT_TEST_INT64_((A), TT_OP_INT64_GE, (B), TT_FALSE)
 
-#define TT_ASSERT_INT64_GE(A, B)                \
+#define TT_ASSERT_INT64_GE(A, B)                      \
   TT_TEST_INT64_((A), TT_OP_INT64_GE, (B), TT_TRUE)
 
 #ifdef _MSC_VER
@@ -276,7 +276,7 @@ extern void tt_test_uint64(const char *file, int line, const char *aexpr,
                            unsigned long long a, unsigned long long b,
                            tt_bool_t fatal);
 
-#define TT_TEST_UINT64_(A, OP, B, F)                                      \
+#define TT_TEST_UINT64_(A, OP, B, F)                              \
   tt_test_uint64(__FILE__, __LINE__, #A, (OP), #B, (A), (B), (F))
 
 #else
@@ -289,40 +289,40 @@ extern void tt_test_uint64(const char *file, int line, const char *aexpr,
 
 #endif
 
-#define TT_EXPECT_UINT64_EQ(A, B)                        \
+#define TT_EXPECT_UINT64_EQ(A, B)                       \
   TT_TEST_UINT64_((A), TT_OP_UINT64_EQ, (B), TT_FALSE)
 
-#define TT_ASSERT_UINT64_EQ(A, B)                \
+#define TT_ASSERT_UINT64_EQ(A, B)                       \
   TT_TEST_UINT64_((A), TT_OP_UINT64_EQ, (B), TT_TRUE)
 
-#define TT_EXPECT_UINT64_NE(A, B)                        \
+#define TT_EXPECT_UINT64_NE(A, B)                       \
   TT_TEST_UINT64_((A), TT_OP_UINT64_NE, (B), TT_FALSE)
 
-#define TT_ASSERT_UINT64_NE(A, B)                \
+#define TT_ASSERT_UINT64_NE(A, B)                       \
   TT_TEST_UINT64_((A), TT_OP_UINT64_NE, (B), TT_TRUE)
 
-#define TT_EXPECT_UINT64_LT(A, B)                        \
+#define TT_EXPECT_UINT64_LT(A, B)                       \
   TT_TEST_UINT64_((A), TT_OP_UINT64_LT, (B), TT_FALSE)
 
-#define TT_ASSERT_UINT64_LT(A, B)                \
+#define TT_ASSERT_UINT64_LT(A, B)                       \
   TT_TEST_UINT64_((A), TT_OP_UINT64_LT, (B), TT_TRUE)
 
-#define TT_EXPECT_UINT64_LE(A, B)                        \
+#define TT_EXPECT_UINT64_LE(A, B)                       \
   TT_TEST_UINT64_((A), TT_OP_UINT64_LE, (B), TT_FALSE)
 
-#define TT_ASSERT_UINT64_LE(A, B)                \
+#define TT_ASSERT_UINT64_LE(A, B)                       \
   TT_TEST_UINT64_((A), TT_OP_UINT64_LE, (B), TT_TRUE)
 
-#define TT_EXPECT_UINT64_GT(A, B)                        \
+#define TT_EXPECT_UINT64_GT(A, B)                       \
   TT_TEST_UINT64_((A), TT_OP_UINT64_GT, (B), TT_FALSE)
 
-#define TT_ASSERT_UINT64_GT(A, B)                \
+#define TT_ASSERT_UINT64_GT(A, B)                       \
   TT_TEST_UINT64_((A), TT_OP_UINT64_GT, (B), TT_TRUE)
 
-#define TT_EXPECT_UINT64_GE(A, B)                        \
+#define TT_EXPECT_UINT64_GE(A, B)                       \
   TT_TEST_UINT64_((A), TT_OP_UINT64_GE, (B), TT_FALSE)
 
-#define TT_ASSERT_UINT64_GE(A, B)                \
+#define TT_ASSERT_UINT64_GE(A, B)                       \
   TT_TEST_UINT64_((A), TT_OP_UINT64_GE, (B), TT_TRUE)
 
 #ifdef _MSC_VER
@@ -487,7 +487,7 @@ extern void tt_test_ptr(const char *file, int line, const char *aexpr,
 #define TT_EXPECT_FALSE(A)                                              \
   tt_expect_bool(__FILE__, __LINE__, #A, TT_OP_FALSE, (A), TT_FALSE)
 
-#define TT_ASSERT_FALSE(A)                                               \
+#define TT_ASSERT_FALSE(A)                                              \
   tt_expect_bool(__FILE__, __LINE__, #A, TT_OP_FALSE, (A), TT_TRUE)
 
 #define TT_EXPECT_FILE_EQ(A, B)                         \
@@ -514,7 +514,7 @@ extern void tt_test_ptr(const char *file, int line, const char *aexpr,
 #define TT_ASSERT_TXTFILE_NE(A, B)                      \
   TT_TEST_STR_((A), TT_OP_TXTFILE_NE, (B), TT_TRUE)
 
-#define TT_FAIL(M, ...)                         \
+#define TT_FAIL(M, ...)                                 \
   tt_fail(__FILE__, __LINE__, (M), __VA_ARGS__)
 
 #define TT_SUITE_START(S)                               \

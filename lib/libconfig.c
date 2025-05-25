@@ -51,7 +51,6 @@
 #define CHUNK_SIZE 16
 #define DEFAULT_TAB_WIDTH 2
 #define DEFAULT_FLOAT_PRECISION 6
-#define BITS_IN_BYTE 8
 
 /* ------------------------------------------------------------------------- */
 
@@ -162,7 +161,7 @@ static void __config_write_value(const config_t *config,
                                  int format, int depth, FILE *stream)
 {
   /* Long enough for 64-bit binary value + NULL terminator. */
-  char temp_buf[(sizeof(int64_t) * BITS_IN_BYTE) + 1];
+  char value_buf[(sizeof(int64_t) * BITS_IN_BYTE) + 1];
 
   switch(type)
   {
@@ -180,16 +179,18 @@ static void __config_write_value(const config_t *config,
           break;
 
         case CONFIG_FORMAT_BIN:
+        {
           /* Once %b/%B become more widely supported, could feature test for them */
-          libconfig_format_bin(value->ival, temp_buf, sizeof(temp_buf));
-          fprintf(stream, "0b%s", temp_buf);
+          char *str = libconfig_format_bin(value->ival, value_buf);
+          fprintf(stream, "0b%s", str);
+          break;
+        }
+
+        case CONFIG_FORMAT_OCT:
+          fprintf(stream, "0o%o", value->ival);
           break;
 
-       case CONFIG_FORMAT_OCT:
-         fprintf(stream, "0o%o", value->ival);
-         break;
-
-       case CONFIG_FORMAT_DEFAULT:
+        case CONFIG_FORMAT_DEFAULT:
         default:
           fprintf(stream, "%d", value->ival);
           break;
@@ -205,10 +206,12 @@ static void __config_write_value(const config_t *config,
           break;
 
         case CONFIG_FORMAT_BIN:
+        {
           /* Once %b/%B become more widely supported, could feature test for them */
-          libconfig_format_bin(value->llval, temp_buf, sizeof(temp_buf));
-          fprintf(stream, "0b%sL", temp_buf);
+          char *str = libconfig_format_bin(value->llval, value_buf);
+          fprintf(stream, "0b%sL", str);
           break;
+        }
 
         case CONFIG_FORMAT_OCT:
           fprintf(stream, "0o%lloL", value->llval);
@@ -227,8 +230,8 @@ static void __config_write_value(const config_t *config,
       const int sci_ok = config_get_option(
             config, CONFIG_OPTION_ALLOW_SCIENTIFIC_NOTATION);
       libconfig_format_double(value->fval, config->float_precision, sci_ok,
-                              temp_buf, sizeof(temp_buf));
-      fputs(temp_buf, stream);
+                              value_buf, sizeof(value_buf));
+      fputs(value_buf, stream);
       break;
     }
 
