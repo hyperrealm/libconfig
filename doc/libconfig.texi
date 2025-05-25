@@ -515,21 +515,25 @@ The last element in a list may be followed by a comma, which will be ignored.
 @comment  node-name,  next,  previous,  up
 @section Integer Values
 
-Integers can be represented in one of four ways:
+Integers can be represented in four ways:
 
 @itemize @bullet
 
+@cindex decimal integer
 @item As a series of one or more decimal digits (@samp{0} - @samp{9}), with an
 optional leading sign character (@samp{+} or @samp{-}).
 
+@cindex binary integer
 @item As a binary value consisting of the characters @samp{0b} followed by a
 series of one or more binary digits (@samp{0} - @samp{1}).
 
+@cindex octal integer
 @item As an octal value consisting of the characters @samp{0o} or @samp{0q}
 followed by a series of one or more octal digits (@samp{0} - @samp{7}). (Since
 version 1.8.1; prior versions of the library supported the old octal
-format of a single leading `0', which is ambiguous.)
+format of a single leading @samp{0}, which is ambiguous.)
 
+@cindex hexadecimal integer
 @item As a hexadecimal value consisting of the characters
 @samp{0x} followed by a series of one or more hexadecimal digits
 (@samp{0} - @samp{9}, @samp{A} - @samp{F}, @samp{a} - @samp{f}).
@@ -573,6 +577,8 @@ of the library.
 @comment  node-name,  next,  previous,  up
 @section Floating Point Values
 
+@cindex floating point value
+
 Floating point values consist of a series of one or more digits, one
 decimal point, an optional leading sign character (@samp{+} or
 @samp{-}), and an optional exponent. An exponent consists of the
@@ -583,6 +589,8 @@ of one or more digits.
 @comment  node-name,  next,  previous,  up
 @section Boolean Values
 
+@cindex boolean value
+
 Boolean values may have one of the following values: @samp{true},
 @samp{false}, or any mixed-case variation thereof.
 
@@ -590,6 +598,7 @@ Boolean values may have one of the following values: @samp{true},
 @comment  node-name,  next,  previous,  up
 @section String Values
 
+@cindex string
 @cindex escape sequence
 String values consist of arbitrary text delimited by double
 quotes. Literal double quotes can be escaped by preceding them with a
@@ -1207,7 +1216,6 @@ be freed by the caller.
 
 These functions get and set the external format for the setting @var{setting}.
 
-@tindex SettingFormat
 @cindex format
 
 The @var{format} must be one of the constants
@@ -2384,6 +2392,7 @@ wildcard includes. Note that this code will not compile on Windows.
 * Perl::
 * Python::
 * Ruby::
+* Rust::
 @end menu
 
 Various open-source libraries have been written that provide access to
@@ -2417,7 +2426,7 @@ language. It may be found at @url{https://code.dlang.org/packages/libconfig-d}.
 
 Matthew Peddie's @i{libconfig} provides Haskell bindings to
 @i{libconfig}. It may be found at
-@url{https://hackage.haskell.org/package/libconfig-0.3.0.0}.
+@url{https://hackage.haskell.org/package/libconfig}.
 
 @node Java, Lisp, Haskell, Other Bindings and Implementations
 @comment  node-name,  next,  previous,  up
@@ -2447,7 +2456,7 @@ or on github at @url{https://github.com/cnangel/Conf-Libconfig}.
 
 Heiner Tholen's @i{pylibconfig2} is a Python library that is syntax-compatible
 with @i{libconfig}. It may be found at
-@url{https://pypi.python.org/pypi/pylibconfig2/0.1.2}.
+@url{https://pypi.python.org/pypi/pylibconfig2}.
 
 @sp 1
 
@@ -2461,7 +2470,7 @@ more permissive license. It may be found at
 The @i{python-libconfig} wrapper provides Python bindings to @i{libconfig}. It
 may be found on github at @url{https://github.com/cnangel/python-libconfig/}.
 
-@node Ruby, , Python, Other Bindings and Implementations
+@node Ruby, Rust, Python, Other Bindings and Implementations
 @comment  node-name,  next,  previous,  up
 @section Ruby
 
@@ -2475,6 +2484,21 @@ bindings for @i{libconfig}. It may be found at
 There is also another Ruby wrapper, @i{libconfig-ruby}, that is included in
 the @i{libconfig} git repository at @url{https://github.com/hyperrealm/libconfig},
 in the @file{contrib/libconfig-ruby} subdirectory.
+
+@node Rust, , Ruby, Other Bindings and Implementations
+@comment  node-name,  next,  previous,  up
+@section Rust
+
+Ivan Semenkov's @i{librustconfig} is a Rust library that provides Rust
+bindings for @i{libconfig}. It may be found on github at
+@url{https://github.com/isemenkov/librustconfig}.
+
+@sp 1
+
+@i{Crate libconfig} is a pure-Rust implementation of a configuration
+file parser that is compatible with the syntax of @i{libconfig}
+configuration files. It may be found at
+@url{https://docs.rs/libconfig/latest/libconfig/}.
 
 @node License, Configuration File Grammar, Other Bindings and Implementations, Top
 @comment  node-name,  next,  previous,  up
@@ -2519,6 +2543,8 @@ directives are not part of the grammar, so they are not included here.
     | <integer64>
     | <bin>
     | <bin64>
+    | <oct>
+    | <oct64>
     | <hex>
     | <hex64>
     | <float>
@@ -2557,22 +2583,30 @@ Terminals are defined below as regular expressions:
 @item @code{<integer64>} @tab
 @code{[-+]?[0-9]+L(L)?}
 @item @code{<bin>} @tab
-@code{0[bB][01]+}
+@code{0[bB]([01])@{1,32@}}
 @item @code{<bin64>} @tab
-@code{0[bB][01]+L(L)?}
+@code{0[bB]([01])@{1,64@}L(L)?}
+@item @code{<oct>} @tab
+@code{0[oOqQ]([0-7])@{1,10@}}
+@item @code{<oct64>} @tab
+@code{0[oOqQ]([0-7])@{1,21@}L(L)?}
 @item @code{<hex>} @tab
-@code{0[Xx][0-9A-Fa-f]+}
+@code{0[xX]([0-9A-Fa-f])@{1,8@}}
 @item @code{<hex64>} @tab
-@code{0[Xx][0-9A-Fa-f]+(L(L)?)?}
+@code{0[xX]([0-9A-Fa-f])@{1,16@}L(L)?}
 @item @code{<float>} @tab
 @code{([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)}
 @end multitable
 
 @sp 1
 
-Note that adjacent strings are automatically concatenated. Non-printable
-characters can be represented within strings using a sequence @samp{\xx},
-representing the ASCII value as two hex digits.
+Adjacent strings are automatically concatenated. Non-printable
+characters can be represented within strings using the escape sequence
+@samp{\x} followed by exactly two hex digits that represent the ASCII
+value as an 8-bit integer. The following escape sequences are also
+supported within strings, and have the conventional meanings:
+@samp{\"}, @samp{\\}, @samp{\a}, @samp{\b}, @samp{\f}, @samp{\n},
+@samp{\r}, @samp{\t}, @samp{\v}.
 
 @node Function Index, Type Index, Configuration File Grammar, Top
 @comment  node-name,  next,  previous,  up

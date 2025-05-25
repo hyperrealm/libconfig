@@ -1496,10 +1496,10 @@ case 37:
 YY_RULE_SETUP
 #line 143 "scanner.l"
 {
-                    int ok, is_long;
-                    long long llval = libconfig_parse_integer(yytext, 10,
-                                                              &is_long, &ok);
-                    if(!ok)
+                    long long llval;
+                    int is_long;
+
+                    if(!libconfig_parse_integer(yytext, 10, &llval, &is_long))
                       return(TOK_ERROR);
 
                     if(is_long)
@@ -1518,24 +1518,23 @@ case 38:
 YY_RULE_SETUP
 #line 161 "scanner.l"
 {
-                    int ok, is_long;
-                    long long llval = libconfig_parse_integer(yytext, 10,
-                                                              &is_long, &ok);
-                    if(!ok)
+                    int is_long;
+
+                    if(!libconfig_parse_integer(yytext, 10, &(yylval->llval),
+                                                &is_long))
                       return(TOK_ERROR);
 
-                    yylval->llval = llval;
                     return(TOK_INTEGER64);
                   }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 171 "scanner.l"
+#line 170 "scanner.l"
 {
-                    int ok, is_long;
-                    long long llval = libconfig_parse_integer(yytext + 2, 2,
-                                                              &is_long, &ok);
-                    if(!ok)
+                    long long llval;
+                    int is_long;
+
+                    if(!libconfig_parse_integer(yytext + 2, 2, &llval, &is_long))
                       return(TOK_ERROR);
 
                     if(is_long)
@@ -1552,12 +1551,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 189 "scanner.l"
+#line 188 "scanner.l"
 {
-                    int ok, is_long;
-                    long long llval = libconfig_parse_integer(yytext + 2, 8,
-                                                              &is_long, &ok);
-                    if(!ok)
+                    long long llval;
+                    int is_long;
+
+                    if(!libconfig_parse_integer(yytext + 2, 8, &llval, &is_long))
                       return(TOK_ERROR);
 
                     if(is_long)
@@ -1574,12 +1573,13 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 207 "scanner.l"
+#line 206 "scanner.l"
 {
-                    int ok, is_long;
-                    long long llval = libconfig_parse_integer(yytext + 2, 16,
-                                                              &is_long, &ok);
-                    if(!ok)
+                    long long llval;
+                    int is_long;
+
+                    if(!libconfig_parse_integer(yytext + 2, 16, &llval,
+                                                &is_long))
                       return(TOK_ERROR);
 
                     if(is_long)

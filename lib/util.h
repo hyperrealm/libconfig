@@ -38,8 +38,8 @@ extern void *libconfig_realloc(void *ptr, size_t size);
 #define __delete(P) free((void *)(P))
 #define __zero(P) memset((void *)(P), 0, sizeof(*P))
 
-extern long long libconfig_parse_integer(const char *s, int base,
-                                         int *is_long, int *ok);
+extern int libconfig_parse_integer(const char *s, int base, long long *val,
+                                   int *is_long);
 
 extern void libconfig_format_double(double val, int precision, int sci_ok,
                                     char *buf, size_t buflen);

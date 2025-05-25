@@ -31,8 +31,10 @@
 
 #include "pathbuf.h"
 
-/* This example reads the configuration file 'example.cfg' and displays
- * some of its contents.
+/* This example reads the configuration file 'example4.cfg', which contains
+ * an @include directive with a wildcard, and writes the full configuration back
+ * to standard output. The include path with wildcard is handled by a custom
+ * include function.
  */
 
 static const char **include_func(config_t *config,
@@ -52,7 +54,7 @@ static const char **include_func(config_t *config,
   pathbuf_t *path_buf;
 
   path_buf = pathbuf_create();
-  
+
   if((*path != '/') && include_dir)
     pathbuf_append_path(path_buf, include_dir);
 
@@ -80,14 +82,15 @@ static const char **include_func(config_t *config,
         if(result_count == result_capacity)
         {
           result_capacity += 16;
-          result = (char **)realloc(result, (result_capacity + 1) * sizeof(char *));
+          result = (char **)realloc(result,
+                                    (result_capacity + 1) * sizeof(char *));
           result_next = result + result_count;
         }
 
         *result_next = strdup(file_path);
         ++result_next;
         ++result_count;
-        
+
         printf("file to include: %s\n", file_path);
       }
 
@@ -102,6 +105,9 @@ static const char **include_func(config_t *config,
 
   return((const char **)result);
 }
+
+/*
+ */
 
 int main(int argc, char **argv)
 {
@@ -121,7 +127,7 @@ int main(int argc, char **argv)
 
   putchar('\n');
   config_write(&cfg, stdout);
-   
+
   config_destroy(&cfg);
 
   return(EXIT_SUCCESS);

@@ -94,20 +94,23 @@ void *libconfig_realloc(void *ptr, size_t size)
 
 /* ------------------------------------------------------------------------- */
 
-long long libconfig_parse_integer(const char *s, int base, int *is_long,
-                                  int *ok)
+/* Returns 1 on success, 0 on failure. Sets is_long to 1 if value is a
+   64-bit int, otherwise to 0.
+*/
+
+int libconfig_parse_integer(const char *s, int base, long long *val,
+                            int *is_long)
 {
-  long long llval;
   char *endptr;
   int errsave = errno;
 
   errno = 0;
-  llval = strtoll(s, &endptr, base);
+  *val = strtoll(s, &endptr, base);
 
-  if((base != 10) && (llval > INT_MAX) && (llval <= UINT_MAX))
-    llval = (long long)(int)llval;
+  if((base != 10) && (*val > INT_MAX) && (*val <= UINT_MAX))
+    *val = (long long)(int)*val;
 
-  *is_long = ((llval < INT_MIN) || (llval > INT_MAX));
+  *is_long = ((*val < INT_MIN) || (*val > INT_MAX));
 
   /* Check for trailing L's. */
   while(!errno && *endptr == 'L')
@@ -119,13 +122,11 @@ long long libconfig_parse_integer(const char *s, int base, int *is_long,
   if(*endptr || errno)
   {
     errno = errsave;
-    *ok = 0;
     return(0);  /* parse error */
   }
   errno = errsave;
 
-  *ok = 1;
-  return(llval);
+  return(1);
 }
 
 /* ------------------------------------------------------------------------- */

@@ -141,10 +141,10 @@ include_open ^[ \t]*@include[ \t]+\"
 {name}            { yylval->sval = yytext; return(TOK_NAME); }
 {float}           { yylval->fval = atof(yytext); return(TOK_FLOAT); }
 {integer}         {
-                    int ok, is_long;
-                    long long llval = libconfig_parse_integer(yytext, 10,
-                                                              &is_long, &ok);
-                    if(!ok)
+                    long long llval;
+                    int is_long;
+
+                    if(!libconfig_parse_integer(yytext, 10, &llval, &is_long))
                       return(TOK_ERROR);
 
                     if(is_long)
@@ -159,20 +159,19 @@ include_open ^[ \t]*@include[ \t]+\"
                     }
                   }
 {integer64}       {
-                    int ok, is_long;
-                    long long llval = libconfig_parse_integer(yytext, 10,
-                                                              &is_long, &ok);
-                    if(!ok)
+                    int is_long;
+
+                    if(!libconfig_parse_integer(yytext, 10, &(yylval->llval),
+                                                &is_long))
                       return(TOK_ERROR);
 
-                    yylval->llval = llval;
                     return(TOK_INTEGER64);
                   }
 {bin}             {
-                    int ok, is_long;
-                    long long llval = libconfig_parse_integer(yytext + 2, 2,
-                                                              &is_long, &ok);
-                    if(!ok)
+                    long long llval;
+                    int is_long;
+
+                    if(!libconfig_parse_integer(yytext + 2, 2, &llval, &is_long))
                       return(TOK_ERROR);
 
                     if(is_long)
@@ -187,10 +186,10 @@ include_open ^[ \t]*@include[ \t]+\"
                     }
                   }
 {oct}             {
-                    int ok, is_long;
-                    long long llval = libconfig_parse_integer(yytext + 2, 8,
-                                                              &is_long, &ok);
-                    if(!ok)
+                    long long llval;
+                    int is_long;
+
+                    if(!libconfig_parse_integer(yytext + 2, 8, &llval, &is_long))
                       return(TOK_ERROR);
 
                     if(is_long)
@@ -205,10 +204,11 @@ include_open ^[ \t]*@include[ \t]+\"
                     }
                   }
 {hex}             {
-                    int ok, is_long;
-                    long long llval = libconfig_parse_integer(yytext + 2, 16,
-                                                              &is_long, &ok);
-                    if(!ok)
+                    long long llval;
+                    int is_long;
+
+                    if(!libconfig_parse_integer(yytext + 2, 16, &llval,
+                                                &is_long))
                       return(TOK_ERROR);
 
                     if(is_long)
