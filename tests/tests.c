@@ -684,6 +684,7 @@ TT_TEST(BinaryAndHex)
 
   buf = "somebin=0b1010101;\n"
         "somehex=0xbeef;\n"
+        "negativehex=0xaabbccdd;\n"
         "someautobighex=0x100000000;\n"
         "someautobigbin=0b111111111111111111111111111111111;" // 33 bits
         "largestintbin=0b11111111111111111111111111111111;" // 32 bits
@@ -734,6 +735,11 @@ TT_TEST(BinaryAndHex)
   rc = config_lookup_int64(&cfg, "somebigoctal", &llval);
   TT_ASSERT_TRUE(rc);
   TT_ASSERT_INT64_EQ(llval, 549755813887LL);
+
+  rc = config_lookup_int(&cfg, "negativehex", &ival);
+  printf("negativehex: %d\n", ival);
+  TT_ASSERT_TRUE(rc);
+  TT_ASSERT_INT_EQ(ival, -1430532899);
 
   parse_and_compare("./testdata/binhex.cfg", "./testdata/binhex.cfg");
 
