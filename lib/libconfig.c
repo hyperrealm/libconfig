@@ -115,7 +115,7 @@ static void __config_locale_override(void)
 
 #else
 
-#warning "No way to modify calling thread's locale!"
+#pragma warning "No way to modify calling thread's locale!"
 
 #endif
 }
@@ -135,7 +135,7 @@ static void __config_locale_restore(void)
 
 #else
 
-#warning "No way to modify calling thread's locale!"
+#pragma warning "No way to modify calling thread's locale!"
 
 #endif
 }

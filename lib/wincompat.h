@@ -31,7 +31,7 @@
 
 #define LIBCONFIG_WINDOWS_OS
 
-if defined(__MINGW32__) || defined(__MINGW64__)
+#if defined(__MINGW32__) || defined(__MINGW64__)
 #define LIBCONFIG_MINGW_OS
 #endif
 
@@ -120,7 +120,7 @@ extern int posix_fsync(int fd);
 
 #else /* defined(LIBCONFIG_WINDOWS_OS) && !defined(LIBCONFIG_MINGW_OS) */
 
-#include <unistd.h> /* for fsync() */
+//#include <unistd.h> /* for fsync() */
 
 #define posix_fileno fileno
 #define posix_fsync  fsync
@@ -132,6 +132,9 @@ extern int posix_fsync(int fd);
 #define IS_RELATIVE_PATH(P) \
   ((P)[0] != '/')
 
+
 #endif /* defined(LIBCONFIG_WINDOWS_OS) && !defined(LIBCONFIG_MINGW_OS) */
+
+#endif /* defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(WIN64) || defined(_WIN64) || defined(__WIN64__) */
 
 #endif /* __wincompat_h */
