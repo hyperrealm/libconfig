@@ -31,7 +31,7 @@
 
 #define LIBCONFIG_WINDOWS_OS
 
-if defined(__MINGW32__) || defined(__MINGW64__)
+#if defined(__MINGW32__) || defined(__MINGW64__)
 #define LIBCONFIG_MINGW_OS
 #endif
 
@@ -135,3 +135,5 @@ extern int posix_fsync(int fd);
 #endif /* defined(LIBCONFIG_WINDOWS_OS) && !defined(LIBCONFIG_MINGW_OS) */
 
 #endif /* __wincompat_h */
+
+#endif
