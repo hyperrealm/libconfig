@@ -25,16 +25,15 @@
 
 #include <limits.h>
 
-
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) \
   || defined(WIN64) || defined(_WIN64) || defined(__WIN64__)
 
 #define LIBCONFIG_WINDOWS_OS
+#endif
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
 #define LIBCONFIG_MINGW_OS
 #endif
-
 
 #ifdef LIBCONFIG_WINDOWS_OS
 
@@ -135,5 +134,3 @@ extern int posix_fsync(int fd);
 #endif /* defined(LIBCONFIG_WINDOWS_OS) && !defined(LIBCONFIG_MINGW_OS) */
 
 #endif /* __wincompat_h */
-
-#endif
