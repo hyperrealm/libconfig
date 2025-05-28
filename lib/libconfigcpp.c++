@@ -29,8 +29,9 @@
 #include "wincompat.h"
 #include "libconfig.h"
 
-#include <cstring>
+#include <cstdint>
 #include <cstdlib>
+#include <cstring>
 #include <sstream>
 
 namespace libconfig {
@@ -745,7 +746,7 @@ Setting::operator int() const
   if(_type == TypeInt64)
   {
     long long val = config_setting_get_int64(_setting);
-    if((val < INT_MIN) || (val > INT_MAX))
+    if((val < INT32_MIN) || (val > INT32_MAX))
       throw SettingRangeException(*this);
 
     return((int)val);
@@ -763,7 +764,7 @@ Setting::operator unsigned int() const
   if(_type == TypeInt64)
   {
     long long val = config_setting_get_int64(_setting);
-    if((val < 0) || (val > UINT_MAX))
+    if((val < 0) || (val > UINT32_MAX))
       throw SettingRangeException(*this);
 
     return(static_cast<unsigned int>(val));

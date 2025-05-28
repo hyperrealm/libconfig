@@ -935,8 +935,8 @@ static int __config_setting_get_int(const config_setting_t *setting,
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_INT64:
-      if((setting->value.llval >= INT_MIN)
-         && (setting->value.llval <= INT_MAX))
+      if((setting->value.llval >= INT32_MIN)
+         && (setting->value.llval <= INT32_MAX))
       {
         *value = (int)(setting->value.llval);
         return(CONFIG_TRUE);
@@ -1230,7 +1230,7 @@ int config_setting_set_int64(config_setting_t *setting, long long value)
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_INT:
-      if((value >= INT_MIN) && (value <= INT_MAX))
+      if((value >= INT32_MIN) && (value <= INT32_MAX))
       {
         setting->value.ival = (int)value;
         return(CONFIG_TRUE);

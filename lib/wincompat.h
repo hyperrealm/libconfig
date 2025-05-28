@@ -23,17 +23,18 @@
 #ifndef __wincompat_h
 #define __wincompat_h
 
-#include <limits.h>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) \
   || defined(WIN64) || defined(_WIN64) || defined(__WIN64__)
-
 #define LIBCONFIG_WINDOWS_OS
 #endif
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
 #define LIBCONFIG_MINGW_OS
 #endif
+
+
+#include <limits.h>
 
 #ifdef LIBCONFIG_WINDOWS_OS
 
@@ -105,12 +106,16 @@ extern int posix_fsync(int fd);
 #define INT64_CONST(I)  (I ## i64)
 #define UINT64_CONST(I) (I ## Ui64)
 
-#ifndef INT_MAX
-#define INT_MAX (2147483647)
+#ifndef INT32_MAX
+#define INT32_MAX (2147483647)
 #endif
 
-#ifndef INT_MIN
-#define INT_MIN (-2147483647-1)
+#ifndef INT32_MIN
+#define INT32_MIN (-2147483647-1)
+#endif
+
+#ifndef UINT32_MAX
+#define UINT32_MAX (4294967295U)
 #endif
 
 #include <Shlwapi.h>

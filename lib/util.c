@@ -107,10 +107,10 @@ int libconfig_parse_integer(const char *s, int base, long long *val,
   errno = 0;
   *val = strtoll(s, &endptr, base);
 
-  if((base != 10) && (*val > INT_MAX) && (*val <= UINT_MAX))
+  if((base != 10) && (*val > INT32_MAX) && (*val <= UINT32_MAX))
     *val = (long long)(int)*val;
 
-  *is_long = ((*val < INT_MIN) || (*val > INT_MAX));
+  *is_long = ((*val < INT32_MIN) || (*val > INT32_MAX));
 
   /* Check for trailing L's. */
   while(!errno && *endptr == 'L')
