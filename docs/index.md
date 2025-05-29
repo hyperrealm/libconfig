@@ -35,5 +35,5 @@ MinGW environment or with Visual Studio 2008 or later using the provided
 solution file.
 
 <center>
-<a href="dist/libconfig-1.8.tar.gz"><b>libconfig-1.8.tar.gz</b></a>
+<a href="dist/libconfig-1.8.1.tar.gz"><b>libconfig-1.8.1.tar.gz</b></a>
 </center>
