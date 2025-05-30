@@ -40,6 +40,7 @@ EXTRA_DIST = \
 	debian/shlibs \
 	debian/watch \
 	libconfig.spec \
+	lib/*.pc.cmake.in \
 	contrib \
 	CMakeLists.txt
 
