@@ -24,7 +24,7 @@
 #define __libconfig_hpp
 
 #include <stdio.h>
-#include <exception>
+#include <stdexcept>
 #include <string>
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
@@ -54,7 +54,15 @@ struct config_setting_t; // fwd decl
 
 namespace libconfig {
 
-class LIBCONFIGXX_API ConfigException : public std::exception { };
+struct LIBCONFIGXX_API ConfigException : public std::runtime_error
+{
+  ConfigException(std::string const &message);
+
+  ConfigException(ConfigException const &other);
+  ConfigException& operator=(ConfigException const &other);
+
+  virtual ~ConfigException() LIBCONFIGXX_NOEXCEPT;
+};
 
 class Setting; // fwd decl
 class SettingIterator;
@@ -62,25 +70,26 @@ class SettingConstIterator;
 
 class LIBCONFIGXX_API SettingException : public ConfigException
 {
-  public:
 
-  SettingException(const Setting &setting);
-  SettingException(const Setting &setting, int idx);
-  SettingException(const Setting &setting, const char *name);
-  SettingException(const char *path);
+  protected:
+
+  SettingException(char const *messagePrefix, const Setting &setting);
+  SettingException(char const *messagePrefix, const Setting &setting, int idx);
+  SettingException(char const *messagePrefix, const Setting &setting, const char *name);
+  SettingException(char const *messagePrefix, std::string path);
+
+  public:
 
   SettingException(const SettingException &other);
   SettingException& operator=(const SettingException &other);
 
   virtual ~SettingException() LIBCONFIGXX_NOEXCEPT;
 
-  const char *getPath() const;
-
-  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
+  std::string const & getPath() const;
 
   private:
 
-  char *_path;
+  std::string _path;
 };
 
 class LIBCONFIGXX_API SettingTypeException : public SettingException
@@ -91,7 +100,9 @@ class LIBCONFIGXX_API SettingTypeException : public SettingException
   SettingTypeException(const Setting &setting, int idx);
   SettingTypeException(const Setting &setting, const char *name);
 
-  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
+  private:
+
+  static const char * const ERROR_PREFIX;
 };
 
 class LIBCONFIGXX_API SettingRangeException : public SettingException
@@ -102,7 +113,9 @@ class LIBCONFIGXX_API SettingRangeException : public SettingException
   SettingRangeException(const Setting &setting, int idx);
   SettingRangeException(const Setting &setting, const char *name);
 
-  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
+  private:
+
+  static const char * const ERROR_PREFIX;
 };
 
 class LIBCONFIGXX_API SettingNotFoundException : public SettingException
@@ -113,7 +126,9 @@ class LIBCONFIGXX_API SettingNotFoundException : public SettingException
   SettingNotFoundException(const Setting &setting, int idx);
   SettingNotFoundException(const Setting &setting, const char *name);
 
-  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
+  private:
+
+  static const char * const ERROR_PREFIX;
 };
 
 class LIBCONFIGXX_API SettingNameException : public SettingException
@@ -121,15 +136,11 @@ class LIBCONFIGXX_API SettingNameException : public SettingException
   public:
 
   SettingNameException(const Setting &setting, const char *name);
-
-  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
 };
 
-class LIBCONFIGXX_API FileIOException : public ConfigException
+struct LIBCONFIGXX_API FileIOException : public ConfigException
 {
-  public:
-
-  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
+  FileIOException();
 };
 
 class LIBCONFIGXX_API ParseException : public ConfigException
@@ -150,8 +161,6 @@ class LIBCONFIGXX_API ParseException : public ConfigException
 
   inline const char *getError() const
   { return(_error); }
-
-  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
 
   private:
 
