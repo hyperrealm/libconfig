@@ -59,33 +59,46 @@ else()
 endif()
 
 add_library(${libname} ${libsrc} ${libinc})
-add_library(${libname}++ ${libsrc_cpp} ${libinc_cpp})
+
+if(BUILD_CXX)
+  add_library(${libname}++ ${libsrc_cpp} ${libinc_cpp})
+endif()
 
 target_include_directories(${libname} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-target_include_directories(${libname}++ PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+if(BUILD_CXX)
+  target_include_directories(${libname}++ PUBLIC
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+endif()
 
 set_target_properties(${libname}
     PROPERTIES LINKER_LANGUAGE C
         DEFINE_SYMBOL LIBCONFIG_EXPORTS
         PUBLIC_HEADER "${libinc}")
-set_target_properties(${libname}++
-    PROPERTIES LINKER_LANGUAGE CXX
-        DEFINE_SYMBOL LIBCONFIGXX_EXPORTS
-        PUBLIC_HEADER "${libinc_cpp}")
+if(BUILD_CXX)
+  set_target_properties(${libname}++
+      PROPERTIES LINKER_LANGUAGE CXX
+          DEFINE_SYMBOL LIBCONFIGXX_EXPORTS
+          PUBLIC_HEADER "${libinc_cpp}")
+endif()
 
 set_version_info_from_makefile("Makefile.am" ${libname})
-set_version_info_from_makefile("Makefile.am" ${libname}++)
+if(BUILD_CXX)
+  set_version_info_from_makefile("Makefile.am" ${libname}++)
+endif()
 
 if(BUILD_SHARED_LIBS)
-    target_compile_definitions(${libname}++ PRIVATE LIBCONFIG_STATIC)
+    if(BUILD_CXX)
+      target_compile_definitions(${libname}++ PRIVATE LIBCONFIG_STATIC)
+    endif()
 else()
     target_compile_definitions(${libname} PUBLIC LIBCONFIG_STATIC)
-    target_compile_definitions(${libname}++ PUBLIC LIBCONFIG_STATIC LIBCONFIGXX_STATIC)
+    if(BUILD_CXX)
+      target_compile_definitions(${libname}++ PUBLIC LIBCONFIG_STATIC LIBCONFIGXX_STATIC)
+    endif()
 endif()
 
 if(APPLE)
@@ -101,22 +114,28 @@ endif()
 if(HAVE_USELOCALE)
     target_compile_definitions(${libname}
         PRIVATE "HAVE_USELOCALE")
-    target_compile_definitions(${libname}++
-        PRIVATE "HAVE_USELOCALE")
+    if(BUILD_CXX)
+      target_compile_definitions(${libname}++
+          PRIVATE "HAVE_USELOCALE")
+    endif()
 endif()
 
 if(HAVE_NEWLOCALE)
     target_compile_definitions(${libname}
         PRIVATE "HAVE_NEWLOCALE")
-    target_compile_definitions(${libname}++
-        PRIVATE "HAVE_NEWLOCALE")
+    if(BUILD_CXX)
+      target_compile_definitions(${libname}++
+          PRIVATE "HAVE_NEWLOCALE")
+    endif()
 endif()
 
 if(HAVE_FREELOCALE)
     target_compile_definitions(${libname}
         PRIVATE "HAVE_FREELOCALE")
-    target_compile_definitions(${libname}++
-        PRIVATE "HAVE_FREELOCALE")
+    if(BUILD_CXX)
+      target_compile_definitions(${libname}++
+          PRIVATE "HAVE_FREELOCALE")
+    endif()
 endif()
 
 if(MSVC)
@@ -125,28 +144,38 @@ if(MSVC)
             _CRT_SECURE_NO_DEPRECATE
             YY_NO_UNISTD_H
             YY_USE_CONST )
-
-    target_compile_definitions(${libname}++
-        PRIVATE
-            _CRT_SECURE_NO_DEPRECATE
-            YY_NO_UNISTD_H
-            YY_USE_CONST )
+    if(BUILD_CXX)
+      target_compile_definitions(${libname}++
+          PRIVATE
+              _CRT_SECURE_NO_DEPRECATE
+              YY_NO_UNISTD_H
+              YY_USE_CONST )
+    endif()
 endif()
 
 if(WIN32)
     target_link_libraries(${libname} shlwapi)
-    target_link_libraries(${libname}++ shlwapi)
+    if(BUILD_CXX)
+      target_link_libraries(${libname}++ shlwapi)
+    endif()
 endif()
 
 target_include_directories(${libname}
   PUBLIC "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
   )
+if(BUILD_CXX)
+  target_include_directories(${libname}++
+    PUBLIC "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+    )
+endif()
 
-target_include_directories(${libname}++
-  PUBLIC "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
-  )
+if(BUILD_CXX)
+  set(_install_targets ${libname} ${libname}++)
+else()
+  set(_install_targets ${libname})
+endif()
 
-install(TARGETS ${libname} ${libname}++
+install(TARGETS ${_install_targets}
     EXPORT libconfigTargets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -177,15 +206,20 @@ if (UNIX)
         ${CMAKE_CURRENT_SOURCE_DIR}/libconfig.pc.cmake.in
         ${CMAKE_CURRENT_BINARY_DIR}/libconfig.pc @ONLY
         )
-
-    configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/libconfig++.pc.cmake.in
-        ${CMAKE_CURRENT_BINARY_DIR}/libconfig++.pc @ONLY
-        )
-
+    if(BUILD_CXX)
+      configure_file(
+          ${CMAKE_CURRENT_SOURCE_DIR}/libconfig++.pc.cmake.in
+          ${CMAKE_CURRENT_BINARY_DIR}/libconfig++.pc @ONLY
+          )
+    endif()
     install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/libconfig.pc
-        ${CMAKE_CURRENT_BINARY_DIR}/libconfig++.pc
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
         )
+    if(BUILD_CXX)
+      install(FILES
+          ${CMAKE_CURRENT_BINARY_DIR}/libconfig++.pc
+          DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+          )
+    endif()
 endif (UNIX)
