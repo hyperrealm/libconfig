@@ -36,6 +36,9 @@ libinc_cpp =  libconfig.h++
 
 BUILT_SOURCES = scanner.c scanner.h grammar.c grammar.h
 
+scanner.h: scanner.c
+	@if test ! -f $@; then rm -f scanner.c; $(MAKE) $(AM_MAKEFLAGS) scanner.c; else :; fi
+
 ## Build mode: C-only or C & C++
 lib_LTLIBRARIES = libconfig.la
 
