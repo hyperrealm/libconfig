@@ -1,4 +1,52 @@
------ version 1.7.4 ------
+	----- version 1.8.1 ------
+
+2025-05-28  Mark Lindner  <markl@neuromancer>
+
+	* examples/c/Makefile.am, examples/c/example4.c,
+	  examples/c/pathbuf.c, examples/c/pathbuf.h - Eliminated use of
+	  PATH_MAX
+	* examples/c/pathbuf.c, lib/libconfig.c, lib/libconfig.h,
+	  lib/wincompat.h - Fixed some conditionals in wincompat.h
+	* lib/util.h - Include stdint.h for MSVC
+	* lib/util.c - Fix libconfig_format_bin on 32-bit systems
+	* tests/test.c - Cleaned up some code in the unit tests
+	* fuzz/fuzz_config_read.c - Fixed invalid memory write
+	* lib/CMakeLists.txt - CMake build fixes
+	* lib/Makefile.am - Corrected library interface version
+	* doc/libconfig.texi, lib/grammar.c, lib/grammar.h, lib/grammar.y,
+	  lib/libconfig.c, lib/libconfig.h++, lib/libconfig.h,
+	  lib/libconfigcpp.c++, lib/scanner.c, lib/scanner.h,
+	  lib/scanner.l, lib/util.c, lib/util.h, tests/tests.c - Fixed
+	  handling of base-2 and base-16 integer values (signed vs. unsigned)
+	* lib/grammar.c, lib/grammar.y - Fixed two cut & paste errors
+	* lib/libconfig.c, lib/scanner.c, lib/scanner.h, lib/scanner.l,
+	  tests/tests.c - Added optional assert functionality for
+	  unexpected null pointers
+	* lib/libconfig.c - Added a few missed asserts
+	* tests/tests.c - Updated unit test.
+	* lib/libconfig.c, lib/libconfig.hh, lib/libconfig.h,
+	  lib/libconfigcpp.cc, lib/scanner.c, lib/scanner.l,
+	  lib/util.c, lib/wincompat.c, lib/wincompat.h,
+	  tests/tests.c - Cleaned up OS test macros
+	* lib/libconfig.c, lib/util.c, lib/util.h - Rewrote
+	  libconfig_format_bin() without using clzl()
+	* tinytest/tinytest.c, tinytest/tinytest.h - unit test code
+	  cleanup
+	* doc/libconfig.texi, examples/c/example4.cfg,
+	  examples/c/example4.c, lib/scanner.c, lib/scanner.l, lib/util.c,
+	  lib/util.h - Misc. code cleanup and documentation updates
+	* lib/wincompat.h - Fixed missing #if and #endif statements
+	* lib/libconfig.c, lib/libconfigcpp.c++, lib/util.c, lib/wincompat.h -
+	  Cleanup of int min/max constants.
+
+	----- version 1.8 ------
+
+2025-04-28  Mark Lindner  <markl@neuromancer>
+
+	* Added support for binary integer values
+	* Miscellaneous code cleanup
+
+	----- version 1.7.4 ------
 
 2022-11-22  Mark Lindner  <markl@neuromancer>
 
