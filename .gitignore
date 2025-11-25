@@ -19,3 +19,4 @@ temp
 *.user
 *.userosscache
 *.sln.docstates
+venv
