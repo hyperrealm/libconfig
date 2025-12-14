@@ -6,8 +6,8 @@
 @setfilename libconfig.info
 @settitle libconfig
 
-@set edition 1.8.1
-@set update-date 1 Jun 2025
+@set edition 1.8.2
+@set update-date 14 Dec 2025
 @set subtitle-text A Library For Processing Structured Configuration Files
 @set author-text Mark A.@: Lindner
 
@@ -105,8 +105,8 @@ structured configuration files. The library features a fully
 reentrant parser and includes bindings for both the C and C++
 programming languages.
 
-The library runs on modern POSIX-compilant systems, such as Linux,
-Solaris, and Mac OS X (Darwin), as well as on Microsoft Windows
+The library runs on modern POSIX-compilant systems, such as GNU/Linux,
+FreeBSD, OpenBSD, and MacOS (Darwin), as well as on Microsoft Windows
 2000/XP and later (with either Microsoft Visual Studio 2005 or later,
 or the GNU toolchain via the MinGW environment).
 
@@ -402,14 +402,14 @@ application:
               price  = 9.99;
               qty    = 8; @} );
 
-  misc:
+  constants:
   @{
     pi = 3.141592654;
     bigint = 9223372036854775807L;
     columns = [ "Last Name", "First Name", "MI" ];
-    bitmask = 0x1FC3;	// hex
+    bitmask1 = 0x1FC3; // hex
     bitmask2 = 0b1011; // binary
-    umask = 0o27;	// octal. Range limited to that of "int"
+    umask = 0o755; // octal
   @};
 @};
 @end smallexample
@@ -630,7 +630,7 @@ shorter strings. For example, the following constructs are equivalent:
 @code{"jumped over the lazy dog."}
 
 @end itemize
-@page
+
 @node Comments, Include Directives, String Values, Configuration Files
 @comment  node-name,  next,  previous,  up
 @section Comments
@@ -1667,7 +1667,7 @@ The default implementation simply returns a @code{NULL}-terminated array
 containing either a copy of @var{path} if it's an absolute path, or a
 concatenation of the include directory and @var{path} if it's a relative path.
 
-For more information see @code{config_set_include_func()} above.
+For more information see @code{config_set_include_func()} in the C API.
 
 @end deftypemethod
 
@@ -2281,7 +2281,7 @@ These methods test if the setting has a child setting with the given
 @code{false} otherwise. These methods do not throw exceptions.
 
 @end deftypemethod
-@page
+
 @deftypemethod Setting iterator begin ()
 @deftypemethodx Setting iterator end ()
 @deftypemethodx Setting const_iterator begin ()
