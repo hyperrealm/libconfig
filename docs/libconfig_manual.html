@@ -52,8 +52,8 @@ ul.no-bullet {list-style: none}
 
 <hr noshade size=6 color="black">
 <div align=right>A Library For Processing Structured Configuration Files<br>
-Version 1.8.1<br>
-1 Jun 2025</div>
+Version 1.8.2<br>
+14 Dec 2025</div>
 <br><br><br><br>
 <font size=+1>Mark A. Lindner</font>
 <hr size=3 noshade color="black">
@@ -134,8 +134,8 @@ structured configuration files. The library features a fully
 reentrant parser and includes bindings for both the C and C++
 programming languages.
 </p>
-<p>The library runs on modern POSIX-compilant systems, such as Linux,
-Solaris, and Mac OS X (Darwin), as well as on Microsoft Windows
+<p>The library runs on modern POSIX-compilant systems, such as GNU/Linux,
+FreeBSD, OpenBSD, and MacOS (Darwin), as well as on Microsoft Windows
 2000/XP and later (with either Microsoft Visual Studio 2005 or later,
 or the GNU toolchain via the MinGW environment).
 </p>
@@ -467,14 +467,14 @@ application:
               price  = 9.99;
               qty    = 8; } );
 
-  misc:
+  constants:
   {
     pi = 3.141592654;
     bigint = 9223372036854775807L;
     columns = [ &quot;Last Name&quot;, &quot;First Name&quot;, &quot;MI&quot; ];
-    bitmask = 0x1FC3;	// hex
+    bitmask1 = 0x1FC3; // hex
     bitmask2 = 0b1011; // binary
-    umask = 0o27;	// octal. Range limited to that of &quot;int&quot;
+    umask = 0o755; // octal
   };
 };
 </pre></div>
@@ -748,6 +748,7 @@ shorter strings. For example, the following constructs are equivalent:
 <code>&quot;jumped over the lazy dog.&quot;</code>
 
 </li></ul>
+
 <hr>
 </div>
 <div class="section" id="Comments">
@@ -1877,7 +1878,7 @@ configuration; the library does not take ownership of or free this string.
 containing either a copy of <var>path</var> if it&rsquo;s an absolute path, or a
 concatenation of the include directory and <var>path</var> if it&rsquo;s a relative path.
 </p>
-<p>For more information see <code>config_set_include_func()</code> above.
+<p>For more information see <code>config_set_include_func()</code> in the C API.
 </p>
 </dd></dl>
 
@@ -2507,6 +2508,7 @@ invalid for the given setting, it is ignored.
 <code>false</code> otherwise. These methods do not throw exceptions.
 </p>
 </dd></dl>
+
 <dl class="def">
 <dt id="index-begin-on-Setting"><span>Method on Setting: <em>iterator</em> <strong>begin</strong> <em>()</em><a href='#index-begin-on-Setting' class='copiable-anchor'> &para;</a></span></dt>
 <dt id="index-end-on-Setting"><span>Method on Setting: <em>iterator</em> <strong>end</strong> <em>()</em><a href='#index-end-on-Setting' class='copiable-anchor'> &para;</a></span></dt>
