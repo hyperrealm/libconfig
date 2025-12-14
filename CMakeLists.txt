@@ -17,6 +17,11 @@ if(BUILD_CXX)
 	enable_language(CXX)
 endif()
 
+if(NOT PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
+	# Git auto-ignore out-of-source build directory
+	file(GENERATE OUTPUT .gitignore CONTENT "*")
+endif()
+
 set_property(GLOBAL	PROPERTY USE_FOLDERS ON)
 
 set(CMAKE_C_STANDARD 99)
