@@ -1,0 +1,23 @@
+name: Build tests
+on: [push, pull_request]
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          architecture: 'x64'
+      # install dependencies
+      - name: CMake build
+        run: cmake -B build && cmake --build build
+
+      - name: autoconf build
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          autoreconf -if
+          ./configure
+          make clean
+          make
