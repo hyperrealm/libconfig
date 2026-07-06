@@ -8,7 +8,7 @@ spec = Gem::Specification.new do |s|
   s.email = "whitequark@whitequark.ru"
   s.platform = Gem::Platform::RUBY
   s.summary = "libconfig bindings"
-  s.files = [ File.join('ext', 'extconf.rb'), File.join('ext', 'rconfig.c') ].to_a
+  s.files = [ File.join('ext', 'extconf.rb'), File.join('ext', 'rconfig.c') ]
   s.extensions = 'ext/extconf.rb'
 end
  
