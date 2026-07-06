@@ -15,3 +15,10 @@ end
 Gem::PackageTask.new(spec) do |pkg|
 end
  
+require 'rake/extensiontask'
+
+task build: :compile
+
+Rake::ExtensionTask.new("rconfig") do |ext|
+  ext.ext_dir = 'ext'
+end

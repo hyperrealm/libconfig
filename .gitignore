@@ -19,3 +19,6 @@ temp
 *.user
 *.userosscache
 *.sln.docstates
+/contrib/libconfig-ruby/Gemfile.lock
+/contrib/libconfig-ruby/lib/rconfig.so
+/contrib/libconfig-ruby/tmp/
