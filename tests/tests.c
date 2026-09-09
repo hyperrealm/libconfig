@@ -644,6 +644,18 @@ TT_TEST(SettingLookups)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(IncludeReadError)
+{
+  config_t cfg;
+
+  config_init(&cfg);
+  TT_ASSERT_FALSE(config_read_string(&cfg, "@include \".\""));
+  TT_ASSERT_PTR_NOTNULL(config_error_text(&cfg));
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
 TT_TEST(ReadStream)
 {
   config_t cfg;
@@ -767,6 +779,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, EscapedStrings);
   TT_SUITE_TEST(LibConfigTests, OverrideSetting);
   TT_SUITE_TEST(LibConfigTests, SettingLookups);
+  TT_SUITE_TEST(LibConfigTests, IncludeReadError);
   TT_SUITE_TEST(LibConfigTests, ReadStream);
   TT_SUITE_TEST(LibConfigTests, BinaryAndHex);
   TT_SUITE_RUN(LibConfigTests);

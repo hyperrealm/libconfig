@@ -50,9 +50,9 @@
 #include "grammar.h"
 #include "wincompat.h"
 #include "util.h"
-
+static int libconfig_yyread(char *buf, int max_size, FILE *input);
 #define YY_NO_INPUT /* Suppress generation of useless input() function */
-
+#define YY_INPUT(buf, result, max_size) ((result) = libconfig_yyread((buf), (max_size), yyin))
 %}
 
 true              [Tt][Rr][Uu][Ee]
@@ -233,6 +233,15 @@ include_open ^[ \t]*@include[ \t]+\"
   const char *error = NULL;
   FILE *fp;
 
+  if(yyin && ferror(yyin))
+  {
+    yyextra->config->error_text = "input in flex scanner failed";
+    yyextra->config->error_file = libconfig_scanctx_current_filename(yyextra);
+    yyextra->config->error_line = libconfig_yyget_lineno(yyscanner);
+    clearerr(yyin);
+    return TOK_ERROR;
+  }
+
   fp = libconfig_scanctx_next_include_file(yyextra, &error);
   if(fp)
   {
@@ -263,6 +272,23 @@ include_open ^[ \t]*@include[ \t]+\"
 }
 
 %%
+
+static int libconfig_yyread(char *buf, int max_size, FILE *input)
+{
+  int result;
+
+  errno = 0;
+  while((result = (int)fread(buf, 1, (size_t)max_size, input)) == 0
+        && ferror(input))
+  {
+    if(errno != EINTR)
+      break;
+    errno = 0;
+    clearerr(input);
+  }
+
+  return(result);
+}
 
 void *libconfig_yyalloc(size_t bytes, void *yyscanner)
 {
