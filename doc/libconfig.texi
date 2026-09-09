@@ -2474,14 +2474,14 @@ may be found on github at @url{https://github.com/cnangel/python-libconfig/}.
 @comment  node-name,  next,  previous,  up
 @section Ruby
 
-Christopher Mark Gore's @i{ruby-libconfig} is a Ruby library that provides Ruby
-bindings for @i{libconfig}. It may be found at
+Christopher Mark Gore's @i{ruby-libconfig} is a pure Ruby library that serializes Ruby
+objects into the @i{libconfig} format. It may be found at
 @url{https://rubygems.org/gems/libconfig} or on github at
 @url{https://github.com/cgore/ruby-libconfig}.
 
 @sp 1
 
-There is also another Ruby wrapper, @i{libconfig-ruby}, that is included in
+There is a Ruby wrapper, @i{libconfig-ruby}, that is included in
 the @i{libconfig} git repository at @url{https://github.com/hyperrealm/libconfig},
 in the @file{contrib/libconfig-ruby} subdirectory.
 
