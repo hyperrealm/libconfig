@@ -17,6 +17,8 @@ if(BUILD_CXX)
 	enable_language(CXX)
 endif()
 
+message(STATUS "CMake version: ${CMAKE_VERSION}")
+
 if(NOT PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
 	# Git auto-ignore out-of-source build directory
 	file(GENERATE OUTPUT .gitignore CONTENT "*")
