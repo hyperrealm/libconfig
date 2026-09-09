@@ -8,10 +8,17 @@ spec = Gem::Specification.new do |s|
   s.email = "whitequark@whitequark.ru"
   s.platform = Gem::Platform::RUBY
   s.summary = "libconfig bindings"
-  s.files = [ File.join('ext', 'extconf.rb'), File.join('ext', 'rconfig.c') ].to_a
+  s.files = [ File.join('ext', 'extconf.rb'), File.join('ext', 'rconfig.c') ]
   s.extensions = 'ext/extconf.rb'
 end
  
 Gem::PackageTask.new(spec) do |pkg|
 end
  
+require 'rake/extensiontask'
+
+task build: :compile
+
+Rake::ExtensionTask.new("rconfig") do |ext|
+  ext.ext_dir = 'ext'
+end

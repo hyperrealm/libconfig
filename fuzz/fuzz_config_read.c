@@ -8,7 +8,7 @@
 #define MAX_CONFIG_SIZE 4096
 #define MAX_PATH_SIZE 256
 #define MIN_BUFF_SIZE sizeof(fuzz_data_t) + 2 // Room for fixed-width data and two null terminators
-#define MAX_BUFF_SIZE sizeof(fuzz_data_t) + MAX_CONFIG_SIZE + MAX_PATH_SIZE + 1
+#define MAX_BUFF_SIZE sizeof(fuzz_data_t) + MAX_CONFIG_SIZE + MAX_PATH_SIZE + 2
 
 // Forward-declare the libFuzzer's mutator callback.
 extern size_t LLVMFuzzerMutate(uint8_t *Data, size_t Size, size_t MaxSize);
