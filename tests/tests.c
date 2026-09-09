@@ -121,7 +121,7 @@ static const char *read_file_to_string(const char *file)
   buf = (char *)malloc(size + 1);
   TT_ASSERT_PTR_NOTNULL(buf);
 
-  fp = fopen(file, "rt");
+  fp = fopen(file, "rb");
   TT_ASSERT_PTR_NOTNULL(fp);
 
   r = fread(buf, 1, size, fp);
