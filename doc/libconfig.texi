@@ -1086,6 +1086,32 @@ Valid tab widths range from 0 to 15. The default tab width is 2.
 
 @end deftypefun
 
+@node Lookup Differences
+@section Historical Differences: Path vs. Typed Lookup
+
+While both @code{config_lookup()} and the typed lookup functions
+(e.g., @code{config_lookup_int()}) serve to retrieve configuration values,
+they represent different approaches evolved over the library's history.
+
+@table @asis
+@item @code{config_lookup()} (Path Lookup)
+This is the fundamental lookup mechanism. It returns a pointer to the
+@code{config_setting_t} structure. Historically, this was the primary way
+to access settings. It separates the act of finding a setting from reading
+its value. This allows for inspecting the setting's type or metadata before
+retrieving the value.
+
+@item Typed Lookup Functions (e.g., @code{config_lookup_int})
+These are convenience wrappers introduced to simplify common use cases.
+They combine the path lookup and type conversion into a single call.
+While more concise, they return a boolean status (@code{CONFIG_TRUE}/@code{CONFIG_FALSE})
+rather than a pointer, which requires a different error handling pattern
+compared to checking for a @code{NULL} pointer from @code{config_lookup()}.
+@end table
+
+When maintaining legacy code, be aware that mixing these styles can lead
+to inconsistent error checking logic.
+
 @deftypefun int config_lookup_int (@w{const config_t * @var{config}}, @w{const char * @var{path}}, @w{int * @var{value}})
 @deftypefunx int config_lookup_int64 (@w{const config_t * @var{config}}, @w{const char * @var{path}}, @w{long long * @var{value}})
 @deftypefunx int config_lookup_float (@w{const config_t * @var{config}}, @w{const char * @var{path}}, @w{double * @var{value}})
