@@ -16,6 +16,13 @@
 #define PACKAGE    "LS bash config"
 #define VERSION    "1.0.3"
 
+// size of the "sinp" scratch buffer used to hold command line argument
+// values before they are copied into freshly allocated strings; every
+// sscanf() call that reads into it must be given a matching field width
+// so that an overly long -s/-g/-d/-p/-f argument can't overflow it
+#define SINP_BUFSZ    256
+#define SINP_MAXLEN   "255"
+
 // global flags
 struct flags {
 	int quiet; //quiet output
@@ -1147,7 +1154,7 @@ int main(int argc, char **argv) {
 	int excode; //program exit code
 	excode = 0;
 
-	sinp = malloc(sizeof(char) * 256);
+	sinp = malloc(sizeof(char) * SINP_BUFSZ);
 
 	//long options reading
 	struct option long_options[] = {
@@ -1183,7 +1190,7 @@ int main(int argc, char **argv) {
 				/* If this option set a flag, do nothing else now. */
 				if(long_options[option_index].flag != 0) break;
 				if(strcmp(long_options[option_index].name, "set") == 0 && optarg) {
-					test = sscanf(optarg, "%s", sinp);
+					test = sscanf(optarg, "%" SINP_MAXLEN "s", sinp);
 					if(test > 0) {
 						dataPath = (char*)malloc((strlen(sinp)+1)*sizeof(char));
 						strcpy(dataPath, sinp);
@@ -1191,7 +1198,7 @@ int main(int argc, char **argv) {
 					optflags.mode = 1;
 				};
 				if(strcmp(long_options[option_index].name, "get") == 0 && optarg) {
-					test = sscanf(optarg, "%s", sinp);
+					test = sscanf(optarg, "%" SINP_MAXLEN "s", sinp);
 					if(test > 0) {
 						dataPath = (char*)malloc((strlen(sinp)+1)*sizeof(char));
 						strcpy(dataPath, sinp);
@@ -1199,21 +1206,21 @@ int main(int argc, char **argv) {
 					optflags.mode = 0;
 				};
 				if(strcmp(long_options[option_index].name, "data") == 0 && optarg) {
-					test = sscanf(optarg, "%[^\n]s", sinp);
+					test = sscanf(optarg, "%" SINP_MAXLEN "[^\n]s", sinp);
 					if(test > 0) {
 						dataString = (char*)malloc((strlen(sinp)+1)*sizeof(char));
 						strcpy(dataString, sinp);
 					}; 
 				};
 				if(strcmp(long_options[option_index].name, "type") == 0 && optarg) {
-					test = sscanf(optarg, "%s", sinp);
+					test = sscanf(optarg, "%" SINP_MAXLEN "s", sinp);
 					if(test > 0) {
 						dataType = (char*)malloc((strlen(sinp)+1)*sizeof(char));
 						strcpy(dataType, sinp);
 					}; 
 				};
 				if(strcmp(long_options[option_index].name, "file") == 0 && optarg) {
-					test = sscanf(optarg, "%[^\n]s", sinp);
+					test = sscanf(optarg, "%" SINP_MAXLEN "[^\n]s", sinp);
 					if(test > 0) {
 						configFile = (char*)malloc((strlen(sinp)+1)*sizeof(char));
 						strcpy(configFile, sinp);
@@ -1246,7 +1253,7 @@ int main(int argc, char **argv) {
 				break;
 			case 's':
 				if(optarg) {
-					test = sscanf(optarg, "%s", sinp);
+					test = sscanf(optarg, "%" SINP_MAXLEN "s", sinp);
 					if(test > 0) {
 						dataPath = (char*)malloc((strlen(sinp)+1)*sizeof(char));
 						strcpy(dataPath, sinp);
@@ -1256,7 +1263,7 @@ int main(int argc, char **argv) {
 				break;
 			case 'g':
 				if(optarg) {
-					test = sscanf(optarg, "%s", sinp);
+					test = sscanf(optarg, "%" SINP_MAXLEN "s", sinp);
 					if(test > 0) {
 						dataPath = (char*)malloc((strlen(sinp)+1)*sizeof(char));
 						strcpy(dataPath, sinp);
@@ -1266,7 +1273,7 @@ int main(int argc, char **argv) {
 				break;
 			case 'd':
 				if(optarg) {
-					test = sscanf(optarg, "%[^\n]s", sinp);
+					test = sscanf(optarg, "%" SINP_MAXLEN "[^\n]s", sinp);
 					if(test > 0) {
 						dataString = (char*)malloc((strlen(sinp)+1)*sizeof(char));
 						strcpy(dataString, sinp);
@@ -1275,7 +1282,7 @@ int main(int argc, char **argv) {
 				break;
 			case 'p':
 				if(optarg) {
-					test = sscanf(optarg, "%s", sinp);
+					test = sscanf(optarg, "%" SINP_MAXLEN "s", sinp);
 					if(test > 0) {
 						dataType = (char*)malloc((strlen(sinp)+1)*sizeof(char));
 						strcpy(dataType, sinp);
@@ -1288,7 +1295,7 @@ int main(int argc, char **argv) {
 				printHelp(); //this function contain exit from program
 				break;
 			case 'f':
-				test = sscanf(optarg, "%[^\n]s", sinp);
+				test = sscanf(optarg, "%" SINP_MAXLEN "[^\n]s", sinp);
 				if(test > 0) {
 					configFile = (char*)malloc((strlen(sinp)+1)*sizeof(char));
 					strcpy(configFile, sinp);
