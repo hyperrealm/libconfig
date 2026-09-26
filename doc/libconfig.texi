@@ -1033,6 +1033,13 @@ This option controls whether duplicate settings override previous settings
 with the same name. If this option is turned off, duplicate settings are
 rejected. By default this option is turned off.
 
+Note that when a setting is overridden, the previous setting object is
+destroyed (including any children it may have) and a new setting object is
+created in its place. Any pointers previously returned for the overridden
+setting or its children, e.g. by @code{config_setting_add()},
+@code{config_setting_get_member()}, or @code{config_lookup()}, become
+invalid and must not be used.
+
 @end table
 
 @end deftypefun
@@ -1321,10 +1328,15 @@ is an array or list, the @var{name} parameter is ignored and may be
 @code{NULL}.
 
 The function returns the new setting on success, or @code{NULL} if
-@var{parent} is not a group, array, or list; or if there is already a
-child setting of @var{parent} named @var{name}; or if @var{type} is
-invalid. If @var{type} is a scalar type, the new setting will have a
-default value of 0, 0.0, @code{false}, or @code{NULL}, as appropriate.
+@var{parent} is not a group, array, or list; or if @var{type} is invalid;
+or if there is already a child setting of @var{parent} named @var{name}
+and the @code{CONFIG_OPTION_ALLOW_OVERRIDES} option is turned off. When
+that option is turned on, an existing child setting named @var{name} is
+destroyed (recursively, including any children) and replaced by the new
+setting; any pointers previously returned for the replaced setting or its
+children become invalid and must not be used. If @var{type} is a scalar
+type, the new setting will have a default value of 0, 0.0,
+@code{false}, or @code{NULL}, as appropriate.
 @end deftypefun
 
 @deftypefun int config_setting_remove (@w{config_setting_t * @var{parent}}, @w{const char * @var{name}})
