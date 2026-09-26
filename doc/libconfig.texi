@@ -776,6 +776,12 @@ This function reads and parses a configuration from the given
 @code{config_error_line()}, and @code{config_error_type()} functions,
 described below, can be used to obtain information about the error.
 
+Note that reading into @var{config} discards any previously read
+configuration: all settings of @var{config} are recursively destroyed
+first (as with @code{config_clear()}), so any pointers previously
+returned for settings of @var{config} become invalid and must not be
+used.
+
 @end deftypefun
 
 @deftypefun int config_read_file (@w{config_t * @var{config}}, @w{const char * @var{filename}})
@@ -786,6 +792,12 @@ This function reads and parses a configuration from the file named
 @code{config_error_text()} and @code{config_error_line()} functions,
 described below, can be used to obtain information about the error.
 
+Note that reading into @var{config} discards any previously read
+configuration: all settings of @var{config} are recursively destroyed
+first (as with @code{config_clear()}), so any pointers previously
+returned for settings of @var{config} become invalid and must not be
+used.
+
 @end deftypefun
 
 @deftypefun int config_read_string (@w{config_t * @var{config}}, @w{const char * @var{str}})
@@ -795,6 +807,12 @@ This function reads and parses a configuration from the string
 @code{CONFIG_TRUE} on success, or @code{CONFIG_FALSE} on failure; the
 @code{config_error_text()} and @code{config_error_line()} functions,
 described below, can be used to obtain information about the error.
+
+Note that reading into @var{config} discards any previously read
+configuration: all settings of @var{config} are recursively destroyed
+first (as with @code{config_clear()}), so any pointers previously
+returned for settings of @var{config} become invalid and must not be
+used.
 
 @end deftypefun
 
