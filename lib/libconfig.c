@@ -907,7 +907,7 @@ static config_setting_t *__config_setting_create(config_setting_t *parent,
 
   setting = __new(config_setting_t);
   setting->parent = parent;
-  setting->name = (name == NULL) ? NULL : strdup(name);
+  setting->name = (name == NULL) ? NULL : libconfig_strdup(name);
   setting->type = type;
   setting->config = parent->config;
   setting->hook = NULL;
@@ -1373,7 +1373,7 @@ int config_setting_set_string(config_setting_t *setting, const char *value)
   if(setting->value.sval)
     __delete(setting->value.sval);
 
-  setting->value.sval = (value == NULL) ? NULL : strdup(value);
+  setting->value.sval = (value == NULL) ? NULL : libconfig_strdup(value);
 
   return(CONFIG_TRUE);
 }
@@ -1878,7 +1878,7 @@ void config_set_include_dir(config_t *config, const char *include_dir)
   config_assert(config != NULL);
 
   __delete(config->include_dir);
-  config->include_dir = include_dir ? strdup(include_dir) : NULL;
+  config->include_dir = include_dir ? libconfig_strdup(include_dir) : NULL;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -2062,7 +2062,7 @@ const char **config_default_include_func(config_t *config,
     strcat(file, path);
   }
   else
-    file = strdup(path);
+    file = libconfig_strdup(path);
 
   *error = NULL;
 

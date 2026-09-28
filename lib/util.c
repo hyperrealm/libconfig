@@ -94,6 +94,17 @@ void *libconfig_realloc(void *ptr, size_t size)
 
 /* ------------------------------------------------------------------------- */
 
+char *libconfig_strdup(const char *str)
+{
+  char *copy = strdup(str);
+  if(!copy)
+    libconfig_fatal_error(__libconfig_malloc_failure_message);
+
+  return(copy);
+}
+
+/* ------------------------------------------------------------------------- */
+
 /* Returns 1 on success, 0 on failure. Sets is_long to 1 if value is a
    64-bit int, otherwise to 0.
 */

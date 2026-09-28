@@ -18,7 +18,7 @@
 #
 # For more info see section 6.3 of the GNU Libtool Manual.
 
-VERINFO = -version-info 15:0:0
+VERINFO = -version-info 15:1:0
 
 ## Flex
 PARSER_PREFIX = libconfig_yy
@@ -77,6 +77,7 @@ libconfig___la_LDFLAGS = $(VERINFO) -no-undefined
 EXTRA_DIST = \
 	$(BUILT_SOURCES) \
 	libconfigcpp.cc libconfig.hh \
+	win32/stdint.h \
 	*.vcproj \
 	*.vcxproj \
 	CMakeLists.txt

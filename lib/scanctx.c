@@ -41,7 +41,7 @@ void libconfig_scanctx_init(struct scan_context *ctx, const char *top_filename)
   __zero(ctx);
   if(top_filename)
   {
-    ctx->top_filename = strdup(top_filename);
+    ctx->top_filename = libconfig_strdup(top_filename);
     libconfig_strvec_append(&(ctx->filenames), ctx->top_filename);
   }
 }
@@ -182,7 +182,7 @@ char *libconfig_scanctx_take_string(struct scan_context *ctx)
 {
   char *r = libconfig_strbuf_release(&(ctx->string));
 
-  return(r ? r : strdup(""));
+  return(r ? r : libconfig_strdup(""));
 }
 
 /* ------------------------------------------------------------------------- */

@@ -1,5 +1,11 @@
+2026-03-29  Mark Lindner  <markl@neuromancer>
+
+	* lib/Makefile.am - Add stdint.h to EXTRA_DIST, bump version
+	* lib/libconfig.c, lib/util.c, lib/util.h, lib/scanctx.c,
+	  lib/libconfigcpp.c++ - Handle allocation failures in strdup()
+
 	----- version 1.8.2 ------
-	
+
 2025-12-14  Mark Lindner  <markl@neuromancer>
 
 	* doc/libconfig.texi - Minor documentation updates
