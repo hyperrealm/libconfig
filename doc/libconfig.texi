@@ -6,8 +6,8 @@
 @setfilename libconfig.info
 @settitle libconfig
 
-@set edition 1.8.2
-@set update-date 14 Dec 2025
+@set edition 1.8.3
+@set update-date ? Oct 2026
 @set subtitle-text A Library For Processing Structured Configuration Files
 @set author-text Mark A.@: Lindner
 
@@ -38,7 +38,7 @@
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2004-2025  Mark A Lindner
+Copyright @copyright{} 2004-2026  Mark A Lindner
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -1075,7 +1075,6 @@ See @code{config_set_options()} above for the list of available options.
 
 @end deftypefun
 
-
 @deftypefun int config_get_auto_convert (@w{const config_t *@var{config}})
 @deftypefunx void config_set_auto_convert (@w{config_t *@var{config}}, @w{int @var{flag}})
 
@@ -1111,31 +1110,39 @@ Valid tab widths range from 0 to 15. The default tab width is 2.
 
 @end deftypefun
 
-@node Lookup Differences
-@section Historical Differences: Path vs. Typed Lookup
+@cartouche
+@quotation Historical Differences - Path vs. Typed Lookup
 
-While both @code{config_lookup()} and the typed lookup functions
-(e.g., @code{config_lookup_int()}) serve to retrieve configuration values,
-they represent different approaches evolved over the library's history.
+While both the path-based lookup and the typed lookup functions serve
+to retrieve configuration values, they represent different approaches
+that evolved over the library's history.
 
 @table @asis
-@item @code{config_lookup()} (Path Lookup)
-This is the fundamental lookup mechanism. It returns a pointer to the
-@code{config_setting_t} structure. Historically, this was the primary way
-to access settings. It separates the act of finding a setting from reading
-its value. This allows for inspecting the setting's type or metadata before
-retrieving the value.
+@item Path Lookup Functions (@code{config_lookup()}, @code{config_setting_lookup()})
+This is the fundamental lookup mechanism. It returns a pointer to a
+@code{config_setting_t} structure on success, or @code{NULL} on
+failure.  Historically, this was the primary way to access
+settings. It separates the act of finding a setting from reading its
+value. This allows for inspecting the setting's type or metadata
+before retrieving the value.
 
-@item Typed Lookup Functions (e.g., @code{config_lookup_int})
-These are convenience wrappers introduced to simplify common use cases.
-They combine the path lookup and type conversion into a single call.
-While more concise, they return a boolean status (@code{CONFIG_TRUE}/@code{CONFIG_FALSE})
-rather than a pointer, which requires a different error handling pattern
-compared to checking for a @code{NULL} pointer from @code{config_lookup()}.
+@item Typed Lookup Functions (e.g., @code{config_lookup_int()}, @code{config_setting_lookup_int()})
+These are convenience wrappers introduced to simplify common use
+cases.  They combine the path-based lookup and type conversion into a
+single call. They store the setting's value at the supplied pointer
+and return @code{CONFIG_TRUE} on success; otherwise they return
+@code{CONFIG_FALSE}.
 @end table
 
-When maintaining legacy code, be aware that mixing these styles can lead
-to inconsistent error checking logic.
+Due to these differences, a distinct error handling pattern is
+required for each style of lookup. When maintaining legacy code, be
+aware that mixing these styles can lead to inconsistent error checking
+logic.
+
+@end quotation
+@end cartouche
+
+@page
 
 @deftypefun int config_lookup_int (@w{const config_t * @var{config}}, @w{const char * @var{path}}, @w{int * @var{value}})
 @deftypefunx int config_lookup_int64 (@w{const config_t * @var{config}}, @w{const char * @var{path}}, @w{long long * @var{value}})
@@ -1192,6 +1199,8 @@ This function is identical to @code{config_setting_lookup()}, except that the
 setting is returned as a @code{const} structure.
 
 @end deftypefun
+
+@page
 
 @deftypefun int config_setting_get_int (@w{const config_setting_t * @var{setting}})
 @deftypefunx {long long} config_setting_get_int64 (@w{const config_setting_t * @var{setting}})

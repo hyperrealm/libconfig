@@ -96,9 +96,14 @@ void *libconfig_realloc(void *ptr, size_t size)
 
 char *libconfig_strdup(const char *str)
 {
-  char *copy = strdup(str);
-  if(!copy)
-    libconfig_fatal_error(__libconfig_malloc_failure_message);
+  char *copy = NULL;
+
+  if(str)
+  {
+    copy = strdup(str);
+    if(!copy)
+      libconfig_fatal_error(__libconfig_malloc_failure_message);
+  }
 
   return(copy);
 }
