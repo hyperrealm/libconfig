@@ -760,6 +760,46 @@ TT_TEST(BinaryAndHex)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(AutoConvertIntegerToFloat)
+{
+  static const int values[] =
+    { 0, 42, 16777215, 16777216, 16777217, -16777217, 2147483647 };
+  static const long long values64[] =
+    { 0LL, 42LL, 16777217LL, -16777217LL, 4294967297LL,
+      -4294967297LL, 9007199254740991LL, 9007199254740992LL };
+  config_t cfg;
+  config_setting_t *setting;
+  unsigned int i;
+
+  config_init(&cfg);
+  setting = config_setting_add(config_root_setting(&cfg), "value",
+                               CONFIG_TYPE_FLOAT);
+  TT_ASSERT_PTR_NE(setting, NULL);
+  TT_ASSERT_TRUE(config_setting_set_float(setting, 1.5));
+
+  TT_EXPECT_FALSE(config_setting_set_int(setting, 16777217));
+  TT_EXPECT_FALSE(config_setting_set_int64(setting, 4294967297LL));
+  TT_EXPECT_TRUE(config_setting_get_float(setting) == 1.5);
+
+  config_set_auto_convert(&cfg, CONFIG_TRUE);
+  for(i = 0; i < sizeof(values) / sizeof(values[0]); ++i)
+  {
+    TT_EXPECT_TRUE(config_setting_set_int(setting, values[i]));
+    TT_EXPECT_TRUE(config_setting_get_float(setting) == (double)values[i]);
+    TT_EXPECT_INT_EQ(config_setting_type(setting), CONFIG_TYPE_FLOAT);
+  }
+  for(i = 0; i < sizeof(values64) / sizeof(values64[0]); ++i)
+  {
+    TT_EXPECT_TRUE(config_setting_set_int64(setting, values64[i]));
+    TT_EXPECT_TRUE(config_setting_get_float(setting) == (double)values64[i]);
+    TT_EXPECT_INT_EQ(config_setting_type(setting), CONFIG_TYPE_FLOAT);
+  }
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
   int failures;
@@ -782,6 +822,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, IncludeReadError);
   TT_SUITE_TEST(LibConfigTests, ReadStream);
   TT_SUITE_TEST(LibConfigTests, BinaryAndHex);
+  TT_SUITE_TEST(LibConfigTests, AutoConvertIntegerToFloat);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);
