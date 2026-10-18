@@ -110,6 +110,32 @@ char *libconfig_strdup(const char *str)
 
 /* ------------------------------------------------------------------------- */
 
+void *libconfig_reallocarray(void *ptr, size_t nmemb, size_t size)
+{
+  if(size && (nmemb > (SIZE_MAX / size)))
+  {
+    libconfig_fatal_error(__libconfig_malloc_failure_message);
+    return(NULL);
+  }
+
+  return(libconfig_realloc(ptr, nmemb * size));
+}
+
+/* ------------------------------------------------------------------------- */
+
+size_t libconfig_size_add(size_t a, size_t b)
+{
+  if(a > (SIZE_MAX - b))
+  {
+    libconfig_fatal_error(__libconfig_malloc_failure_message);
+    return(SIZE_MAX); /* no allocation of this size can succeed */
+  }
+
+  return(a + b);
+}
+
+/* ------------------------------------------------------------------------- */
+
 /* Returns 1 on success, 0 on failure. Sets is_long to 1 if value is a
    64-bit int, otherwise to 0.
 */
