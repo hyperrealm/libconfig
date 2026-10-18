@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2025  Mark A Lindner
+   Copyright (C) 2005-2026  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -42,7 +42,7 @@ extern "C" {
 
 #define LIBCONFIG_VER_MAJOR    1
 #define LIBCONFIG_VER_MINOR    8
-#define LIBCONFIG_VER_REVISION 1
+#define LIBCONFIG_VER_REVISION 3
 
 #include <stdio.h>
 
