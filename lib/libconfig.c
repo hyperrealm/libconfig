@@ -1202,7 +1202,7 @@ int config_setting_set_int(config_setting_t *setting, int value)
     case CONFIG_TYPE_FLOAT:
       if(config_get_auto_convert(setting->config))
       {
-        setting->value.fval = (float)value;
+        setting->value.fval = (double)value;
         return(CONFIG_TRUE);
       }
       else
@@ -1241,7 +1241,7 @@ int config_setting_set_int64(config_setting_t *setting, long long value)
     case CONFIG_TYPE_FLOAT:
       if(config_get_auto_convert(setting->config))
       {
-        setting->value.fval = (float)value;
+        setting->value.fval = (double)value;
         return(CONFIG_TRUE);
       }
       else
