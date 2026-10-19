@@ -34,10 +34,11 @@ void libconfig_strbuf_ensure_capacity(strbuf_t *buf, size_t len)
 {
   static const size_t mask = ~(STRING_BLOCK_SIZE - 1);
 
-  size_t newlen = buf->length + len + 1; /* add 1 for NUL */
+  size_t newlen = libconfig_size_add(libconfig_size_add(buf->length, len),
+                                     1); /* add 1 for NUL */
   if(newlen > buf->capacity)
   {
-    buf->capacity = (newlen + (STRING_BLOCK_SIZE - 1)) & mask;
+    buf->capacity = libconfig_size_add(newlen, STRING_BLOCK_SIZE - 1) & mask;
     buf->string = (char *)libconfig_realloc(buf->string, buf->capacity);
   }
 }
@@ -57,7 +58,7 @@ void libconfig_strbuf_append_string(strbuf_t *buf, const char *s)
 {
   size_t len = strlen(s);
   libconfig_strbuf_ensure_capacity(buf, len);
-  strcpy(buf->string + buf->length, s);
+  memcpy(buf->string + buf->length, s, len + 1); /* include NUL */
   buf->length += len;
 }
 

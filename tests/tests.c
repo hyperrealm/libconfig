@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 
 #ifdef _MSC_VER
@@ -437,6 +438,172 @@ TT_TEST(RemoveSetting)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(ListGrowAndRemove)
+{
+  config_t cfg;
+  config_setting_t *array, *group, *setting;
+  char name[16];
+  int i, expected;
+
+  config_init(&cfg);
+  array = config_setting_add(config_root_setting(&cfg), "array",
+                             CONFIG_TYPE_ARRAY);
+  group = config_setting_add(config_root_setting(&cfg), "group",
+                             CONFIG_TYPE_GROUP);
+  TT_ASSERT_PTR_NOTNULL(array);
+  TT_ASSERT_PTR_NOTNULL(group);
+
+  /* Grow well past the list allocation chunk size. */
+  for(i = 0; i < 200; ++i)
+  {
+    TT_ASSERT_PTR_NOTNULL(config_setting_set_int_elem(array, -1, i));
+
+    snprintf(name, sizeof(name), "s%d", i);
+    setting = config_setting_add(group, name, CONFIG_TYPE_INT);
+    TT_ASSERT_PTR_NOTNULL(setting);
+    TT_ASSERT_TRUE(config_setting_set_int(setting, i));
+  }
+  TT_ASSERT_INT_EQ(200, config_setting_length(array));
+  TT_ASSERT_INT_EQ(200, config_setting_length(group));
+
+  /* Remove the last, first and a middle element. */
+  TT_ASSERT_TRUE(config_setting_remove_elem(array, 199));
+  TT_ASSERT_TRUE(config_setting_remove_elem(array, 0));
+  TT_ASSERT_TRUE(config_setting_remove_elem(array, 99));
+  TT_ASSERT_FALSE(config_setting_remove_elem(array, 197));
+
+  TT_ASSERT_TRUE(config_setting_remove(group, "s199"));
+  TT_ASSERT_TRUE(config_setting_remove(group, "s0"));
+  TT_ASSERT_TRUE(config_setting_remove(group, "s100"));
+  TT_ASSERT_FALSE(config_setting_remove(group, "s100"));
+
+  /* Remaining elements are 1..99 and 101..198, in order. */
+  TT_ASSERT_INT_EQ(197, config_setting_length(array));
+  TT_ASSERT_INT_EQ(197, config_setting_length(group));
+  for(i = 0; i < 197; ++i)
+  {
+    expected = (i < 99) ? i + 1 : i + 2;
+    TT_EXPECT_INT_EQ(expected, config_setting_get_int_elem(array, i));
+
+    setting = config_setting_get_elem(group, i);
+    TT_ASSERT_PTR_NOTNULL(setting);
+    snprintf(name, sizeof(name), "s%d", expected);
+    TT_EXPECT_STR_EQ(name, config_setting_name(setting));
+    TT_EXPECT_INT_EQ(expected, config_setting_get_int(setting));
+  }
+
+  /* Written output reads back the same. */
+  remove("temp.cfg");
+  TT_ASSERT_TRUE(config_write_file(&cfg, "temp.cfg"));
+  config_destroy(&cfg);
+
+  config_init(&cfg);
+  TT_ASSERT_TRUE(config_read_file(&cfg, "temp.cfg"));
+  remove("temp.cfg");
+  array = config_lookup(&cfg, "array");
+  group = config_lookup(&cfg, "group");
+  TT_ASSERT_PTR_NOTNULL(array);
+  TT_ASSERT_PTR_NOTNULL(group);
+  TT_ASSERT_INT_EQ(197, config_setting_length(array));
+  TT_ASSERT_INT_EQ(197, config_setting_length(group));
+  TT_EXPECT_INT_EQ(99, config_setting_get_int_elem(array, 98));
+  TT_EXPECT_INT_EQ(101, config_setting_get_int_elem(array, 99));
+  TT_EXPECT_INT_EQ(198, config_setting_get_int_elem(array, 196));
+  TT_EXPECT_STR_EQ("s101", config_setting_name(config_setting_get_elem(group,
+                                                                     99)));
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
+TT_TEST(LongStrings)
+{
+  char part1[301], part2[201], expected[512], text[600];
+  config_t cfg;
+  const char *str;
+
+  /* Spans several string buffer blocks; adjacent literals are joined. */
+  memset(part1, 'a', sizeof(part1) - 1);
+  part1[sizeof(part1) - 1] = '\0';
+  memset(part2, 'b', sizeof(part2) - 1);
+  part2[sizeof(part2) - 1] = '\0';
+  snprintf(expected, sizeof(expected), "%s%s\tend\n", part1, part2);
+  snprintf(text, sizeof(text), "str = \"%s\" \"%s\" \"\\tend\\n\";\n",
+           part1, part2);
+
+  config_init(&cfg);
+  TT_ASSERT_TRUE(config_read_string(&cfg, text));
+  TT_ASSERT_TRUE(config_lookup_string(&cfg, "str", &str));
+  TT_ASSERT_STR_EQ(expected, str);
+
+  /* Written output reads back the same. */
+  remove("temp.cfg");
+  TT_ASSERT_TRUE(config_write_file(&cfg, "temp.cfg"));
+  config_destroy(&cfg);
+
+  config_init(&cfg);
+  TT_ASSERT_TRUE(config_read_file(&cfg, "temp.cfg"));
+  remove("temp.cfg");
+  TT_ASSERT_TRUE(config_lookup_string(&cfg, "str", &str));
+  TT_ASSERT_STR_EQ(expected, str);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
+#define NUM_INCLUDE_FILES 40
+
+static const char **many_files_include_func(config_t *config,
+                                            const char *include_dir,
+                                            const char *path,
+                                            const char **error)
+{
+  static const char *file = "testdata/input_0.cfg"; /* empty file */
+  const char **files;
+  int i;
+
+  files = (const char **)malloc(sizeof(const char *)
+                                * (NUM_INCLUDE_FILES + 1));
+  for(i = 0; i < NUM_INCLUDE_FILES; ++i)
+  {
+    char *copy = (char *)malloc(strlen(file) + 1);
+    memcpy(copy, file, strlen(file) + 1);
+    files[i] = copy;
+  }
+  files[NUM_INCLUDE_FILES] = NULL;
+
+  *error = NULL;
+  return(files);
+}
+
+TT_TEST(IncludeFiles)
+{
+  config_t cfg;
+  const char *str;
+  int val;
+
+  /* Relative include path is joined to the include directory. */
+  config_init(&cfg);
+  config_set_include_dir(&cfg, "./testdata/../testdata");
+  TT_ASSERT_TRUE(config_read_string(&cfg, "@include \"more.cfg\"\n"));
+  TT_ASSERT_TRUE(config_lookup_string(&cfg, "message", &str));
+  TT_ASSERT_STR_EQ("Hello, world!", str);
+  config_destroy(&cfg);
+
+  /* More included files than the file name list allocation chunk size. */
+  config_init(&cfg);
+  config_set_include_func(&cfg, many_files_include_func);
+  TT_ASSERT_TRUE(config_read_string(&cfg,
+                                    "@include \"many\"\nafter = 1;\n"));
+  TT_ASSERT_TRUE(config_lookup_int(&cfg, "after", &val));
+  TT_ASSERT_INT_EQ(1, val);
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
 TT_TEST(EscapedStrings)
 {
   config_t cfg;
@@ -816,6 +983,9 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, BigInt6);
   TT_SUITE_TEST(LibConfigTests, BigInt7);
   TT_SUITE_TEST(LibConfigTests, RemoveSetting);
+  TT_SUITE_TEST(LibConfigTests, ListGrowAndRemove);
+  TT_SUITE_TEST(LibConfigTests, LongStrings);
+  TT_SUITE_TEST(LibConfigTests, IncludeFiles);
   TT_SUITE_TEST(LibConfigTests, EscapedStrings);
   TT_SUITE_TEST(LibConfigTests, OverrideSetting);
   TT_SUITE_TEST(LibConfigTests, SettingLookups);

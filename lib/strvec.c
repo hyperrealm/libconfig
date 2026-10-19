@@ -33,10 +33,11 @@ void libconfig_strvec_append(strvec_t *vec, const char *s)
 {
   if(vec->length == vec->capacity)
   {
-    vec->capacity += CHUNK_SIZE;
-    vec->strings = (const char **)libconfig_realloc(
+    vec->capacity = libconfig_size_add(vec->capacity, CHUNK_SIZE);
+    vec->strings = (const char **)libconfig_reallocarray(
         (void *)vec->strings,
-        (vec->capacity + 1) * sizeof(const char *));
+        libconfig_size_add(vec->capacity, 1), /* add 1 for NULL */
+        sizeof(const char *));
     vec->end = vec->strings + vec->length;
   }
 
