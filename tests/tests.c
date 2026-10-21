@@ -927,6 +927,74 @@ TT_TEST(BinaryAndHex)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(BinaryIntegerRoundTrip)
+{
+  static const struct
+  {
+    int value;
+    const char *text;
+  } cases[] = {
+    { (-2147483647 - 1), "v = 0b10000000000000000000000000000000;\n" },
+    { -2147483647, "v = 0b10000000000000000000000000000001;\n" },
+    { -2, "v = 0b11111111111111111111111111111110;\n" },
+    { -1, "v = 0b11111111111111111111111111111111;\n" },
+    { 0, "v = 0b0;\n" },
+    { 1, "v = 0b1;\n" },
+    { 2147483647, "v = 0b1111111111111111111111111111111;\n" }
+  };
+  unsigned int i;
+  int use_default;
+
+  for(use_default = 0; use_default < 2; ++use_default)
+  {
+    for(i = 0; i < sizeof(cases) / sizeof(cases[0]); ++i)
+    {
+      config_t cfg, restored;
+      config_setting_t *setting;
+      FILE *stream = tmpfile();
+      char text[128];
+      int ok;
+
+      TT_ASSERT_TRUE(stream != NULL);
+      if(!stream)
+        continue;
+
+      config_init(&cfg);
+      config_init(&restored);
+      setting = config_setting_add(config_root_setting(&cfg), "v",
+                                   CONFIG_TYPE_INT);
+      TT_ASSERT_TRUE(config_setting_set_int(setting, cases[i].value));
+      if(use_default)
+        config_set_default_format(&cfg, CONFIG_FORMAT_BIN);
+      else
+        TT_ASSERT_TRUE(config_setting_set_format(setting, CONFIG_FORMAT_BIN));
+
+      config_write(&cfg, stream);
+      rewind(stream);
+      TT_ASSERT_TRUE(fgets(text, sizeof(text), stream) != NULL);
+      TT_ASSERT_STR_EQ(text, cases[i].text);
+      TT_ASSERT_INT_EQ(fgetc(stream), EOF);
+
+      rewind(stream);
+      ok = config_read(&restored, stream);
+      TT_ASSERT_TRUE(ok);
+      if(ok)
+      {
+        setting = config_lookup(&restored, "v");
+        TT_ASSERT_INT_EQ(config_setting_type(setting), CONFIG_TYPE_INT);
+        TT_ASSERT_INT_EQ(config_setting_get_int(setting), cases[i].value);
+        TT_ASSERT_INT_EQ(config_setting_get_format(setting), CONFIG_FORMAT_BIN);
+      }
+
+      fclose(stream);
+      config_destroy(&restored);
+      config_destroy(&cfg);
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------- */
+
 TT_TEST(AutoConvertIntegerToFloat)
 {
   static const int values[] =
@@ -992,6 +1060,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, IncludeReadError);
   TT_SUITE_TEST(LibConfigTests, ReadStream);
   TT_SUITE_TEST(LibConfigTests, BinaryAndHex);
+  TT_SUITE_TEST(LibConfigTests, BinaryIntegerRoundTrip);
   TT_SUITE_TEST(LibConfigTests, AutoConvertIntegerToFloat);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);

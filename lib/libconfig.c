@@ -181,7 +181,7 @@ static void __config_write_value(const config_t *config,
         case CONFIG_FORMAT_BIN:
         {
           /* Once %b/%B become more widely supported, could feature test for them */
-          char *str = libconfig_format_bin(value->ival, value_buf);
+          char *str = libconfig_format_bin((uint32_t)value->ival, value_buf);
           fprintf(stream, "0b%s", str);
           break;
         }
