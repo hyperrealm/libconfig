@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2025  Mark A Lindner
+   Copyright (C) 2005-2026  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -106,6 +106,32 @@ char *libconfig_strdup(const char *str)
   }
 
   return(copy);
+}
+
+/* ------------------------------------------------------------------------- */
+
+void *libconfig_reallocarray(void *ptr, size_t nmemb, size_t size)
+{
+  if(size && (nmemb > (SIZE_MAX / size)))
+  {
+    libconfig_fatal_error(__libconfig_malloc_failure_message);
+    return(NULL);
+  }
+
+  return(libconfig_realloc(ptr, nmemb * size));
+}
+
+/* ------------------------------------------------------------------------- */
+
+size_t libconfig_size_add(size_t a, size_t b)
+{
+  if(a > (SIZE_MAX - b))
+  {
+    libconfig_fatal_error(__libconfig_malloc_failure_message);
+    return(SIZE_MAX); /* no allocation of this size can succeed */
+  }
+
+  return(a + b);
 }
 
 /* ------------------------------------------------------------------------- */
