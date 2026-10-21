@@ -851,6 +851,56 @@ TT_TEST(ReadStream)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(NonDecimalInt64Suffix)
+{
+  static const struct
+  {
+    const char *text;
+    long long value;
+    int type;
+  } cases[] = {
+    { "v = 0x7FFFFFFFL;", 2147483647LL, CONFIG_TYPE_INT64 },
+    { "v = 0x80000000L;", 2147483648LL, CONFIG_TYPE_INT64 },
+    { "v = 0xFFFFFFFFLL;", 4294967295LL, CONFIG_TYPE_INT64 },
+    { "v = 0x100000000L;", 4294967296LL, CONFIG_TYPE_INT64 },
+    { "v = 0b10000000000000000000000000000000L;", 2147483648LL,
+      CONFIG_TYPE_INT64 },
+    { "v = 0b11111111111111111111111111111111LL;", 4294967295LL,
+      CONFIG_TYPE_INT64 },
+    { "v = 0o20000000000L;", 2147483648LL, CONFIG_TYPE_INT64 },
+    { "v = 0q37777777777LL;", 4294967295LL, CONFIG_TYPE_INT64 },
+    { "v = 0xFFFFFFFF;", -1LL, CONFIG_TYPE_INT },
+    { "v = 0b11111111111111111111111111111111;", -1LL, CONFIG_TYPE_INT },
+    { "v = 0o37777777777;", -1LL, CONFIG_TYPE_INT },
+    { "v = 4294967295L;", 4294967295LL, CONFIG_TYPE_INT64 },
+    { "v = -2147483649L;", -2147483649LL, CONFIG_TYPE_INT64 },
+    { "v = 0x7FFFFFFFFFFFFFFFL;", 9223372036854775807LL,
+      CONFIG_TYPE_INT64 }
+  };
+  unsigned int i;
+
+  for(i = 0; i < sizeof(cases) / sizeof(cases[0]); ++i)
+  {
+    config_t cfg;
+    config_setting_t *setting;
+    config_init(&cfg);
+    TT_ASSERT_TRUE(config_read_string(&cfg, cases[i].text));
+    setting = config_lookup(&cfg, "v");
+    TT_ASSERT_PTR_NE(setting, NULL);
+    if(setting)
+    {
+      TT_ASSERT_INT_EQ(config_setting_type(setting), cases[i].type);
+      TT_ASSERT_INT64_EQ(config_setting_get_int64(setting), cases[i].value);
+    }
+    config_destroy(&cfg);
+  }
+
+  parse_and_compare("./testdata/int64-suffix.cfg",
+                    "./testdata/int64-suffix.txt");
+}
+
+/* ------------------------------------------------------------------------- */
+
 TT_TEST(BinaryAndHex)
 {
   const char *buf;
@@ -1059,6 +1109,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, SettingLookups);
   TT_SUITE_TEST(LibConfigTests, IncludeReadError);
   TT_SUITE_TEST(LibConfigTests, ReadStream);
+  TT_SUITE_TEST(LibConfigTests, NonDecimalInt64Suffix);
   TT_SUITE_TEST(LibConfigTests, BinaryAndHex);
   TT_SUITE_TEST(LibConfigTests, BinaryIntegerRoundTrip);
   TT_SUITE_TEST(LibConfigTests, AutoConvertIntegerToFloat);
