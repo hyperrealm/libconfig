@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2025  Mark A Lindner
+   Copyright (C) 2005-2026  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -61,17 +61,22 @@ static void __fatal_error_func(const char *message)
 
 static char *__safe_strdup(const char *str)
 {
-  char *copy = ::strdup(str);
-  if(!copy)
-    throw std::bad_alloc();
+  char *copy = NULL;
+
+  if (str)
+  {
+    copy = ::strdup(str);
+    if(!copy)
+      throw std::bad_alloc();
+  }
 
   return(copy);
 }
-  
+
 // ---------------------------------------------------------------------------
 
 ParseException::ParseException(const char *file, int line, const char *error)
-  : _file(file ? __safe_strdup(file) : NULL), _line(line), _error(error)
+  : _file(__safe_strdup(file)), _line(line), _error(error)
 {
 }
 
@@ -79,7 +84,7 @@ ParseException::ParseException(const char *file, int line, const char *error)
 
 ParseException::ParseException(const ParseException &other)
   : ConfigException(other),
-    _file(other._file ? __safe_strdup(other._file) : NULL),
+    _file(__safe_strdup(other._file)),
     _line(other._line),
     _error(other._error)
 {

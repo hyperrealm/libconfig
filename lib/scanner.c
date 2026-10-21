@@ -891,7 +891,7 @@ static const flex_int32_t yy_rule_can_match_eol[49] =
 /* -*- mode: C -*- */
 /* --------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2025  Mark A Lindner
+   Copyright (C) 2005-2026  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -1674,10 +1674,10 @@ case YY_STATE_EOF(INCLUDE):
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 265 "scanner.l"
+#line 274 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1672 "scanner.c"
+#line 1681 "scanner.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2806,7 +2806,8 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 276 "scanner.l"
+#line 274 "scanner.l"
+
 
 static int libconfig_yyread(char *buf, int max_size, FILE *input)
 {
@@ -2825,7 +2826,6 @@ static int libconfig_yyread(char *buf, int max_size, FILE *input)
   return(result);
 }
 
-#line 293 "scanner.l"
 void *libconfig_yyalloc(size_t bytes, void *yyscanner)
 {
   return(libconfig_malloc(bytes));

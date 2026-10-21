@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2025  Mark A Lindner
+   Copyright (C) 2005-2026  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -34,6 +34,12 @@ extern void *libconfig_malloc(size_t size);
 extern void *libconfig_calloc(size_t nmemb, size_t size);
 extern void *libconfig_realloc(void *ptr, size_t size);
 extern char *libconfig_strdup(const char *str);
+
+/* Overflow-checked size arithmetic for allocations. If the result cannot be
+   represented in a size_t, the fatal error handler is called, as for an
+   allocation failure. */
+extern void *libconfig_reallocarray(void *ptr, size_t nmemb, size_t size);
+extern size_t libconfig_size_add(size_t a, size_t b);
 
 #define __new(T) (T *)libconfig_calloc(1, sizeof(T)) /* zeroed */
 #define __delete(P) free((void *)(P))
