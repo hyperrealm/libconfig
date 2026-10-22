@@ -1,3 +1,17 @@
+2026-10-21  Mark Lindner  <markl@neuromancer>
+
+	----- version 1.8.3 ------
+
+	* Use checked size arithmetic for internal container growth
+	* Preserve 32-bit width when writing negative binary integers
+	* Preserve explicit 64-bit suffixes when parsing nondecimal integers
+	* Preserve double precision when auto-converting integer assignments
+	* Added missing files to distribution tarball
+	* Handle memory allocation errors from strdup()
+	* Improve handling of file read errors in the lexer
+	* Various documentation updates
+	* Various build file cleanups
+
 2026-09-27  Mark Lindner  <markl@neuromancer>
 
 	* doc/libconfig.texi - Minor documentation updates
