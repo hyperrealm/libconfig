@@ -842,7 +842,7 @@ int read_config(char *configFile, char *dataPath, struct flags optflags) {
 	config_setting_t *setting, *ss; //configuration element handler, and helper handler (config element too)
 	int comaset, varindex, varcounter; //helper flat for buid output strings, varibale index, counter
 	unsigned int maxel, i; //max elements, and loop index
-	char buffer[256]; //reading buffer
+	char buffer[512]; //reading buffer, large enough for any double printed with "%f"
 	const char *cbuffer;	
 	const char *coma=";"; //output string variable separator
 	int ibuffer, ssize; //value int buffer
@@ -899,7 +899,7 @@ int read_config(char *configFile, char *dataPath, struct flags optflags) {
 		case CONFIG_TYPE_FLOAT:
 			dataTypeName = (char*)realloc(dataTypeName, 9*sizeof(char));
 			strcpy(dataTypeName, "float");
-			sprintf(buffer, "%f", config_setting_get_float(setting));
+			snprintf(buffer, sizeof(buffer), "%f", config_setting_get_float(setting));
 			dataValueString = (char*)realloc(dataValueString, (strlen(buffer)+1)*sizeof(char));
 			strcpy(dataValueString, buffer);
 			break;
@@ -956,7 +956,7 @@ int read_config(char *configFile, char *dataPath, struct flags optflags) {
 							strcat(dataValueString, buffer);
 						break;
 						case CONFIG_TYPE_FLOAT:
-							sprintf(buffer, "%f", config_setting_get_float(ss));
+							snprintf(buffer, sizeof(buffer), "%f", config_setting_get_float(ss));
 							dataValueString = (char*)realloc(dataValueString, (strlen(dataValueString)+strlen(buffer)+2)*sizeof(char));
 							if(comaset == 1) strcat(dataValueString, coma);
 							strcat(dataValueString, buffer);
@@ -1037,7 +1037,7 @@ int read_config(char *configFile, char *dataPath, struct flags optflags) {
 							strcat(dataValueString, buffer);
 						break;
 						case CONFIG_TYPE_FLOAT:
-							sprintf(buffer, "%f", config_setting_get_float(ss));
+							snprintf(buffer, sizeof(buffer), "%f", config_setting_get_float(ss));
 							dataValueString = (char*)realloc(dataValueString, (strlen(dataValueString)+strlen(buffer)+2)*sizeof(char));
 							if(comaset == 1) strcat(dataValueString, coma);
 							strcat(dataValueString, buffer);
