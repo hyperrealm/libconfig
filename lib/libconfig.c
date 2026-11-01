@@ -227,11 +227,14 @@ static void __config_write_value(const config_t *config,
     /* float */
     case CONFIG_TYPE_FLOAT:
     {
+      /* %f never switches to an exponent, so this must hold every integer
+         digit of DBL_MAX; only fractional digits may be truncated. */
+      char float_buf[DBL_MAX_10_EXP + 64];
       const int sci_ok = config_get_option(
             config, CONFIG_OPTION_ALLOW_SCIENTIFIC_NOTATION);
       libconfig_format_double(value->fval, config->float_precision, sci_ok,
-                              value_buf, sizeof(value_buf));
-      fputs(value_buf, stream);
+                              float_buf, sizeof(float_buf));
+      fputs(float_buf, stream);
       break;
     }
 

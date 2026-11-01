@@ -1085,6 +1085,48 @@ TT_TEST(AutoConvertIntegerToFloat)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(WriteLargeFloat)
+{
+  static const double values[] =
+    { 1e60, 1e61, 1e62, -1e62, 1e100, 1e300, 1.7976931348623157e308,
+      -1.7976931348623157e308 };
+  unsigned int i;
+
+  for(i = 0; i < sizeof(values) / sizeof(values[0]); ++i)
+  {
+    config_t cfg, restored;
+    config_setting_t *setting;
+    FILE *stream = tmpfile();
+    int ok;
+
+    TT_ASSERT_TRUE(stream != NULL);
+    if(!stream)
+      continue;
+
+    config_init(&cfg);
+    config_init(&restored);
+    setting = config_setting_add(config_root_setting(&cfg), "v",
+                                 CONFIG_TYPE_FLOAT);
+    TT_ASSERT_TRUE(config_setting_set_float(setting, values[i]));
+
+    config_write(&cfg, stream);
+    rewind(stream);
+    ok = config_read(&restored, stream);
+    TT_ASSERT_TRUE(ok);
+    if(ok)
+    {
+      setting = config_lookup(&restored, "v");
+      TT_EXPECT_TRUE(config_setting_get_float(setting) == values[i]);
+    }
+
+    fclose(stream);
+    config_destroy(&restored);
+    config_destroy(&cfg);
+  }
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
   int failures;
@@ -1113,6 +1155,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, BinaryAndHex);
   TT_SUITE_TEST(LibConfigTests, BinaryIntegerRoundTrip);
   TT_SUITE_TEST(LibConfigTests, AutoConvertIntegerToFloat);
+  TT_SUITE_TEST(LibConfigTests, WriteLargeFloat);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);
