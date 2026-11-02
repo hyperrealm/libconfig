@@ -566,6 +566,11 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
 
   config_clear(config);
 
+  /* Don't let a previous read's error leak into this one. */
+  config->error_text = NULL;
+  config->error_line = 0;
+  config->error_type = CONFIG_ERR_NONE;
+
   libconfig_parsectx_init(&parse_ctx);
   parse_ctx.config = config;
   parse_ctx.parent = config->root;
@@ -709,6 +714,8 @@ int config_read_file(config_t *config, const char *filename)
       fclose(stream);
 
     config->error_text = __io_error;
+    config->error_file = NULL;
+    config->error_line = 0;
     config->error_type = CONFIG_ERR_FILE_IO;
     return(CONFIG_FALSE);
   }
@@ -783,6 +790,7 @@ void config_clear(config_t *config)
 
   libconfig_strvec_delete(config->filenames);
   config->filenames = NULL;
+  config->error_file = NULL; /* pointed into filenames */
 
   config->root = __new(config_setting_t);
   config->root->type = CONFIG_TYPE_GROUP;

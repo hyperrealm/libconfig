@@ -823,6 +823,42 @@ TT_TEST(IncludeReadError)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(ErrorStateOnReread)
+{
+  config_t cfg;
+
+  config_init(&cfg);
+
+  TT_ASSERT_FALSE(config_read_file(&cfg, "testdata/bad_input_0.cfg"));
+  TT_ASSERT_INT_EQ(config_error_line(&cfg), 2);
+
+  /* A second parse error must report its own line and text. */
+  TT_ASSERT_FALSE(config_read_file(&cfg, "testdata/bad_input_1.cfg"));
+  TT_ASSERT_STR_EQ(config_error_file(&cfg), "testdata/bad_input_1.cfg");
+  TT_ASSERT_INT_EQ(config_error_line(&cfg), 6);
+  TT_ASSERT_STR_EQ(config_error_text(&cfg), "duplicate setting name");
+
+  /* The re-read frees the file names that error_file pointed into. */
+  TT_ASSERT_TRUE(config_read_file(&cfg, "testdata/input_0.cfg"));
+  TT_ASSERT_INT_EQ(config_error_type(&cfg), CONFIG_ERR_NONE);
+  TT_ASSERT_PTR_NULL(config_error_text(&cfg));
+  TT_ASSERT_PTR_NULL(config_error_file(&cfg));
+
+  TT_ASSERT_FALSE(config_read_file(&cfg, "testdata/no_such_file.cfg"));
+  TT_ASSERT_INT_EQ(config_error_type(&cfg), CONFIG_ERR_FILE_IO);
+  TT_ASSERT_PTR_NULL(config_error_file(&cfg));
+  TT_ASSERT_INT_EQ(config_error_line(&cfg), 0);
+
+  TT_ASSERT_FALSE(config_read_file(&cfg, "testdata/bad_input_0.cfg"));
+  TT_ASSERT_PTR_NOTNULL(config_error_file(&cfg));
+  config_clear(&cfg);
+  TT_ASSERT_PTR_NULL(config_error_file(&cfg));
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
 TT_TEST(ReadStream)
 {
   config_t cfg;
@@ -1108,6 +1144,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, OverrideSetting);
   TT_SUITE_TEST(LibConfigTests, SettingLookups);
   TT_SUITE_TEST(LibConfigTests, IncludeReadError);
+  TT_SUITE_TEST(LibConfigTests, ErrorStateOnReread);
   TT_SUITE_TEST(LibConfigTests, ReadStream);
   TT_SUITE_TEST(LibConfigTests, NonDecimalInt64Suffix);
   TT_SUITE_TEST(LibConfigTests, BinaryAndHex);
