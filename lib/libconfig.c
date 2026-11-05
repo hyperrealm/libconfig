@@ -160,8 +160,10 @@ static void __config_write_value(const config_t *config,
                                  const config_value_t *value, int type,
                                  int format, int depth, FILE *stream)
 {
-  /* Long enough for 64-bit binary value + NULL terminator. */
-  char value_buf[(sizeof(int64_t) * BITS_IN_BYTE) + 1];
+  /* Long enough for a 64-bit binary value + NULL terminator, and for a
+     float: %f never switches to an exponent, so it must hold every integer
+     digit of DBL_MAX; only fractional digits may be truncated. */
+  char value_buf[DBL_MAX_10_EXP + 64];
 
   switch(type)
   {
