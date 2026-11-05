@@ -539,18 +539,18 @@ static int __config_type_is_scalar(int type)
 
 /* Converting a double to an integer type is undefined when the truncated
    value does not fit, so check before casting. The upper bounds are
-   exclusive: INT32_MAX + 1 and INT64_MAX + 1 are exact powers of two, while
-   INT64_MAX itself rounds up to 2^63 as a double. NaN fails both tests. */
+   exclusive and must be exact: INT_MAX + 1 is representable as a double,
+   but LLONG_MAX is not, so the int64 bound is written as -LLONG_MIN.
+   NaN fails both tests. */
 
 static int __config_double_fits_int(double value)
 {
-  return((value >= -2147483648.0) && (value < 2147483648.0));
+  return((value >= (double)INT_MIN) && (value < (double)INT_MAX + 1.0));
 }
 
 static int __config_double_fits_int64(double value)
 {
-  return((value >= -9223372036854775808.0)
-         && (value < 9223372036854775808.0));
+  return((value >= (double)LLONG_MIN) && (value < -(double)LLONG_MIN));
 }
 
 /* ------------------------------------------------------------------------- */
