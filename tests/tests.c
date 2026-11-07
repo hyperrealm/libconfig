@@ -1163,6 +1163,78 @@ TT_TEST(WriteLargeFloat)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(AutoConvertFloatToInteger)
+{
+  config_t cfg;
+  config_setting_t *setting;
+  int ival = -1;
+  long long llval = -1LL;
+
+  config_init(&cfg);
+  config_set_auto_convert(&cfg, CONFIG_TRUE);
+
+  TT_ASSERT_TRUE(config_read_string(
+    &cfg,
+    "small = 42.9; big = 1e300; neg = -4e18; inf = 1e999;"
+    " max32 = 2147483647.0; over32 = 2147483648.0;"
+    " min32 = -2147483648.0; under32 = -2147483649.0;"
+    " over64 = 9223372036854775808.0; min64 = -9223372036854775808.0;"));
+
+  TT_EXPECT_TRUE(config_lookup_int(&cfg, "small", &ival));
+  TT_EXPECT_INT_EQ(ival, 42);
+  TT_EXPECT_TRUE(config_lookup_int(&cfg, "max32", &ival));
+  TT_EXPECT_INT_EQ(ival, 2147483647);
+  TT_EXPECT_TRUE(config_lookup_int(&cfg, "min32", &ival));
+  TT_EXPECT_INT_EQ(ival, -2147483647 - 1);
+
+  /* Out-of-range values must fail and leave the output untouched. */
+  ival = -1;
+  TT_EXPECT_FALSE(config_lookup_int(&cfg, "big", &ival));
+  TT_EXPECT_FALSE(config_lookup_int(&cfg, "neg", &ival));
+  TT_EXPECT_FALSE(config_lookup_int(&cfg, "inf", &ival));
+  TT_EXPECT_FALSE(config_lookup_int(&cfg, "over32", &ival));
+  TT_EXPECT_FALSE(config_lookup_int(&cfg, "under32", &ival));
+  TT_EXPECT_INT_EQ(ival, -1);
+
+  TT_EXPECT_TRUE(config_lookup_int64(&cfg, "neg", &llval));
+  TT_EXPECT_INT64_EQ(llval, -4000000000000000000LL);
+  TT_EXPECT_TRUE(config_lookup_int64(&cfg, "over32", &llval));
+  TT_EXPECT_INT64_EQ(llval, 2147483648LL);
+  TT_EXPECT_TRUE(config_lookup_int64(&cfg, "min64", &llval));
+  TT_EXPECT_INT64_EQ(llval, -9223372036854775807LL - 1LL);
+
+  llval = -1LL;
+  TT_EXPECT_FALSE(config_lookup_int64(&cfg, "big", &llval));
+  TT_EXPECT_FALSE(config_lookup_int64(&cfg, "inf", &llval));
+  TT_EXPECT_FALSE(config_lookup_int64(&cfg, "over64", &llval));
+  TT_EXPECT_INT64_EQ(llval, -1LL);
+
+  /* Storing a float into an integer setting follows the same rules. */
+  setting = config_setting_add(config_root_setting(&cfg), "int32",
+                               CONFIG_TYPE_INT);
+  TT_ASSERT_PTR_NE(setting, NULL);
+  TT_ASSERT_TRUE(config_setting_set_int(setting, 7));
+  TT_EXPECT_FALSE(config_setting_set_float(setting, 1e300));
+  TT_EXPECT_FALSE(config_setting_set_float(setting, 2147483648.0));
+  TT_EXPECT_INT_EQ(config_setting_get_int(setting), 7);
+  TT_EXPECT_TRUE(config_setting_set_float(setting, -42.9));
+  TT_EXPECT_INT_EQ(config_setting_get_int(setting), -42);
+
+  setting = config_setting_add(config_root_setting(&cfg), "int64",
+                               CONFIG_TYPE_INT64);
+  TT_ASSERT_PTR_NE(setting, NULL);
+  TT_ASSERT_TRUE(config_setting_set_int64(setting, 7LL));
+  TT_EXPECT_FALSE(config_setting_set_float(setting, 1e300));
+  TT_EXPECT_FALSE(config_setting_set_float(setting, 9223372036854775808.0));
+  TT_EXPECT_INT64_EQ(config_setting_get_int64(setting), 7LL);
+  TT_EXPECT_TRUE(config_setting_set_float(setting, 4294967296.5));
+  TT_EXPECT_INT64_EQ(config_setting_get_int64(setting), 4294967296LL);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
   int failures;
@@ -1193,6 +1265,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, BinaryIntegerRoundTrip);
   TT_SUITE_TEST(LibConfigTests, AutoConvertIntegerToFloat);
   TT_SUITE_TEST(LibConfigTests, WriteLargeFloat);
+  TT_SUITE_TEST(LibConfigTests, AutoConvertFloatToInteger);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);

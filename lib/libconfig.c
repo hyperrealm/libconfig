@@ -537,6 +537,24 @@ static int __config_type_is_scalar(int type)
 
 /* ------------------------------------------------------------------------- */
 
+/* Converting a double to an integer type is undefined when the truncated
+   value does not fit, so check before casting. The upper bounds are
+   exclusive and must be exact: INT_MAX + 1 is representable as a double,
+   but LLONG_MAX is not, so the int64 bound is written as -LLONG_MIN.
+   NaN fails both tests. */
+
+static int __config_double_fits_int(double value)
+{
+  return((value >= (double)INT_MIN) && (value < (double)INT_MAX + 1.0));
+}
+
+static int __config_double_fits_int64(double value)
+{
+  return((value >= (double)LLONG_MIN) && (value < -(double)LLONG_MIN));
+}
+
+/* ------------------------------------------------------------------------- */
+
 static int __config_validate_name(const char *name)
 {
   const char *p = name;
@@ -960,7 +978,8 @@ static int __config_setting_get_int(const config_setting_t *setting,
         return(CONFIG_FALSE);
 
     case CONFIG_TYPE_FLOAT:
-      if(config_get_option(setting->config, CONFIG_OPTION_AUTOCONVERT))
+      if(config_get_option(setting->config, CONFIG_OPTION_AUTOCONVERT)
+         && __config_double_fits_int(setting->value.fval))
       {
         *value = (int)(setting->value.fval);
         return(CONFIG_TRUE);
@@ -1011,7 +1030,8 @@ static int __config_setting_get_int64(const config_setting_t *setting,
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_FLOAT:
-      if(config_get_option(setting->config, CONFIG_OPTION_AUTOCONVERT))
+      if(config_get_option(setting->config, CONFIG_OPTION_AUTOCONVERT)
+         && __config_double_fits_int64(setting->value.fval))
       {
         *value = (long long)(setting->value.fval);
         return(CONFIG_TRUE);
@@ -1284,7 +1304,8 @@ int config_setting_set_float(config_setting_t *setting, double value)
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_INT:
-      if(config_get_option(setting->config, CONFIG_OPTION_AUTOCONVERT))
+      if(config_get_option(setting->config, CONFIG_OPTION_AUTOCONVERT)
+         && __config_double_fits_int(value))
       {
         setting->value.ival = (int)value;
         return(CONFIG_TRUE);
@@ -1293,7 +1314,8 @@ int config_setting_set_float(config_setting_t *setting, double value)
         return(CONFIG_FALSE);
 
     case CONFIG_TYPE_INT64:
-      if(config_get_option(setting->config, CONFIG_OPTION_AUTOCONVERT))
+      if(config_get_option(setting->config, CONFIG_OPTION_AUTOCONVERT)
+         && __config_double_fits_int64(value))
       {
         setting->value.llval = (long long)value;
         return(CONFIG_TRUE);
