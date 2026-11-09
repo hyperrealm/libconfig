@@ -68,6 +68,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 /* ------------------------------------------------------------------------- */
 
 static const char *__io_error = "file I/O error";
+static const char *__size_error = "input too large";
 
 static void __config_list_destroy(config_list_t *list);
 static void __config_write_setting(const config_t *config,
@@ -649,6 +650,17 @@ int config_read_string(config_t *config, const char *str)
 {
   config_assert(config != NULL);
   config_assert(str != NULL);
+
+  /* yy_scan_string() narrows the length to int and adds 2 for its
+     end-of-buffer bytes, so anything longer can't be scanned safely. */
+  if(strlen(str) > (size_t)(INT_MAX - 2))
+  {
+    config->error_text = __size_error;
+    config->error_file = NULL;
+    config->error_line = 0;
+    config->error_type = CONFIG_ERR_PARSE;
+    return(CONFIG_FALSE);
+  }
 
   return(__config_read(config, NULL, NULL, str));
 }
