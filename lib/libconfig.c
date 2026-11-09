@@ -1475,7 +1475,10 @@ const config_setting_t *config_setting_lookup_const(
     {
       char *q;
       long index = strtol(++p, &q, 10);
-      if(*q != ']')
+
+      /* Reject an empty or out-of-range index instead of letting the
+         conversion to unsigned int below wrap it onto another element. */
+      if((q == p) || (*q != ']') || (index < 0) || (index > INT_MAX))
         return NULL;
 
       p = ++q;
