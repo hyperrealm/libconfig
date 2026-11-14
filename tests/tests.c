@@ -799,6 +799,19 @@ TT_TEST(SettingLookups)
   setting = config_setting_lookup(parent, "[0].array.[1000]");
   TT_ASSERT_PTR_NULL(setting);
 
+  /* Out-of-range or empty indexes must not alias a valid element. */
+  setting = config_setting_lookup(parent, "[0].array.[4294967296]");
+  TT_ASSERT_PTR_NULL(setting);
+
+  setting = config_setting_lookup(parent, "[0].array.[-4294967295]");
+  TT_ASSERT_PTR_NULL(setting);
+
+  setting = config_setting_lookup(parent, "[0].array.[]");
+  TT_ASSERT_PTR_NULL(setting);
+
+  ok = config_lookup_int(&cfg, "foo.[4294967297].number", &ival);
+  TT_ASSERT_FALSE(ok);
+
   setting = config_setting_lookup(parent, "[0].array.[0].blah");
   TT_ASSERT_PTR_NULL(setting);
 
