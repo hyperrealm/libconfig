@@ -230,8 +230,11 @@ SettingException::SettingException(const SettingException &other)
 
 SettingException &SettingException::operator=(const SettingException &other)
 {
+  // Copy first so that self-assignment doesn't read the freed path.
+  char *path = __safe_strdup(other._path);
+
   ::free(_path);
-  _path = __safe_strdup(other._path);
+  _path = path;
 
   return(*this);
 }

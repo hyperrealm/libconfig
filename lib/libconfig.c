@@ -1411,6 +1411,8 @@ int config_setting_get_string_safe(const config_setting_t *setting,
 
 int config_setting_set_string(config_setting_t *setting, const char *value)
 {
+  char *old;
+
   config_assert(setting != NULL);
   config_assert(value != NULL);
 
@@ -1419,10 +1421,10 @@ int config_setting_set_string(config_setting_t *setting, const char *value)
   else if(setting->type != CONFIG_TYPE_STRING)
     return(CONFIG_FALSE);
 
-  if(setting->value.sval)
-    __delete(setting->value.sval);
-
+  /* value may point into the current string, so copy it before freeing. */
+  old = setting->value.sval;
   setting->value.sval = (value == NULL) ? NULL : libconfig_strdup(value);
+  __delete(old);
 
   return(CONFIG_TRUE);
 }
@@ -1927,10 +1929,14 @@ void config_set_destructor(config_t *config, void (*destructor)(void *))
 
 void config_set_include_dir(config_t *config, const char *include_dir)
 {
+  const char *old;
+
   config_assert(config != NULL);
 
-  __delete(config->include_dir);
+  /* include_dir may point into the current value, so copy it first. */
+  old = config->include_dir;
   config->include_dir = include_dir ? libconfig_strdup(include_dir) : NULL;
+  __delete(old);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1971,6 +1977,8 @@ void config_setting_set_hook(config_setting_t *setting, void *hook)
 config_setting_t *config_setting_add(config_setting_t *parent,
                                      const char *name, int type)
 {
+  config_setting_t *existing, *setting;
+
   if((type < CONFIG_TYPE_NONE) || (type > CONFIG_TYPE_LIST))
     return(NULL);
 
@@ -1989,15 +1997,20 @@ config_setting_t *config_setting_add(config_setting_t *parent,
       return(NULL);
   }
 
-  if(config_setting_get_member(parent, name) != NULL)
-  {
-    if(config_get_option(parent->config, CONFIG_OPTION_ALLOW_OVERRIDES))
-      config_setting_remove(parent, name);
-    else
-      return(NULL); /* already exists */
-  }
+  existing = config_setting_get_member(parent, name);
+  if(existing && !config_get_option(parent->config,
+                                    CONFIG_OPTION_ALLOW_OVERRIDES))
+    return(NULL); /* already exists */
 
-  return(__config_setting_create(parent, name, type));
+  /* Create the new setting before destroying the one it overrides, since
+     name may point into that setting (e.g. be its own name). */
+  setting = __config_setting_create(parent, name, type);
+
+  if(existing)
+    config_setting_remove_elem(parent,
+                               (unsigned int)config_setting_index(existing));
+
+  return(setting);
 }
 
 /* ------------------------------------------------------------------------- */
