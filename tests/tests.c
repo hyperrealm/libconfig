@@ -1248,6 +1248,53 @@ TT_TEST(AutoConvertFloatToInteger)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(SetterArgumentAliasing)
+{
+  config_t cfg;
+  config_setting_t *setting, *array;
+  const char *str;
+  int ok;
+
+  config_init(&cfg);
+  ok = config_read_string(&cfg,
+                          "path = \"  /var/lib/app\";\n"
+                          "names = [ \"  alpha\" ];\n"
+                          "server = { port = 80; };\n");
+  TT_ASSERT_TRUE(ok);
+
+  /* The new value points into the string it replaces. */
+  setting = config_lookup(&cfg, "path");
+  TT_ASSERT_PTR_NOTNULL(setting);
+  str = config_setting_get_string(setting);
+  TT_EXPECT_TRUE(config_setting_set_string(setting, str + 2));
+  TT_EXPECT_STR_EQ("/var/lib/app", config_setting_get_string(setting));
+
+  array = config_lookup(&cfg, "names");
+  TT_ASSERT_PTR_NOTNULL(array);
+  str = config_setting_get_string_elem(array, 0);
+  TT_EXPECT_PTR_NOTNULL(config_setting_set_string_elem(array, 0, str + 2));
+  TT_EXPECT_STR_EQ("alpha", config_setting_get_string_elem(array, 0));
+
+  /* Override a setting by passing its own name. */
+  config_set_option(&cfg, CONFIG_OPTION_ALLOW_OVERRIDES, CONFIG_TRUE);
+  setting = config_lookup(&cfg, "server");
+  TT_ASSERT_PTR_NOTNULL(setting);
+  setting = config_setting_add(config_root_setting(&cfg),
+                               config_setting_name(setting), CONFIG_TYPE_INT);
+  TT_ASSERT_PTR_NOTNULL(setting);
+  TT_EXPECT_STR_EQ("server", config_setting_name(setting));
+  TT_EXPECT_PTR_EQ(config_lookup(&cfg, "server"), setting);
+  TT_EXPECT_INT_EQ(config_setting_length(config_root_setting(&cfg)), 3);
+
+  config_set_include_dir(&cfg, "/etc/app");
+  config_set_include_dir(&cfg, config_get_include_dir(&cfg));
+  TT_EXPECT_STR_EQ("/etc/app", config_get_include_dir(&cfg));
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
   int failures;
@@ -1279,6 +1326,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, AutoConvertIntegerToFloat);
   TT_SUITE_TEST(LibConfigTests, WriteLargeFloat);
   TT_SUITE_TEST(LibConfigTests, AutoConvertFloatToInteger);
+  TT_SUITE_TEST(LibConfigTests, SetterArgumentAliasing);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);
