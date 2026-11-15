@@ -106,6 +106,7 @@ include_open ^[ \t]*@include[ \t]+\"
 <INCLUDE>[^\"\\]+ { libconfig_scanctx_append_string(yyextra, yytext); }
 <INCLUDE>\\\\     { libconfig_scanctx_append_char(yyextra, '\\'); }
 <INCLUDE>\\\"     { libconfig_scanctx_append_char(yyextra, '\"'); }
+<INCLUDE>\\       { libconfig_scanctx_append_char(yyextra, '\\'); }
 <INCLUDE>\"       {
   const char *error = NULL;
   const char *path = libconfig_scanctx_take_string(yyextra);
