@@ -563,12 +563,13 @@ static int __config_validate_name(const char *name)
   if(*p == '\0')
     return(CONFIG_FALSE);
 
-  if(! isalpha((int)*p) && (*p != '*'))
+  if(! isalpha((unsigned char)*p) && (*p != '*'))
     return(CONFIG_FALSE);
 
   for(++p; *p; ++p)
   {
-    if(! (isalpha((int)*p) || isdigit((int)*p) || strchr("*_-", (int)*p)))
+    if(! (isalpha((unsigned char)*p) || isdigit((unsigned char)*p)
+          || strchr("*_-", (int)*p)))
       return(CONFIG_FALSE);
   }
 
