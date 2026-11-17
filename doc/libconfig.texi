@@ -2660,7 +2660,7 @@ Terminals are defined below as regular expressions:
 @item @code{<hex64>} @tab
 @code{0[xX]([0-9A-Fa-f])@{1,16@}L(L)?}
 @item @code{<float>} @tab
-@code{([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)}
+@code{([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]?([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)}
 @end multitable
 
 @sp 1
