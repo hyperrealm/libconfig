@@ -48,7 +48,20 @@ extern size_t libconfig_size_add(size_t a, size_t b);
 extern int libconfig_parse_integer(const char *s, int base, long long *val,
                                    int *is_long);
 
+/* Floats in config files always use '.' as the radix character. They are
+   converted using a "C" numeric locale object rather than by switching the
+   calling thread's locale. The object is NULL on platforms that don't
+   support one. */
+struct libconfig_locale;
+
+extern struct libconfig_locale *libconfig_locale_create(void);
+extern void libconfig_locale_destroy(struct libconfig_locale *loc);
+
+extern double libconfig_parse_double(const char *s,
+                                     const struct libconfig_locale *loc);
+
 extern void libconfig_format_double(double val, int precision, int sci_ok,
-                                    char *buf, size_t buflen);
+                                    char *buf, size_t buflen,
+                                    const struct libconfig_locale *loc);
 
 extern char *libconfig_format_bin(int64_t val, char *buf);

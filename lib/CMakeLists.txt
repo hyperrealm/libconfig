@@ -109,6 +109,9 @@ else()
     check_symbol_exists(uselocale "locale.h" HAVE_USELOCALE)
     check_symbol_exists(newlocale "locale.h" HAVE_NEWLOCALE)
     check_symbol_exists(freelocale "locale.h" HAVE_FREELOCALE)
+    set(CMAKE_REQUIRED_DEFINITIONS -D_GNU_SOURCE)
+    check_symbol_exists(strtod_l "stdlib.h" HAVE_STRTOD_L)
+    unset(CMAKE_REQUIRED_DEFINITIONS)
 endif()
 
 if(HAVE_USELOCALE)
@@ -135,6 +138,15 @@ if(HAVE_FREELOCALE)
     if(BUILD_CXX)
       target_compile_definitions(${libname}++
           PRIVATE "HAVE_FREELOCALE")
+    endif()
+endif()
+
+if(HAVE_STRTOD_L)
+    target_compile_definitions(${libname}
+        PRIVATE "HAVE_STRTOD_L")
+    if(BUILD_CXX)
+      target_compile_definitions(${libname}++
+          PRIVATE "HAVE_STRTOD_L")
     endif()
 endif()
 

@@ -139,7 +139,7 @@ include_open ^[ \t]*@include[ \t]+\"
 {true}            { yylval->ival = 1; return(TOK_BOOLEAN); }
 {false}           { yylval->ival = 0; return(TOK_BOOLEAN); }
 {name}            { yylval->sval = yytext; return(TOK_NAME); }
-{float}           { yylval->fval = atof(yytext); return(TOK_FLOAT); }
+{float}           { yylval->fval = libconfig_parse_double(yytext, yyextra->locale); return(TOK_FLOAT); }
 {integer}         {
                     long long llval;
                     int is_long;

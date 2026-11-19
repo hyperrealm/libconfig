@@ -33,6 +33,8 @@
 
 #define MAX_INCLUDE_DEPTH 10
 
+struct libconfig_locale;
+
 struct include_stack_frame
 {
   /*
@@ -53,6 +55,7 @@ struct scan_context
   int stack_depth;
   strbuf_t string;
   strvec_t filenames;
+  const struct libconfig_locale *locale; /* for parsing floats */
 };
 
 extern void libconfig_scanctx_init(struct scan_context *ctx,

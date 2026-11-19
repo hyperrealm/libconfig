@@ -71,6 +71,10 @@ extern int posix_fsync(int fd);
 #define strtoll   _strtoi64
 #endif
 
+#if !defined(LIBCONFIG_MINGW_OS)
+#define strtod_l  _strtod_l
+#endif
+
 #if !defined(S_ISDIR) && defined(S_IFMT) && defined(S_IFDIR)
 #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif

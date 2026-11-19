@@ -24,12 +24,6 @@
 #include "ac_config.h"
 #endif
 
-#include <locale.h>
-
-#if defined(HAVE_XLOCALE_H) || defined(__APPLE__)
-#include <xlocale.h>
-#endif
-
 #include <ctype.h>
 #include <float.h>
 #include <stdio.h>
@@ -73,7 +67,8 @@ static const char *__size_error = "input too large";
 static void __config_list_destroy(config_list_t *list);
 static void __config_write_setting(const config_t *config,
                                    const config_setting_t *setting,
-                                   FILE *stream, int depth);
+                                   FILE *stream, int depth,
+                                   const struct libconfig_locale *locale);
 
 /* ------------------------------------------------------------------------- */
 
@@ -97,52 +92,6 @@ static void __config_assert(const char *function, const char *expr)
 
 /* ------------------------------------------------------------------------- */
 
-static void __config_locale_override(void)
-{
-#if defined(LIBCONFIG_WINDOWS_OS) && !defined(LIBCONFIG_MINGW_OS)
-
-  _configthreadlocale(_ENABLE_PER_THREAD_LOCALE);
-  setlocale(LC_NUMERIC, "C");
-
-#elif defined(__APPLE__)
-
-  locale_t loc = newlocale(LC_NUMERIC_MASK, "C", NULL);
-  uselocale(loc);
-
-#elif ((defined HAVE_NEWLOCALE) && (defined HAVE_USELOCALE))
-
-  locale_t loc = newlocale(LC_NUMERIC, "C", NULL);
-  uselocale(loc);
-
-#else
-
-#warning "No way to modify calling thread's locale!"
-
-#endif
-}
-
-/* ------------------------------------------------------------------------- */
-
-static void __config_locale_restore(void)
-{
-#if defined(LIBCONFIG_WINDOWS_OS) && !defined(LIBCONFIG_MINGW_OS)
-
-    _configthreadlocale(_DISABLE_PER_THREAD_LOCALE);
-
-#elif ((defined HAVE_USELOCALE) && (defined HAVE_FREELOCALE))
-
-  locale_t loc = uselocale(LC_GLOBAL_LOCALE);
-  freelocale(loc);
-
-#else
-
-#warning "No way to modify calling thread's locale!"
-
-#endif
-}
-
-/* ------------------------------------------------------------------------- */
-
 static void __config_indent(FILE *stream, int depth, unsigned short w)
 {
   if(w)
@@ -159,7 +108,8 @@ static void __config_indent(FILE *stream, int depth, unsigned short w)
 
 static void __config_write_value(const config_t *config,
                                  const config_value_t *value, int type,
-                                 int format, int depth, FILE *stream)
+                                 int format, int depth, FILE *stream,
+                                 const struct libconfig_locale *locale)
 {
   /* Long enough for a 64-bit binary value + NULL terminator, and for a
      float: %f never switches to an exponent, so it must hold every integer
@@ -233,7 +183,7 @@ static void __config_write_value(const config_t *config,
       const int sci_ok = config_get_option(
             config, CONFIG_OPTION_ALLOW_SCIENTIFIC_NOTATION);
       libconfig_format_double(value->fval, config->float_precision, sci_ok,
-                              value_buf, sizeof(value_buf));
+                              value_buf, sizeof(value_buf), locale);
       fputs(value_buf, stream);
       break;
     }
@@ -302,7 +252,7 @@ static void __config_write_value(const config_t *config,
         {
           __config_write_value(config, &((*s)->value), (*s)->type,
                                config_setting_get_format(*s), depth + 1,
-                               stream);
+                               stream, locale);
 
           if(len)
             fputc(',', stream);
@@ -331,7 +281,7 @@ static void __config_write_value(const config_t *config,
         {
           __config_write_value(config, &((*s)->value), (*s)->type,
                                config_setting_get_format(*s), depth + 1,
-                               stream);
+                               stream, locale);
 
           if(len)
             fputc(',', stream);
@@ -368,7 +318,7 @@ static void __config_write_value(const config_t *config,
         config_setting_t **s;
 
         for(s = list->elements; len--; s++)
-          __config_write_setting(config, *s, stream, depth + 1);
+          __config_write_setting(config, *s, stream, depth + 1, locale);
       }
 
       if(depth > 1)
@@ -584,6 +534,7 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
   yyscan_t scanner;
   struct scan_context scan_ctx;
   struct parse_context parse_ctx;
+  struct libconfig_locale *locale;
   int r;
 
   config_clear(config);
@@ -598,11 +549,12 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
   parse_ctx.parent = config->root;
   parse_ctx.setting = config->root;
 
-  __config_locale_override();
+  locale = libconfig_locale_create();
 
   libconfig_scanctx_init(&scan_ctx, filename);
   config->root->file = libconfig_scanctx_current_filename(&scan_ctx);
   scan_ctx.config = config;
+  scan_ctx.locale = locale;
   libconfig_yylex_init_extra(&scan_ctx, &scanner);
 
   if(stream)
@@ -630,7 +582,7 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
   config->filenames = libconfig_scanctx_cleanup(&scan_ctx);
   libconfig_parsectx_cleanup(&parse_ctx);
 
-  __config_locale_restore();
+  libconfig_locale_destroy(locale);
 
   return(r == 0 ? CONFIG_TRUE : CONFIG_FALSE);
 }
@@ -670,7 +622,8 @@ int config_read_string(config_t *config, const char *str)
 
 static void __config_write_setting(const config_t *config,
                                    const config_setting_t *setting,
-                                   FILE *stream, int depth)
+                                   FILE *stream, int depth,
+                                   const struct libconfig_locale *locale)
 {
   char group_assign_char = config_get_option(
     config, CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS) ? ':' : '=';
@@ -691,7 +644,8 @@ static void __config_write_setting(const config_t *config,
   }
 
   __config_write_value(config, &(setting->value), setting->type,
-                       config_setting_get_format(setting), depth, stream);
+                       config_setting_get_format(setting), depth, stream,
+                       locale);
 
   if(depth > 0)
   {
@@ -706,14 +660,16 @@ static void __config_write_setting(const config_t *config,
 
 void config_write(const config_t *config, FILE *stream)
 {
+  struct libconfig_locale *locale;
+
   config_assert(config != NULL);
   config_assert(stream != NULL);
 
-  __config_locale_override();
+  locale = libconfig_locale_create();
 
-  __config_write_setting(config, config->root, stream, 0);
+  __config_write_setting(config, config->root, stream, 0, locale);
 
-  __config_locale_restore();
+  libconfig_locale_destroy(locale);
 }
 
 /* ------------------------------------------------------------------------- */
