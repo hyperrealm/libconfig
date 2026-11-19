@@ -1295,6 +1295,26 @@ TT_TEST(SetterArgumentAliasing)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(NonAsciiSettingName)
+{
+  config_t cfg;
+  config_setting_t *root;
+
+  config_init(&cfg);
+  root = config_root_setting(&cfg);
+
+  /* UTF-8 bytes are negative as plain char; they must not reach the ctype
+     functions as negative values, and the names must still be rejected. */
+  TT_EXPECT_PTR_NULL(config_setting_add(root, "caf\xc3\xa9", CONFIG_TYPE_INT));
+  TT_EXPECT_PTR_NULL(config_setting_add(root, "\xc3\xa9t\xc3\xa9",
+                                        CONFIG_TYPE_INT));
+  TT_EXPECT_PTR_NOTNULL(config_setting_add(root, "cafe", CONFIG_TYPE_INT));
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
   int failures;
@@ -1327,6 +1347,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, WriteLargeFloat);
   TT_SUITE_TEST(LibConfigTests, AutoConvertFloatToInteger);
   TT_SUITE_TEST(LibConfigTests, SetterArgumentAliasing);
+  TT_SUITE_TEST(LibConfigTests, NonAsciiSettingName);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);
