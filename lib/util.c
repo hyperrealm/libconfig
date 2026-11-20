@@ -299,7 +299,8 @@ void libconfig_format_double(double val, int precision, int sci_ok, char *buf,
       size_t len = strlen(radix);
 
       *p = '.';
-      memmove(p + 1, p + len, strlen(p + len) + 1);
+      if(len > 1)
+        memmove(p + 1, p + len, strlen(p + len) + 1);
     }
   }
 
