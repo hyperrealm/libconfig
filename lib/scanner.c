@@ -1643,6 +1643,18 @@ case YY_STATE_EOF(INCLUDE):
     return TOK_ERROR;
   }
 
+  /* Comments and strings end with the file they are in; don't let one
+     that is still open carry over into the next or including file. */
+  if(YY_START == SINGLE_LINE_COMMENT)
+    BEGIN INITIAL;
+  else if((YY_START != INITIAL) && (yyextra->stack_depth > 0))
+  {
+    yyextra->config->error_text = "unexpected end of include file";
+    yyextra->config->error_file = libconfig_scanctx_current_filename(yyextra);
+    yyextra->config->error_line = libconfig_yyget_lineno(yyscanner);
+    return TOK_ERROR;
+  }
+
   fp = libconfig_scanctx_next_include_file(yyextra, &error);
   if(fp)
   {
@@ -1674,10 +1686,10 @@ case YY_STATE_EOF(INCLUDE):
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 274 "scanner.l"
+#line 286 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1681 "scanner.c"
+#line 1693 "scanner.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2806,7 +2818,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 274 "scanner.l"
+#line 286 "scanner.l"
 
 
 static int libconfig_yyread(char *buf, int max_size, FILE *input)

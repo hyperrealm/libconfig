@@ -841,6 +841,42 @@ TT_TEST(IncludeReadError)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(IncludeUnterminated)
+{
+  config_t cfg;
+  int val;
+
+  config_init(&cfg);
+  config_set_include_dir(&cfg, "./testdata");
+
+  /* A comment or string left open in an included file must not swallow
+     the settings that follow the @include. */
+  TT_ASSERT_FALSE(config_read_string(&cfg,
+                                     "@include \"unterminated_comment.cfg\"\n"
+                                     "admin = false;\n"));
+  TT_ASSERT_STR_EQ("unexpected end of include file", config_error_text(&cfg));
+  TT_ASSERT_PTR_NOTNULL(strstr(config_error_file(&cfg),
+                               "unterminated_comment.cfg"));
+
+  TT_ASSERT_FALSE(config_read_string(&cfg,
+                                     "@include \"unterminated_string.cfg\"\n"
+                                     "name = \"x\";\n"));
+  TT_ASSERT_STR_EQ("unexpected end of include file", config_error_text(&cfg));
+  TT_ASSERT_PTR_NOTNULL(strstr(config_error_file(&cfg),
+                               "unterminated_string.cfg"));
+
+  /* A line comment ends at the end of the file. */
+  TT_ASSERT_TRUE(config_read_string(&cfg, "@include \"trailing_comment.cfg\""
+                                    " b = 2;\n"));
+  TT_ASSERT_TRUE(config_lookup_int(&cfg, "a", &val));
+  TT_ASSERT_TRUE(config_lookup_int(&cfg, "b", &val));
+  TT_ASSERT_INT_EQ(2, val);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
 TT_TEST(ErrorStateOnReread)
 {
   config_t cfg;
@@ -1401,6 +1437,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, OverrideSetting);
   TT_SUITE_TEST(LibConfigTests, SettingLookups);
   TT_SUITE_TEST(LibConfigTests, IncludeReadError);
+  TT_SUITE_TEST(LibConfigTests, IncludeUnterminated);
   TT_SUITE_TEST(LibConfigTests, ErrorStateOnReread);
   TT_SUITE_TEST(LibConfigTests, ReadStream);
   TT_SUITE_TEST(LibConfigTests, NonDecimalInt64Suffix);
