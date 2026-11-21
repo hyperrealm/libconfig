@@ -841,6 +841,42 @@ TT_TEST(IncludeReadError)
 
 /* ------------------------------------------------------------------------- */
 
+static char include_path_seen[64];
+
+static const char **record_path_include_func(config_t *config,
+                                             const char *include_dir,
+                                             const char *path,
+                                             const char **error)
+{
+  snprintf(include_path_seen, sizeof(include_path_seen), "%s", path);
+
+  *error = NULL;
+  return(NULL); /* include nothing */
+}
+
+TT_TEST(IncludePathBackslash)
+{
+  config_t cfg;
+
+  config_init(&cfg);
+  config_set_include_func(&cfg, record_path_include_func);
+
+  /* A lone backslash is kept, as it is in string values. */
+  include_path_seen[0] = '\0';
+  TT_ASSERT_TRUE(config_read_string(&cfg, "@include \"conf.d\\extra.cfg\"\n"));
+  TT_ASSERT_STR_EQ("conf.d\\extra.cfg", include_path_seen);
+
+  /* An escaped backslash still yields a single one. */
+  include_path_seen[0] = '\0';
+  TT_ASSERT_TRUE(config_read_string(&cfg,
+                                    "@include \"conf.d\\\\extra.cfg\"\n"));
+  TT_ASSERT_STR_EQ("conf.d\\extra.cfg", include_path_seen);
+
+  config_destroy(&cfg);
+}
+
+/* ------------------------------------------------------------------------- */
+
 TT_TEST(ErrorStateOnReread)
 {
   config_t cfg;
@@ -1401,6 +1437,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, OverrideSetting);
   TT_SUITE_TEST(LibConfigTests, SettingLookups);
   TT_SUITE_TEST(LibConfigTests, IncludeReadError);
+  TT_SUITE_TEST(LibConfigTests, IncludePathBackslash);
   TT_SUITE_TEST(LibConfigTests, ErrorStateOnReread);
   TT_SUITE_TEST(LibConfigTests, ReadStream);
   TT_SUITE_TEST(LibConfigTests, NonDecimalInt64Suffix);

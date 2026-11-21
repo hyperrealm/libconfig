@@ -580,8 +580,8 @@ static void yynoreturn yy_fatal_error ( const char* msg , yyscan_t yyscanner );
 	yyg->yy_hold_char = *yy_cp; \
 	*yy_cp = '\0'; \
 	yyg->yy_c_buf_p = yy_cp;
-#define YY_NUM_RULES 48
-#define YY_END_OF_BUFFER 49
+#define YY_NUM_RULES 49
+#define YY_END_OF_BUFFER 50
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -592,29 +592,29 @@ struct yy_trans_info
 static const flex_int16_t yy_accept[214] =
     {   0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-       49,   47,   27,   28,   27,    8,    1,   44,   45,   35,
-       47,   30,   36,   47,   37,   37,   29,   46,   35,   35,
-       42,   43,   31,   32,   28,   47,    3,    2,    6,    7,
-        6,    9,   21,   20,   23,   26,   48,   28,   35,   36,
-       37,   36,    0,    4,    1,   36,    0,    0,   38,    0,
-        0,   35,   35,   28,    0,    0,    5,    9,   18,    0,
+       50,   48,   28,   29,   28,    8,    1,   45,   46,   36,
+       48,   31,   37,   48,   38,   38,   30,   47,   36,   36,
+       43,   44,   32,   33,   29,   48,    3,    2,    6,    7,
+        6,    9,   21,   20,   23,   27,   26,   29,   36,   37,
+       38,   37,    0,    4,    1,   37,    0,    0,   39,    0,
+        0,   36,   36,   29,    0,    0,    5,    9,   18,    0,
        17,   10,   11,   16,   12,   13,   14,   15,   23,   25,
-       24,    0,   36,   36,    0,   39,    0,   36,   38,   40,
-       41,   35,   35,    0,    0,    0,   36,   39,   39,   40,
+       24,    0,   37,   37,    0,   40,    0,   37,   39,   41,
+       42,   36,   36,    0,    0,    0,   37,   40,   40,   41,
 
-       40,   41,   41,   35,   33,    0,   19,   39,   39,   40,
-       40,   41,   41,   34,    0,   39,   40,   41,    0,   39,
-       40,   41,    0,   39,   40,   41,    0,   39,   40,   41,
-        0,   39,   40,   41,   22,   39,   40,   41,   39,   40,
-       41,   39,   40,   41,   39,   40,   41,   39,   40,   41,
-       39,   40,   41,   39,   40,   41,   39,   40,   41,   39,
-       40,   39,   40,   39,   40,   39,   40,   39,   40,   39,
-       39,   39,   39,   39,   39,   39,   39,   39,   39,   39,
-       39,   39,   39,   39,   39,   39,   39,   39,   39,   39,
-       39,   39,   39,   39,   39,   39,   39,   39,   39,   39,
+       41,   42,   42,   36,   34,    0,   19,   40,   40,   41,
+       41,   42,   42,   35,    0,   40,   41,   42,    0,   40,
+       41,   42,    0,   40,   41,   42,    0,   40,   41,   42,
+        0,   40,   41,   42,   22,   40,   41,   42,   40,   41,
+       42,   40,   41,   42,   40,   41,   42,   40,   41,   42,
+       40,   41,   42,   40,   41,   42,   40,   41,   42,   40,
+       41,   40,   41,   40,   41,   40,   41,   40,   41,   40,
+       40,   40,   40,   40,   40,   40,   40,   40,   40,   40,
+       40,   40,   40,   40,   40,   40,   40,   40,   40,   40,
+       40,   40,   40,   40,   40,   40,   40,   40,   40,   40,
 
-       39,   39,   39,   39,   39,   39,   39,   39,   39,   39,
-       39,   39,    0
+       40,   40,   40,   40,   40,   40,   40,   40,   40,   40,
+       40,   40,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -874,11 +874,11 @@ static const flex_int16_t yy_chk[666] =
     } ;
 
 /* Table of booleans, true if rule could match eol. */
-static const flex_int32_t yy_rule_can_match_eol[49] =
+static const flex_int32_t yy_rule_can_match_eol[50] =
     {   0,
 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0,     };
+    0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,     };
 
 /* The intent behind this definition is that it'll catch
  * any uses of REJECT which flex missed.
@@ -1418,6 +1418,11 @@ YY_RULE_SETUP
 case 26:
 YY_RULE_SETUP
 #line 109 "scanner.l"
+{ libconfig_scanctx_append_char(yyextra, '\\'); }
+	YY_BREAK
+case 27:
+YY_RULE_SETUP
+#line 110 "scanner.l"
 {
   const char *error = NULL;
   const char *path = libconfig_scanctx_take_string(yyextra);
@@ -1441,60 +1446,60 @@ YY_RULE_SETUP
   BEGIN INITIAL;
 }
 	YY_BREAK
-case 27:
-/* rule 27 can match eol */
-YY_RULE_SETUP
-#line 132 "scanner.l"
-{ /* ignore */ }
-	YY_BREAK
 case 28:
+/* rule 28 can match eol */
 YY_RULE_SETUP
 #line 133 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 135 "scanner.l"
-{ return(TOK_EQUALS); }
+#line 134 "scanner.l"
+{ /* ignore */ }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 136 "scanner.l"
-{ return(TOK_COMMA); }
+{ return(TOK_EQUALS); }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 137 "scanner.l"
-{ return(TOK_GROUP_START); }
+{ return(TOK_COMMA); }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 138 "scanner.l"
-{ return(TOK_GROUP_END); }
+{ return(TOK_GROUP_START); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 139 "scanner.l"
-{ yylval->ival = 1; return(TOK_BOOLEAN); }
+{ return(TOK_GROUP_END); }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 140 "scanner.l"
-{ yylval->ival = 0; return(TOK_BOOLEAN); }
+{ yylval->ival = 1; return(TOK_BOOLEAN); }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 141 "scanner.l"
-{ yylval->sval = yytext; return(TOK_NAME); }
+{ yylval->ival = 0; return(TOK_BOOLEAN); }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 142 "scanner.l"
-{ yylval->fval = libconfig_parse_double(yytext, yyextra->locale); return(TOK_FLOAT); }
+{ yylval->sval = yytext; return(TOK_NAME); }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
 #line 143 "scanner.l"
+{ yylval->fval = libconfig_parse_double(yytext, yyextra->locale); return(TOK_FLOAT); }
+	YY_BREAK
+case 38:
+YY_RULE_SETUP
+#line 144 "scanner.l"
 {
                     long long llval;
                     int is_long;
@@ -1514,9 +1519,9 @@ YY_RULE_SETUP
                     }
                   }
 	YY_BREAK
-case 38:
+case 39:
 YY_RULE_SETUP
-#line 161 "scanner.l"
+#line 162 "scanner.l"
 {
                     int is_long;
 
@@ -1527,9 +1532,9 @@ YY_RULE_SETUP
                     return(TOK_INTEGER64);
                   }
 	YY_BREAK
-case 39:
+case 40:
 YY_RULE_SETUP
-#line 170 "scanner.l"
+#line 171 "scanner.l"
 {
                     long long llval;
                     int is_long;
@@ -1549,9 +1554,9 @@ YY_RULE_SETUP
                     }
                   }
 	YY_BREAK
-case 40:
+case 41:
 YY_RULE_SETUP
-#line 188 "scanner.l"
+#line 189 "scanner.l"
 {
                     long long llval;
                     int is_long;
@@ -1571,9 +1576,9 @@ YY_RULE_SETUP
                     }
                   }
 	YY_BREAK
-case 41:
+case 42:
 YY_RULE_SETUP
-#line 206 "scanner.l"
+#line 207 "scanner.l"
 {
                     long long llval;
                     int is_long;
@@ -1594,34 +1599,34 @@ YY_RULE_SETUP
                     }
                   }
 	YY_BREAK
-case 42:
-YY_RULE_SETUP
-#line 225 "scanner.l"
-{ return(TOK_ARRAY_START); }
-	YY_BREAK
 case 43:
 YY_RULE_SETUP
 #line 226 "scanner.l"
-{ return(TOK_ARRAY_END); }
+{ return(TOK_ARRAY_START); }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
 #line 227 "scanner.l"
-{ return(TOK_LIST_START); }
+{ return(TOK_ARRAY_END); }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
 #line 228 "scanner.l"
-{ return(TOK_LIST_END); }
+{ return(TOK_LIST_START); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
 #line 229 "scanner.l"
-{ return(TOK_SEMICOLON); }
+{ return(TOK_LIST_END); }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
 #line 230 "scanner.l"
+{ return(TOK_SEMICOLON); }
+	YY_BREAK
+case 48:
+YY_RULE_SETUP
+#line 231 "scanner.l"
 { return(TOK_GARBAGE); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
@@ -1629,7 +1634,7 @@ case YY_STATE_EOF(SINGLE_LINE_COMMENT):
 case YY_STATE_EOF(MULTI_LINE_COMMENT):
 case YY_STATE_EOF(STRING):
 case YY_STATE_EOF(INCLUDE):
-#line 232 "scanner.l"
+#line 233 "scanner.l"
 {
   const char *error = NULL;
   FILE *fp;
@@ -1672,12 +1677,12 @@ case YY_STATE_EOF(INCLUDE):
   }
 }
 	YY_BREAK
-case 48:
+case 49:
 YY_RULE_SETUP
-#line 274 "scanner.l"
+#line 275 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1681 "scanner.c"
+#line 1686 "scanner.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2806,7 +2811,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 274 "scanner.l"
+#line 275 "scanner.l"
 
 
 static int libconfig_yyread(char *buf, int max_size, FILE *input)
