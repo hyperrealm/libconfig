@@ -242,6 +242,18 @@ include_open ^[ \t]*@include[ \t]+\"
     return TOK_ERROR;
   }
 
+  /* Comments and strings end with the file they are in; don't let one
+     that is still open carry over into the next or including file. */
+  if(YY_START == SINGLE_LINE_COMMENT)
+    BEGIN INITIAL;
+  else if((YY_START != INITIAL) && (yyextra->stack_depth > 0))
+  {
+    yyextra->config->error_text = "unexpected end of include file";
+    yyextra->config->error_file = libconfig_scanctx_current_filename(yyextra);
+    yyextra->config->error_line = libconfig_yyget_lineno(yyscanner);
+    return TOK_ERROR;
+  }
+
   fp = libconfig_scanctx_next_include_file(yyextra, &error);
   if(fp)
   {
