@@ -20,10 +20,15 @@
    ----------------------------------------------------------------------------
 */
 
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+
+#ifdef __APPLE__
+#include <xlocale.h>
+#endif
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -1315,6 +1320,64 @@ TT_TEST(NonAsciiSettingName)
 
 /* ------------------------------------------------------------------------- */
 
+TT_TEST(ThreadLocaleUnchanged)
+{
+  /* Floats are read and written with a '.' whatever the calling thread's
+     locale is, and that locale is left alone. Use one with a ',' radix
+     character where it's installed. */
+  config_t cfg;
+  double value = 0.0;
+  char text[64] = "";
+  FILE *stream;
+
+#if defined(_WIN32) && !defined(__MINGW32__)
+  char numeric[64];
+  int mode = _configthreadlocale(_ENABLE_PER_THREAD_LOCALE);
+
+  setlocale(LC_NUMERIC, "de-DE");
+  snprintf(numeric, sizeof(numeric), "%s", setlocale(LC_NUMERIC, NULL));
+#elif defined(LC_GLOBAL_LOCALE)
+  locale_t loc = newlocale(LC_NUMERIC_MASK, "de_DE.UTF-8", (locale_t)0);
+
+  if(!loc)
+    loc = newlocale(LC_NUMERIC_MASK, "C", (locale_t)0);
+  TT_ASSERT_PTR_NOTNULL(loc);
+  uselocale(loc);
+#endif
+
+  config_init(&cfg);
+  TT_EXPECT_TRUE(config_read_string(&cfg, "x = 1.5;"));
+  TT_EXPECT_TRUE(config_lookup_float(&cfg, "x", &value));
+  TT_EXPECT_DOUBLE_EQ(value, 1.5);
+
+  stream = tmpfile();
+  TT_EXPECT_PTR_NOTNULL(stream);
+  if(stream)
+  {
+    config_write(&cfg, stream);
+    rewind(stream);
+    TT_EXPECT_PTR_NOTNULL(fgets(text, sizeof(text), stream));
+    fclose(stream);
+  }
+  TT_EXPECT_STR_EQ(text, "x = 1.5;\n");
+  config_destroy(&cfg);
+
+#if defined(_WIN32) && !defined(__MINGW32__)
+  TT_EXPECT_INT_EQ(_configthreadlocale(0), _ENABLE_PER_THREAD_LOCALE);
+  TT_EXPECT_STR_EQ(setlocale(LC_NUMERIC, NULL), numeric);
+
+  setlocale(LC_NUMERIC, "C");
+  _configthreadlocale(mode);
+#elif defined(LC_GLOBAL_LOCALE)
+  TT_EXPECT_PTR_EQ(uselocale((locale_t)0), loc);
+
+  uselocale(LC_GLOBAL_LOCALE);
+  freelocale(loc);
+#endif
+}
+
+/* ------------------------------------------------------------------------- */
+
 int main(int argc, char **argv)
 {
   int failures;
@@ -1348,6 +1411,7 @@ int main(int argc, char **argv)
   TT_SUITE_TEST(LibConfigTests, AutoConvertFloatToInteger);
   TT_SUITE_TEST(LibConfigTests, SetterArgumentAliasing);
   TT_SUITE_TEST(LibConfigTests, NonAsciiSettingName);
+  TT_SUITE_TEST(LibConfigTests, ThreadLocaleUnchanged);
   TT_SUITE_RUN(LibConfigTests);
   failures = TT_SUITE_NUM_FAILURES(LibConfigTests);
   TT_SUITE_END(LibConfigTests);

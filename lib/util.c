@@ -20,13 +20,48 @@
    ----------------------------------------------------------------------------
 */
 
+#ifdef HAVE_CONFIG_H
+#include "ac_config.h"
+#endif
+
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE /* for strtod_l() in glibc */
+#endif
+
 #include "util.h"
 #include "wincompat.h"
 
 #include <errno.h>
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#if defined(HAVE_XLOCALE_H) || defined(__APPLE__)
+#include <xlocale.h>
+#endif
+
+#if defined(LIBCONFIG_WINDOWS_OS) && !defined(LIBCONFIG_MINGW_OS)
+
+#define LIBCONFIG_HAVE_C_LOCALE
+
+struct libconfig_locale
+{
+  _locale_t numeric;
+};
+
+#elif defined(__APPLE__) \
+  || ((defined HAVE_NEWLOCALE) && (defined HAVE_FREELOCALE) \
+      && (defined HAVE_STRTOD_L))
+
+#define LIBCONFIG_HAVE_C_LOCALE
+
+struct libconfig_locale
+{
+  locale_t numeric;
+};
+
+#endif
 
 /* ------------------------------------------------------------------------- */
 
@@ -175,13 +210,101 @@ int libconfig_parse_integer(const char *s, int base, long long *val,
 
 /* ------------------------------------------------------------------------- */
 
+struct libconfig_locale *libconfig_locale_create(void)
+{
+#ifdef LIBCONFIG_HAVE_C_LOCALE
+
+  struct libconfig_locale *loc = __new(struct libconfig_locale);
+
+#if defined(LIBCONFIG_WINDOWS_OS) && !defined(LIBCONFIG_MINGW_OS)
+  loc->numeric = _create_locale(LC_NUMERIC, "C");
+#else
+  loc->numeric = newlocale(LC_NUMERIC_MASK, "C", (locale_t)0);
+#endif
+
+  /* The "C" locale always exists, so this can only fail for lack of
+     memory. */
+  if(!loc->numeric)
+    libconfig_fatal_error(__libconfig_malloc_failure_message);
+
+  return(loc);
+
+#else
+
+  return(NULL);
+
+#endif
+}
+
+/* ------------------------------------------------------------------------- */
+
+void libconfig_locale_destroy(struct libconfig_locale *loc)
+{
+#ifdef LIBCONFIG_HAVE_C_LOCALE
+
+  if(!loc)
+    return;
+
+#if defined(LIBCONFIG_WINDOWS_OS) && !defined(LIBCONFIG_MINGW_OS)
+  _free_locale(loc->numeric);
+#else
+  freelocale(loc->numeric);
+#endif
+
+  __delete(loc);
+
+#endif
+}
+
+/* ------------------------------------------------------------------------- */
+
+double libconfig_parse_double(const char *s,
+                              const struct libconfig_locale *loc)
+{
+#ifdef LIBCONFIG_HAVE_C_LOCALE
+  return(strtod_l(s, NULL, loc->numeric));
+#else
+  return(strtod(s, NULL));
+#endif
+}
+
+/* ------------------------------------------------------------------------- */
+
 void libconfig_format_double(double val, int precision, int sci_ok, char *buf,
-                             size_t buflen)
+                             size_t buflen, const struct libconfig_locale *loc)
 {
   const char *fmt = sci_ok ? "%.*g" : "%.*f";
   char *p, *q;
 
+#if defined(LIBCONFIG_WINDOWS_OS) && !defined(LIBCONFIG_MINGW_OS)
+
+  /* Unlike snprintf(), this doesn't terminate a truncated string. */
+  _snprintf_l(buf, buflen - 3, fmt, loc->numeric, precision, val);
+  buf[buflen - 4] = '\0';
+
+#elif defined(__APPLE__)
+
+  snprintf_l(buf, buflen - 3, loc->numeric, fmt, precision, val);
+
+#else
+
+  /* No snprintf_l(), so replace the current locale's radix character. */
   snprintf(buf, buflen - 3, fmt, precision, val);
+
+  {
+    const char *radix = localeconv()->decimal_point;
+
+    if(radix && *radix && strcmp(radix, ".") && (p = strstr(buf, radix)))
+    {
+      size_t len = strlen(radix);
+
+      *p = '.';
+      if(len > 1)
+        memmove(p + 1, p + len, strlen(p + len) + 1);
+    }
+  }
+
+#endif
 
   /* Check for exponent. */
   p = strchr(buf, 'e');

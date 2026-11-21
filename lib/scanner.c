@@ -1490,7 +1490,7 @@ YY_RULE_SETUP
 case 36:
 YY_RULE_SETUP
 #line 142 "scanner.l"
-{ yylval->fval = atof(yytext); return(TOK_FLOAT); }
+{ yylval->fval = libconfig_parse_double(yytext, yyextra->locale); return(TOK_FLOAT); }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP

@@ -79,7 +79,7 @@ AC_C_CONST
 
 dnl Checks for functions
 
-AC_CHECK_FUNCS([newlocale uselocale freelocale])
+AC_CHECK_FUNCS([newlocale uselocale freelocale strtod_l])
 
 dnl Package options
 
