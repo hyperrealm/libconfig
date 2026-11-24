@@ -62,7 +62,7 @@ extern void pathbuf_append_path_len(pathbuf_t *buf, const char *path, size_t len
   if(buf->length > 0)
     add_sep = *(buf->path + buf->length - 1) == '/' ? 0 : 1;
   
-  pathbuf_ensure_capacity(buf, len + (add_sep ? 0 : 1));
+  pathbuf_ensure_capacity(buf, len + (add_sep ? 1 : 0));
   if(add_sep)
   {
     *(buf->path + buf->length) = '/';
